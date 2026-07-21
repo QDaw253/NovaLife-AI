@@ -10,15 +10,20 @@ venv/
 # Django
 db.sqlite3
 media/
-
-# VSCode
-.vscode/
+staticfiles/
 
 # Environment
 .env
 
-# Static cache
-staticfiles/
+# VSCode
+.vscode/
+
+# Python cache
+.pytest_cache/
+.mypy_cache/
 
 # macOS
 .DS_Store
+
+# Windows
+Thumbs.db

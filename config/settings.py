@@ -37,13 +37,24 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'accounts',
-    'dashboard',
-    'goals',
-    'tasks',
-    'habits',
-    'wardrobe',
-    'ai',
+
+    'rest_framework',
+    'rest_framework_simplejwt',
+    
+    "apps.accounts",
+
+    "apps.dashboard",
+
+    "apps.goals",
+
+    "apps.tasks",
+
+    "apps.habits",
+
+    "apps.wardrobe",
+
+    "apps.ai",
+    
 ]
 
 MIDDLEWARE = [
@@ -126,3 +137,20 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+AUTH_USER_MODEL = "accounts.User"
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+}
+
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=2),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+}

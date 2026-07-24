@@ -56,6 +56,8 @@ INSTALLED_APPS = [
     "apps.wardrobe",
 
     "apps.ai",
+
+    "apps.chat",
     
 ]
 

@@ -18,4 +18,16 @@ class RegisterView(APIView):
             },
         status=status.HTTP_201_CREATED,
         )
-        
+class LoginView(APIView):
+    def post(self, request):
+        result = AuthService.login(request.data)
+
+        return Response(
+            {
+                "message":"Đăng nhập thành công",
+                "user": UserSerializer(result["user"]).data,
+                "access":result["access"],
+                "refresh": result["refresh"],
+            },
+            status = status.HTTP_200_OK,
+        )        

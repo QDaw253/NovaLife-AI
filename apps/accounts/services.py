@@ -1,7 +1,7 @@
 from django.db import transaction
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import AuthenticationFailed
-from .serializers import(LoginSerializer, RegisterSerializer)
+from .serializers import(LoginSerializer, RegisterSerializer, LogoutSerializer)
 from rest_framework_simplejwt.tokens import RefreshToken
 
 
@@ -37,6 +37,24 @@ class AuthService:
             "access": str(access),
             "refresh": str(refresh),
         }
+
+    @staticmethod
+    def me(user):
+        return user
+
+    @staticmethod
+    def logout(data):
+        serializer = LogoutSerializer(data = data)
+        serializer.is_valid(raise_exception=True)
+
+        validated_data = serializer.validated_data
+
+        RefreshToken(
+            validated_data["refresh"]
+        ).blacklist()
+
+        return True
+
 
 
            

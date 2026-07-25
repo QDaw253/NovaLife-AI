@@ -1,5 +1,6 @@
-from django.db import models
 from django.conf import settings
+from django.db import models
+
 
 class Goal(models.Model):
     class Category(models.TextChoices):
@@ -16,9 +17,10 @@ class Goal(models.Model):
         OTHER = "other", "Khác"
 
     class Priority(models.TextChoices):
-        LOW ="low","Thấp",
-        MEDIUM = "medium","Trung bình",
-        HIGH = "high", "cao",
+        LOW = "low", "Thấp"
+        MEDIUM = "medium", "Trung bình"
+        HIGH = "high", "Cao"
+
     class Status(models.TextChoices):
         PENDING = "pending", "Chưa bắt đầu"
         IN_PROGRESS = "in_progress", "Đang thực hiện"
@@ -33,26 +35,23 @@ class Goal(models.Model):
     )
 
     title = models.CharField(
-        max_length=225,
-        blank=True,
-
+        max_length=255,
     )
 
     description = models.TextField(
         blank=True,
     )
 
-    category =models.CharField(
+    category = models.CharField(
         max_length=50,
         choices=Category.choices,
         default=Category.OTHER,
-
     )
 
-    priority= models.CharField(
+    priority = models.CharField(
         max_length=20,
-        choices=Status.choices,
-        default=Status.PENDING,
+        choices=Priority.choices,
+        default=Priority.MEDIUM,
     )
 
     status = models.CharField(
@@ -67,7 +66,7 @@ class Goal(models.Model):
     )
 
     created_at = models.DateTimeField(
-        auto_now=True,
+        auto_now_add=True,
     )
 
     updated_at = models.DateTimeField(
@@ -81,3 +80,92 @@ class Goal(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class GoalAIPlan(models.Model):
+    goal = models.OneToOneField(
+        Goal,
+        on_delete=models.CASCADE,
+        related_name="ai_plan",
+    )
+
+    difficulty = models.CharField(
+        max_length=20,
+    )
+
+    estimated_duration = models.CharField(
+        max_length=100,
+    )
+
+    recommended_hours_per_week = models.PositiveIntegerField()
+
+    plan_data = models.JSONField(
+        default=dict,
+        blank=True,
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True,
+    )
+
+    def __str__(self):
+        return f"AI Plan - {self.goal.title}"
+
+class Milestone(models.Model):
+    class Status(models.TextChoices):
+        PENDING = "pending", "Chưa bắt đầu"
+        IN_PROGRESS = "in_progress", "Đang thực hiện"
+        COMPLETED = "completed", "Hoàn thành"
+
+    goal = models.ForeignKey(
+        Goal,
+        on_delete=models.CASCADE,
+        related_name="milestones",
+    )
+
+    title = models.CharField(
+        max_length=255,
+    )
+
+    description = models.TextField(
+        blank=True,
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=Status.choices,
+        default=Status.PENDING,
+    )
+
+    deadline = models.DateField(
+        null=True,
+        blank=True,
+    )
+
+    order = models.PositiveIntegerField(
+        default=1,
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True,
+    )
+
+    class Meta:
+        ordering = ["order", "created_at"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["goal", "order"],
+                name="unique_milestone_order_per_goal",
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.order}. {self.title}"

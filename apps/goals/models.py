@@ -110,10 +110,6 @@ class GoalAIPlan(models.Model):
         blank=True,
     )
 
-    plan_data = models.JSONField(
-        default=dict,
-        blank=True,
-    )
 
     created_at = models.DateTimeField(
         auto_now_add=True,

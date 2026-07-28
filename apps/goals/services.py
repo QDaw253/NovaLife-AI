@@ -1,7 +1,6 @@
 from decimal import Decimal, ROUND_HALF_UP
 
 from django.db import transaction
-from django.utils import timezone
 
 from .models import Goal, GoalAIPlan, GoalProgress, Task, Milestone
 
@@ -106,7 +105,10 @@ class GoalProgressService:
             * Decimal("100")
         )
 
-        return round(progress,2)
+        return progress.quantize(
+            Decimal("0.01"),
+            rounding=ROUND_HALF_UP,
+)
 
     @staticmethod
     @transaction.atomic
@@ -124,5 +126,4 @@ class GoalProgressService:
             progress_percentage=progress_percentage,
             ai_feedback=ai_feedback,
             note=note,
-            recorded_at=timezone.now(),
         )

@@ -2,8 +2,15 @@ from decimal import Decimal, ROUND_HALF_UP
 
 from django.db import transaction
 
-from .models import Goal, GoalAIPlan, GoalProgress, Task, Milestone
 from apps.ai.services import GoalAIService
+
+from .models import (
+    Goal,
+    GoalAIPlan,
+    GoalProgress,
+    Milestone,
+    Task,
+)
 
 
 class GoalService:
@@ -13,6 +20,7 @@ class GoalService:
             user=user,
             **goal_data,
         )
+
     @staticmethod
     def create_ai_plan(goal, plan_data):
         return GoalAIPlan.objects.create(
@@ -20,72 +28,43 @@ class GoalService:
             difficulty=plan_data["difficulty"],
             estimated_duration=plan_data["estimated_duration"],
             recommended_hours_per_week=(
-                plan_data["recommended_hours_per_week"]
+                plan_data.get("recommended_hours_per_week")
             ),
-    )
+        )
+
+    @staticmethod
+    def create_tasks(milestone, tasks_data):
+        for task_data in tasks_data:
+            Task.objects.create(
+                milestone=milestone,
+                **task_data,
+            )
 
     @staticmethod
     def create_milestones(goal, milestones_data):
         for milestone_data in milestones_data:
-            milestone = Milestone.objects.create(
-                goal=goal,
-                title=milestone_data["title"],
-                description=milestone_data.get("description", ""),
-                deadline=milestone_data.get("deadline"),
-                order=milestone_data["order"],
+            milestone_payload = milestone_data.copy()
+
+            tasks_data = milestone_payload.pop(
+                "tasks",
+                [],
             )
 
-            tasks_data = milestone_data.get("tasks", [])
+            milestone = Milestone.objects.create(
+                goal=goal,
+                **milestone_payload,
+            )
 
-            for task_data in tasks_data:
-                Task.objects.create(
-                    milestone=milestone,
-                    title=task_data["title"],
-                    description=task_data.get("description", ""),
-                    priority=task_data.get(
-                        "priority",
-                        Task.Priority.MEDIUM,
-                    ),
-                    deadline=task_data.get("deadline"),
-                    estimated_minutes=task_data.get(
-                        "estimated_minutes"
-                    ),
-                    order=task_data["order"],
-                )
-
-    @staticmethod
-    def create_initial_progress(goal):
-        return GoalProgress.objects.create(
-            goal=goal,
-            progress_percentage=0,
-            ai_feedback="Mục tiêu đã được khởi tạo.",
-        )
-
-    @staticmethod
-    @transaction.atomic
-    def create_goal_with_plan(user, goal_data, ai_result):
-        goal = GoalService.create_goal(
-            user=user,
-            goal_data=goal_data,
-        )
-
-        GoalService.create_ai_plan(
-            goal=goal,
-            plan_data=ai_result,
-        )
-
-        GoalService.create_milestones(
-            goal=goal,
-            milestones_data=ai_result.get("milestones", []),
-        )
-
-        GoalService.create_initial_progress(goal)
-
-        return goal
+            GoalService.create_tasks(
+                milestone=milestone,
+                tasks_data=tasks_data,
+            )
 
     @staticmethod
     def create_goal_with_plan(user, goal_data):
-        ai_plan_data = GoalAIService.generate_plan(goal_data)
+        ai_plan_data = GoalAIService.generate_plan(
+            goal_data
+        )
 
         with transaction.atomic():
             goal = GoalService.create_goal(
@@ -98,43 +77,23 @@ class GoalService:
                 plan_data=ai_plan_data,
             )
 
-
             GoalService.create_milestones(
                 goal=goal,
-                milestones_data=ai_plan_data["milestones"],
+                milestones_data=(
+                    ai_plan_data["milestones"]
+                ),
             )
 
-            GoalProgressService.create_snapshot(goal)
+            GoalProgressService.create_snapshot(
+                goal=goal,
+                ai_feedback=(
+                    "Mục tiêu và kế hoạch AI "
+                    "đã được khởi tạo."
+                ),
+            )
 
             return goal
 
-    @staticmethod
-    def create_milestones(goal, milestones_data):
-        for milestone_data in milestones_data:
-            milestone_payload = milestone_data.copy()
-
-            tasks_data = milestone_payload.pop("tasks", [])
-
-            milestone = Milestone.objects.create(
-                goal=goal,
-                **milestone_payload,
-            )
-
-            GoalService.create_tasks(
-                milestone=milestone,
-                tasks_data=tasks_data,
-            )
-            # Tạo GoalProgress
-
-            
-
-    @staticmethod
-    def create_tasks(milestone, tasks_data):
-        for task_data in tasks_data:
-            Task.objects.create(
-                milestone=milestone,
-                **task_data,
-        )
 
 class GoalProgressService:
     @staticmethod
@@ -161,7 +120,7 @@ class GoalProgressService:
         return progress.quantize(
             Decimal("0.01"),
             rounding=ROUND_HALF_UP,
-)
+        )
 
     @staticmethod
     @transaction.atomic
@@ -171,12 +130,16 @@ class GoalProgressService:
         note: str = "",
     ) -> GoalProgress:
         progress_percentage = (
-            GoalProgressService.calculate_progress(goal)
+            GoalProgressService.calculate_progress(
+                goal
+            )
         )
 
         return GoalProgress.objects.create(
             goal=goal,
-            progress_percentage=progress_percentage,
+            progress_percentage=(
+                progress_percentage
+            ),
             ai_feedback=ai_feedback,
             note=note,
         )

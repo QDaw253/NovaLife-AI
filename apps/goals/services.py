@@ -3,6 +3,7 @@ from decimal import Decimal, ROUND_HALF_UP
 from django.db import transaction
 
 from .models import Goal, GoalAIPlan, GoalProgress, Task, Milestone
+from apps.ai.services import GoalAIService
 
 
 class GoalService:
@@ -82,6 +83,61 @@ class GoalService:
         GoalService.create_initial_progress(goal)
 
         return goal
+
+    @staticmethod
+    def create_goal_with_plan(user, goal_data):
+        ai_plan_data = GoalAIService.generate_plan(goal_data)
+
+        with transaction.atomic():
+            goal = GoalService.create_goal(
+                user=user,
+                goal_data=goal_data,
+            )
+
+            GoalService.create_ai_plan(
+                goal==goal,
+                ai_plan_data=ai_plan_data,
+            )
+
+            GoalService.create_milestones(
+                goal=goal,
+                milestones_data=ai_plan_data["milestones"],
+            )
+
+            GoalService.create_milestones(
+                goal=goal,
+                milestones_data=ai_plan_data["milestones"],
+            )
+
+            return goal
+
+    @staticmethod
+    def create_milestones(goal, milestones_data):
+        for milestone_data in milestones_data:
+            milestone_payload = milestone_data.copy()
+
+            tasks_data = milestone_payload.pop("tasks", [])
+
+            milestone = Milestone.objects.create(
+                goal=goal,
+                **milestone_payload,
+            )
+
+            GoalService.create_tasks(
+                milestone=milestone,
+                tasks_data=tasks_data,
+            )
+            # Tạo GoalProgress
+
+            
+
+    @staticmethod
+    def create_tasks(milestone, tasks_data):
+        for task_data in tasks_data:
+            Task.objects.create(
+                milestone=milestone,
+                **task_data,
+        )
 
 class GoalProgressService:
     @staticmethod

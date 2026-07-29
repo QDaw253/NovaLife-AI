@@ -305,7 +305,9 @@ class GoalProgress(models.Model):
         auto_now_add=True,
     )
 
-    created_at = models.DateTimeField()
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
 
     class Meta:
         ordering = ["-recorded_at", "-created_at"]

@@ -8,7 +8,7 @@ cho mục tiêu sau:
 Tiêu đề: {goal_data["title"]}
 Mô tả: {goal_data.get("description", "")}
 Danh mục: {goal_data["category"]}
-Mức ưu tiên: {goal_data["priority"]}
+Mức ưu tiên: {goal_data.get("priority", "medium")}
 Deadline: {goal_data["deadline"]}
 
 Yêu cầu:

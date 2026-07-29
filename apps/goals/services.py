@@ -22,8 +22,7 @@ class GoalService:
             recommended_hours_per_week=(
                 plan_data["recommended_hours_per_week"]
             ),
-            plan_data=plan_data.get("plan_data", {}),
-        )
+    )
 
     @staticmethod
     def create_milestones(goal, milestones_data):
@@ -95,19 +94,17 @@ class GoalService:
             )
 
             GoalService.create_ai_plan(
-                goal==goal,
-                ai_plan_data=ai_plan_data,
+                goal=goal,
+                plan_data=ai_plan_data,
             )
+
 
             GoalService.create_milestones(
                 goal=goal,
                 milestones_data=ai_plan_data["milestones"],
             )
 
-            GoalService.create_milestones(
-                goal=goal,
-                milestones_data=ai_plan_data["milestones"],
-            )
+            GoalProgressService.create_snapshot(goal)
 
             return goal
 

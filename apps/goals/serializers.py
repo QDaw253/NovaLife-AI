@@ -1,19 +1,26 @@
 from rest_framework import serializers
 from datetime import date
 
-from .models import Goal
+from .models import Goal, GoalAIPlan, Task, Milestone
 from .services import GoalProgressService, GoalService
 
 class GoalCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Goal
         fields = (
+            "id",
             "title",
             "category",
             "description",
             "priority",
             "deadline",
         )
+        extra_kwargs = {
+            "priority": {
+                "required": False,
+                "default": "medium",
+            }
+        }
 
     def validate_title(self, value):
         if not value.strip(): #strip() tức khoảng trắng 
@@ -32,7 +39,7 @@ class GoalCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         request = self.context["request"]
 
-        return GoalService.create_goal(
+        return GoalService.create_goal_with_plan(
             user=request.user,
             goal_data=validated_data,
         )
@@ -55,8 +62,56 @@ class GoalListSerializer(serializers.ModelSerializer):
     def get_progress(self, obj):
         return GoalProgressService.calculate_progress(obj)
 
+class GoalAIPlanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GoalAIPlan
+        fields = (
+            "difficulty",
+            "estimated_duration",
+            "recommended_hours_per_week",
+        )
+
+class TaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = (
+            "id",
+            "title",
+            "description",
+            "priority",
+            "deadline",
+            "estimated_minutes",
+            "order",
+            "status",
+        )
+
+class MilestoneSerializer(serializers.ModelSerializer):
+    tasks = TaskSerializer(
+        many=True,
+        read_only=True,
+    )
+
+    class Meta:
+        model = Milestone
+        fields = (
+            "id",
+            "title",
+            "description",
+            "deadline",
+            "order",
+            "tasks",
+        )
+
 class GoalDetailSerializer(serializers.ModelSerializer):
     progress = serializers.SerializerMethodField()
+    ai_plan = GoalAIPlanSerializer(
+            read_only=True,
+        )
+    
+    milestones = MilestoneSerializer(
+            many=True,
+            read_only=True,
+        )
 
     class Meta:
         model = Goal
@@ -71,7 +126,12 @@ class GoalDetailSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
             "progress",
+            "ai_plan",
+            "milestones",
         )
+
+    
 
     def get_progress(self, obj):
         return GoalProgressService.calculate_progress(obj)
+

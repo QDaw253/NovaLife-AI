@@ -13,8 +13,16 @@ class GoalViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Goal.objects.filter(user=self.request.user)
-
+        return( 
+            Goal.objects
+            .filter(user=self.request.user)
+            .select_related("ai_plan")
+            .prefetch_related(
+                "milestones",
+                "milestones__tasks",
+                )
+        
+        )
     def get_serializer_class(self):
         if self.action == "list":
             return GoalListSerializer

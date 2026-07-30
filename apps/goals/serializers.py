@@ -85,6 +85,11 @@ class TaskSerializer(serializers.ModelSerializer):
             "status",
         )
 
+class TaskUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = ["status",]
+
 class MilestoneSerializer(serializers.ModelSerializer):
     tasks = TaskSerializer(
         many=True,
@@ -129,8 +134,6 @@ class GoalDetailSerializer(serializers.ModelSerializer):
             "ai_plan",
             "milestones",
         )
-
-    
 
     def get_progress(self, obj):
         return GoalProgressService.calculate_progress(obj)

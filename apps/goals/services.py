@@ -143,3 +143,74 @@ class GoalProgressService:
             ai_feedback=ai_feedback,
             note=note,
         )
+
+class TaskService:
+    @staticmethod
+    @transaction.atomic
+    def update_task_status(task:Task, status:str)->Task:
+        task.status = status
+        task.save(update_fields=["status"])
+
+        TaskService.update_milestone_status(
+            milestone = task.milestone
+        )
+
+        TaskService.update_goal_status(
+            goal = task.milestone.goal
+        )
+
+        GoalProgressService.create_snapshot(
+            goal=task.milestone.goal,
+            note = f"Cập nhật trạng thái task:{task.title}",
+        )
+
+        return task
+
+    @staticmethod
+    def update_milestone_status(milestone:Milestone)->Milestone:
+        tasks = milestone.tasks.all()
+
+        total_tasks = tasks.count()
+        completed_tasks = tasks.filter(status = Task.Status.COMPLETED).count()
+
+        if total_tasks > 0 and completed_tasks == total_tasks:
+            milestone.status = Milestone.Status.COMPLETED
+
+        elif tasks.exclude(
+            status=Task.Status.PENDING
+        ).exists():
+            milestone.status = Milestone.Status.IN_PROGRESS
+
+        else:
+            milestone.status = Milestone.Status.PENDING
+
+        milestone.save(update_fields=["status"])
+
+        return milestone
+
+    @staticmethod
+    def update_goal_status(goal: Goal) -> Goal:
+        milestones = goal.milestones.all()
+
+        total_milestones = milestones.count()
+        completed_milestones = milestones.filter(
+            status=Milestone.Status.COMPLETED
+        ).count()
+
+        if (
+            total_milestones > 0
+            and completed_milestones == total_milestones
+        ):
+            goal.status = Goal.Status.COMPLETED
+
+        elif milestones.exclude(
+            status=Milestone.Status.PENDING
+        ).exists():
+            goal.status = Goal.Status.IN_PROGRESS
+
+        else:
+            goal.status = Goal.Status.PENDING
+
+        goal.save(update_fields=["status"])
+
+        return goal

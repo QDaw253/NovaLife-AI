@@ -29,4 +29,9 @@ urlpatterns = [
         "api/goals/",
         include("apps.goals.urls"),
     ),
+
+    path(
+        "api/habits/",
+        include("apps.habits.urls"),
+    ),
 ]

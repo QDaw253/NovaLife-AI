@@ -34,4 +34,9 @@ urlpatterns = [
         "api/habits/",
         include("apps.habits.urls"),
     ),
+
+    path(
+        "api/dashboard/",
+        include("apps.dashboard.urls"),
+    ),
 ]

@@ -63,6 +63,10 @@ class ClothingItem(models.Model):
         default=False,
     )
 
+    is_active = models.BooleanField(
+        default=True,
+    )
+
     created_at = models.DateTimeField(
         auto_now_add=True,
     )

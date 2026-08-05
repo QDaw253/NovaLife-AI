@@ -39,4 +39,9 @@ urlpatterns = [
         "api/dashboard/",
         include("apps.dashboard.urls"),
     ),
+
+    path(
+        "api/wardrobe/",
+        include("apps.wardrobe.urls"),
+    ),
 ]

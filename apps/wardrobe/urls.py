@@ -1,6 +1,10 @@
+from django.urls import path
 from rest_framework.routers import DefaultRouter
 
-from .views import ClothingItemViewSet
+from .views import (
+    ClothingImageAnalyzeAPIView,
+    ClothingItemViewSet,
+)
 
 router = DefaultRouter()
 
@@ -10,4 +14,12 @@ router.register(
     basename="wardrobe",
 )
 
-urlpatterns = router.urls
+urlpatterns = [
+    path(
+        "analyze-image/",
+        ClothingImageAnalyzeAPIView.as_view(),
+        name="analyze-image",
+    ),
+]
+
+urlpatterns += router.urls

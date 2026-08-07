@@ -2,6 +2,7 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .models import ClothingItem
 from .serializers import (
@@ -9,7 +10,9 @@ from .serializers import (
     ClothingItemDetailSerializer,
     ClothingItemListSerializer,
     ClothingItemUpdateSerializer,
+    ClothingImageAnalyzeSerializer,
 )
+from .services import ClothingVisionService
 
 
 class ClothingItemViewSet(viewsets.ModelViewSet):
@@ -39,3 +42,24 @@ class ClothingItemViewSet(viewsets.ModelViewSet):
         item.save(update_fields=["is_active", "updated_at",])
 
         return Response(status=status.HTTP_204_NO_CONTENT,)
+
+class ClothingImageAnalyzeAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        serializer = ClothingImageAnalyzeSerializer(
+            data=request.data,
+        )
+
+        serializer.is_valid(
+            raise_exception=True,
+        )
+
+        result = ClothingVisionService.analyze_image(
+            image=serializer.validated_data["image"],
+        )
+
+        return Response(
+            result,
+            status=status.HTTP_200_OK,
+        )

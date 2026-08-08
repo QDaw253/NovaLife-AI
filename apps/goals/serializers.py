@@ -102,6 +102,7 @@ class MilestoneSerializer(serializers.ModelSerializer):
             "id",
             "title",
             "description",
+            "status",
             "deadline",
             "order",
             "tasks",

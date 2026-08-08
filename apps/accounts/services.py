@@ -3,6 +3,8 @@ from django.contrib.auth import authenticate
 from rest_framework.exceptions import AuthenticationFailed
 from .serializers import(LoginSerializer, RegisterSerializer, LogoutSerializer)
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.exceptions import TokenError
+from rest_framework.exceptions import ValidationError
 
 
 class AuthService:
@@ -44,14 +46,24 @@ class AuthService:
 
     @staticmethod
     def logout(data):
-        serializer = LogoutSerializer(data = data)
+        serializer = LogoutSerializer(data=data)
         serializer.is_valid(raise_exception=True)
 
         validated_data = serializer.validated_data
 
-        RefreshToken(
-            validated_data["refresh"]
-        ).blacklist()
+        try:
+            RefreshToken(
+                validated_data["refresh"]
+            ).blacklist()
+
+        except TokenError as exc:
+            raise ValidationError(
+                {
+                    "refresh": [
+                        "Refresh token không hợp lệ hoặc đã hết hạn."
+                    ]
+                }
+            ) from exc
 
         return True
 

@@ -4,6 +4,7 @@ from rest_framework.routers import DefaultRouter
 from .views import (
     ClothingImageAnalyzeAPIView,
     ClothingItemViewSet,
+    OutfitRecommendationAPIView
 )
 
 router = DefaultRouter()
@@ -19,6 +20,11 @@ urlpatterns = [
         "analyze-image/",
         ClothingImageAnalyzeAPIView.as_view(),
         name="analyze-image",
+    ),
+    path(
+        "recommend-outfit/",
+        OutfitRecommendationAPIView.as_view(),
+        name="recommend-outfit",
     ),
 ]
 

@@ -11,8 +11,9 @@ from .serializers import (
     ClothingItemListSerializer,
     ClothingItemUpdateSerializer,
     ClothingImageAnalyzeSerializer,
+    OutfitRecommendationRequestSerializer
 )
-from .services import ClothingVisionService
+from .services import ClothingVisionService, OutfitRecommendationService
 
 
 class ClothingItemViewSet(viewsets.ModelViewSet):
@@ -57,6 +58,29 @@ class ClothingImageAnalyzeAPIView(APIView):
 
         result = ClothingVisionService.analyze_image(
             image=serializer.validated_data["image"],
+        )
+
+        return Response(
+            result,
+            status=status.HTTP_200_OK,
+        )
+
+class OutfitRecommendationAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        serializer = OutfitRecommendationRequestSerializer(
+            data=request.data,
+        )
+
+        serializer.is_valid(
+            raise_exception=True,
+        )
+
+        result = OutfitRecommendationService.recommend(
+            user=request.user,
+            occasion=serializer.validated_data["occasion"],
+            season=serializer.validated_data["season"],
         )
 
         return Response(

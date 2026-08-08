@@ -93,21 +93,9 @@ class ClothingItemDetailSerializer(serializers.ModelSerializer):
         )
 
 class ClothingImageAnalyzeSerializer(serializers.Serializer):
-    """
-    Kiểm tra ảnh do người dùng gửi lên để AI phân tích.
-    """
 
     image = serializers.ImageField()
-
-
 class ClothingAnalysisResultSerializer(serializers.Serializer):
-    """
-    Kiểm tra và chuẩn hóa kết quả do AI Vision trả về.
-
-    Serializer hỗ trợ hai trạng thái:
-    - success: phân tích thành công.
-    - cannot_analyze: không thể phân tích ảnh.
-    """
 
     STATUS_SUCCESS = "success"
     STATUS_CANNOT_ANALYZE = "cannot_analyze"
@@ -162,9 +150,6 @@ class ClothingAnalysisResultSerializer(serializers.Serializer):
     )
 
     def validate_suggested_name(self, value):
-        """
-        Chuẩn hóa tên gợi ý nếu AI phân tích thành công.
-        """
 
         if value is None:
             return value
@@ -179,10 +164,6 @@ class ClothingAnalysisResultSerializer(serializers.Serializer):
         return value
 
     def validate_color(self, value):
-        """
-        Chuẩn hóa màu về chữ thường.
-        Ví dụ: NAVY -> navy.
-        """
 
         if value is None:
             return value
@@ -197,9 +178,6 @@ class ClothingAnalysisResultSerializer(serializers.Serializer):
         return value
 
     def validate(self, attrs):
-        """
-        Kiểm tra tính nhất quán của toàn bộ kết quả AI.
-        """
 
         analysis_status = attrs.get("status")
         reason = attrs.get("reason")
@@ -235,11 +213,6 @@ class ClothingAnalysisResultSerializer(serializers.Serializer):
         reason,
         result_fields,
     ):
-        """
-        Khi AI phân tích thành công:
-        - reason phải là null.
-        - Tất cả các trường kết quả phải có dữ liệu.
-        """
 
         errors = {}
 
@@ -265,12 +238,6 @@ class ClothingAnalysisResultSerializer(serializers.Serializer):
         reason,
         result_fields,
     ):
-        """
-        Khi AI không thể phân tích:
-        - reason bắt buộc phải có.
-        - Các trường kết quả phải là null.
-        """
-
         errors = {}
 
         if reason is None:
@@ -287,3 +254,70 @@ class ClothingAnalysisResultSerializer(serializers.Serializer):
 
         if errors:
             raise serializers.ValidationError(errors)
+
+class OutfitRecommendationRequestSerializer(serializers.Serializer):
+    occasion = serializers.ChoiceField(
+        choices=ClothingItem.Occasion.choices,
+    )
+
+    season = serializers.ChoiceField(
+        choices=ClothingItem.Season.choices,
+    )
+
+
+class OutfitRecommendationResultSerializer(serializers.Serializer):
+    status = serializers.ChoiceField(
+        choices=(
+            "success",
+            "cannot_recommend",
+        ),
+    )
+
+    reason = serializers.CharField(
+        allow_null=True,
+        required=False,
+    )
+
+    item_ids = serializers.ListField(
+        child=serializers.IntegerField(),
+        allow_empty=True,
+    )
+
+    explanation = serializers.CharField(
+        allow_null=True,
+    )
+
+    def validate(self, attrs):
+        status = attrs["status"]
+        reason = attrs.get("reason")
+        item_ids = attrs["item_ids"]
+        explanation = attrs.get("explanation")
+
+        if status == "success":
+            if reason is not None:
+                raise serializers.ValidationError(
+                    "reason phải là null khi gợi ý outfit thành công."
+                )
+
+            if not item_ids:
+                raise serializers.ValidationError(
+                    "item_ids không được rỗng khi gợi ý outfit thành công."
+                )
+
+            if not explanation:
+                raise serializers.ValidationError(
+                    "explanation là bắt buộc khi gợi ý outfit thành công."
+                )
+
+        if status == "cannot_recommend":
+            if not reason:
+                raise serializers.ValidationError(
+                    "reason là bắt buộc khi không thể gợi ý outfit."
+                )
+
+            if item_ids:
+                raise serializers.ValidationError(
+                    "item_ids phải rỗng khi không thể gợi ý outfit."
+                )
+
+        return attrs

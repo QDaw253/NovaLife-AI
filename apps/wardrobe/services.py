@@ -6,8 +6,10 @@ from google.genai import types
 from google.genai.errors import ServerError
 from rest_framework.exceptions import ValidationError
 
-from .prompts import WARDROBE_ANALYZE_PROMPT
-from .serializers import ClothingAnalysisResultSerializer
+from .prompts import WARDROBE_ANALYZE_PROMPT, build_outfit_recommendation_prompt
+from .serializers import ClothingAnalysisResultSerializer, OutfitRecommendationResultSerializer
+from .models import ClothingItem
+
 
 
 class ClothingVisionService:
@@ -61,3 +63,99 @@ class ClothingVisionService:
         )
 
         return serializer.validated_data
+
+class OutfitRecommendationService:
+
+    @staticmethod
+    def get_wardrobe_items(*, user):
+        return ClothingItem.objects.filter(
+            user=user,
+            is_active=True,
+        ).values(
+            "id",
+            "name",
+            "category",
+            "color",
+            "season",
+            "occasion",
+        )
+
+    @staticmethod
+    def recommend(
+        *,
+        user,
+        occasion,
+        season,
+    ):
+        wardrobe_items = OutfitRecommendationService.get_wardrobe_items(
+            user=user,
+        )
+
+        wardrobe_items = list(wardrobe_items)
+
+        if not wardrobe_items:
+            return {
+                "status": "cannot_recommend",
+                "reason": "insufficient_items",
+                "item_ids": [],
+                "explanation": None,
+            }
+
+        prompt = build_outfit_recommendation_prompt(
+            occasion=occasion,
+            season=season,
+            wardrobe_items=wardrobe_items,
+        )
+
+        client = genai.Client(
+            api_key=settings.GEMINI_API_KEY,
+        )
+
+        try:
+            response = client.models.generate_content(
+                model=settings.GEMINI_MODEL,
+                contents=prompt,
+            )
+        except ServerError as exc:
+            raise ValidationError(
+                {
+                    "ai": [
+                        "Dịch vụ AI hiện đang quá tải. Vui lòng thử lại sau."
+                    ]
+                }
+            ) from exc
+
+        result = json.loads(
+            response.text,
+        )
+
+        serializer = OutfitRecommendationResultSerializer(
+            data=result,
+        )
+
+        serializer.is_valid(
+            raise_exception=True,
+        )
+
+        validated_data = serializer.validated_data
+
+        if validated_data["status"] == "success":
+            valid_item_ids = {
+                item["id"]
+                for item in wardrobe_items
+            }
+
+            recommended_item_ids = set(
+                validated_data["item_ids"]
+            )
+
+            if not recommended_item_ids.issubset(valid_item_ids):
+                raise ValidationError(
+                    {
+                        "ai": [
+                            "AI trả về trang phục không tồn tại trong tủ đồ."
+                        ]
+                    }
+                )
+
+        return validated_data

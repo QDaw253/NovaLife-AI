@@ -7,7 +7,7 @@ from google.genai.errors import ServerError
 from rest_framework.exceptions import ValidationError
 
 from .prompts import WARDROBE_ANALYZE_PROMPT, build_outfit_recommendation_prompt
-from .serializers import ClothingAnalysisResultSerializer, OutfitRecommendationResultSerializer
+from .serializers import ClothingAnalysisResultSerializer, OutfitRecommendationResultSerializer, ClothingItemListSerializer
 from .models import ClothingItem
 
 
@@ -157,5 +157,28 @@ class OutfitRecommendationService:
                         ]
                     }
                 )
+
+            recommended_items = ClothingItem.objects.filter(
+                user=user,
+                is_active=True,
+                id__in=validated_data["item_ids"],
+            )
+
+            items_by_id = {
+                item.id: item
+                for item in recommended_items
+            }
+
+            ordered_items = [
+                items_by_id[item_id]
+                for item_id in validated_data["item_ids"]
+            ]
+
+            item_serializer = ClothingItemListSerializer(
+                ordered_items,
+                many=True,
+            )
+
+            validated_data["items"] = item_serializer.data
 
         return validated_data

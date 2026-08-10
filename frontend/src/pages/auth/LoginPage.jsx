@@ -1,9 +1,14 @@
 import { useState } from 'react'
 import { login } from '../../api/auth'
 
+import { useAuth } from '../../contexts/AuthContext'
+import { useNavigate } from 'react-router-dom'
+
 function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const { setUser } = useAuth()
+  const navigate = useNavigate()
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -13,7 +18,25 @@ function LoginPage() {
       password: password,
     })
 
-    console.log(result)
+    localStorage.setItem(
+      'access_token',
+      result.data.access,
+    )
+
+    localStorage.setItem(
+      'refresh_token',
+      result.data.refresh,
+    )
+
+    localStorage.setItem(
+      'user',
+      JSON.stringify(result.data.user),
+    )
+
+    setUser(result.data.user)
+    navigate('/dashboard')
+
+    
   }
 
   return (

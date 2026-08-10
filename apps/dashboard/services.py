@@ -20,7 +20,9 @@ class DashboardService:
             status = Goal.Status.COMPLETED,
         ).count()
 
-        in_progress = total - completed
+        in_progress = goals.filter(
+            status=Goal.Status.IN_PROGRESS,
+        ).count()
 
         completion_rate =(
             round(completed/total*100,2)

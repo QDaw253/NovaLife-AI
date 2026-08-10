@@ -19,7 +19,10 @@ class HabitViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return (
             Habit.objects
-            .filter(user=self.request.user)
+            .filter(
+                user=self.request.user,
+                is_active=True,
+            )
             .prefetch_related("logs")
         )
     def get_serializer_class(self):
@@ -56,4 +59,19 @@ class HabitViewSet(viewsets.ModelViewSet):
         return Response(
             HabitLogSerializer(habit_log).data,
             status=status.HTTP_200_OK,
+        )
+
+    def destroy(self, request, *args, **kwargs):
+        habit = self.get_object()
+
+        habit.is_active = False
+        habit.save(
+            update_fields=[
+                "is_active",
+                "updated_at",
+            ]
+        )
+
+        return Response(
+            status=status.HTTP_204_NO_CONTENT,
         )

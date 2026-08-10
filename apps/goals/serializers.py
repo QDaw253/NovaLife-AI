@@ -16,11 +16,36 @@ class GoalCreateSerializer(serializers.ModelSerializer):
             "deadline",
         )
         extra_kwargs = {
-            "priority": {
-                "required": False,
-                "default": "medium",
+        "title": {
+            "error_messages": {
+                "required": "Tiêu đề là bắt buộc.",
+                "blank": "Tiêu đề mục tiêu không được để trống.",
+                "max_length": "Tiêu đề quá dài.",
             }
-        }
+        },
+
+        "category": {
+            "error_messages": {
+                "required": "Danh mục là bắt buộc.",
+                "invalid_choice": "Danh mục không hợp lệ.",
+            }
+        },
+
+        "priority": {
+            "required": False,
+            "default": "medium",
+            "error_messages": {
+                "invalid_choice": "Mức độ ưu tiên không hợp lệ.",
+            }
+        },
+
+        "deadline": {
+            "error_messages": {
+                "invalid": "Deadline không hợp lệ.",
+                "invalid_date": "Deadline phải có định dạng YYYY-MM-DD.",
+            }
+        },
+    }
 
     def validate_title(self, value):
         if not value.strip(): #strip() tức khoảng trắng 

@@ -11,7 +11,17 @@ api.interceptors.request.use(
   (config) => {
     const accessToken = localStorage.getItem('access_token')
 
-    if (accessToken) {
+    const publicUrls = [
+      'accounts/login/',
+      'accounts/register/',
+      'accounts/refresh/',
+    ]
+
+    const isPublicUrl = publicUrls.some(
+      (url) => config.url?.includes(url)
+    )
+
+    if (accessToken && !isPublicUrl) {
       config.headers.Authorization = `Bearer ${accessToken}`
     }
 

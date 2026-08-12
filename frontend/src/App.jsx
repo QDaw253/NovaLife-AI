@@ -12,6 +12,8 @@ import MainLayout from './layouts/MainLayout'
 import GoalsPage from './pages/goals/GoalsPage'
 import HabitsPage from './pages/habits/HabitPage'
 import HabitDetailPage from './pages/habits/HabitDetailPage'
+import CreateHabitPage from './pages/habits/CreateHabitPage'
+import EditHabitPage from './pages/habits/EditHabitPage'
 import WardrobePage from './pages/wardrobe/WardrobePage'
 import AIOutfitPage from './pages/ai/AIOutfitPage'
 import GoalDetailPage from './pages/goals/GoalDetailPage'
@@ -49,6 +51,8 @@ function App() {
         <Route path="/goals/:id/edit" element={<EditGoalPage />} />
         <Route path="/habits" element={<HabitsPage />} />
         <Route path="/habits/:id" element={<HabitDetailPage />} />
+        <Route path="/habits/:id/edit" element={<EditHabitPage />} />
+        <Route path="/habits/new" element={<CreateHabitPage />} />
         <Route path="/wardrobe" element={<WardrobePage />} />
         <Route path="/ai-outfit" element={<AIOutfitPage />} />
       </Routes>

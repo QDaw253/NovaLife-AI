@@ -20,12 +20,16 @@ function HabitsPage() {
       <h1>Thói quen</h1>
       <p>Theo dõi thói quen hằng ngày.</p>
 
+      <Link to="/habits/new">
+        + Tạo thói quen
+      </Link>
+
       {habits.map((habit) => (
         <div key={habit.id}>
           <h3>
             <Link to={`/habits/${habit.id}`}>
               {habit.title}
-            </Link>
+            </Link> 
         </h3>
           <p>Danh mục: {habit.category}</p>
           <p>Tần suất: {habit.frequency}</p>

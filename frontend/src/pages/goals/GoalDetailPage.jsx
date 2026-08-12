@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { getGoal } from '../../api/goals'
+import { useParams, useNavigate } from 'react-router-dom'
+import { getGoal, deleteGoal } from '../../api/goals'
 
 function GoalDetailPage() {
   const { id } = useParams()
+  const navigate = useNavigate()
   const [goal, setGoal] = useState(null)
 
   useEffect(() => {
@@ -19,6 +20,19 @@ function GoalDetailPage() {
     if (!goal) {
         return <p>Đang tải mục tiêu...</p>
     }
+    const handleDelete = async () => {
+        const confirmed = window.confirm(
+            'Bạn có chắc muốn xóa mục tiêu này không?'
+        )
+
+        if (!confirmed) {
+            return
+        }
+
+        await deleteGoal(id)
+
+        navigate('/goals')
+    }
 
   return (
     <div>
@@ -31,6 +45,8 @@ function GoalDetailPage() {
         <p>Trạng thái: {goal.status}</p>
         <p>Tiến độ: {goal.progress}%</p>
         <p>Deadline: {goal.deadline || 'Không có'}</p>
+
+        <button onClick={handleDelete}>Xóa mục tiêu</button>
 
         <hr />
 

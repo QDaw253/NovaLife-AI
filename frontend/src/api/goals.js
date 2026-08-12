@@ -14,3 +14,11 @@ export const createGoal = async (data) => {
 
   return response.data
 }
+export const updateGoal = async (id, data) => {
+  const response = await api.patch(`/goals/${id}/`, data)
+  return response.data
+}
+export const deleteGoal = async (id) => {
+  const response = await api.delete(`/goals/${id}/`)
+  return response.data
+}

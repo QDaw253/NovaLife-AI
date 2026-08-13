@@ -15,7 +15,11 @@ import HabitDetailPage from './pages/habits/HabitDetailPage'
 import CreateHabitPage from './pages/habits/CreateHabitPage'
 import EditHabitPage from './pages/habits/EditHabitPage'
 import WardrobePage from './pages/wardrobe/WardrobePage'
+import WardrobeDetailPage from './pages/wardrobe/WardrobeDetailPage'
+import CreateWardrobePage from './pages/wardrobe/CreateWardrobePage'
+import EditWardrobePage from './pages/wardrobe/EditWardrobePage'
 import AIOutfitPage from './pages/ai/AIOutfitPage'
+import OutfitRecommendationPage from './pages/wardrobe/OutfitRecommendationPage'
 import GoalDetailPage from './pages/goals/GoalDetailPage'
 import CreateGoalPage from './pages/goals/CreateGoalPage'
 import EditGoalPage from './pages/goals/EditGoalPage'
@@ -54,7 +58,11 @@ function App() {
         <Route path="/habits/:id/edit" element={<EditHabitPage />} />
         <Route path="/habits/new" element={<CreateHabitPage />} />
         <Route path="/wardrobe" element={<WardrobePage />} />
+        <Route path="/wardrobe/:id" element={<WardrobeDetailPage />} />
+        <Route path="/wardrobe/new" element={<CreateWardrobePage />} />
+        <Route path="/wardrobe/:id/edit" element={<EditWardrobePage />} />
         <Route path="/ai-outfit" element={<AIOutfitPage />} />
+        <Route path="/wardrobe/outfit-recommendation" element={<OutfitRecommendationPage />} />
       </Routes>
     </BrowserRouter>
   )

@@ -24,6 +24,21 @@ class ClothingItem(models.Model):
         FORMAL = "formal", "Trang trọng"
         VERSATILE = "versatile", "Đa dụng"
 
+    COLOR_CHOICES = [
+        ("white", "Trắng"),
+        ("black", "Đen"),
+        ("gray", "Xám"),
+        ("blue", "Xanh dương"),
+        ("green", "Xanh lá"),
+        ("red", "Đỏ"),
+        ("yellow", "Vàng"),
+        ("orange", "Cam"),
+        ("pink", "Hồng"),
+        ("purple", "Tím"),
+        ("brown", "Nâu"),
+        ("beige", "Be"),
+    ]
+
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -41,6 +56,7 @@ class ClothingItem(models.Model):
 
     color = models.CharField(
         max_length=100,
+        choices=COLOR_CHOICES,
     )
 
     season = models.CharField(

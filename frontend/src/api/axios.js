@@ -7,10 +7,11 @@ const api = axios.create({
   },
 })
 
-// ==============================
+
+// =====================================
 // REQUEST INTERCEPTOR
-// ==============================
-// Tự động gắn access token vào các API cần đăng nhập
+// =====================================
+
 api.interceptors.request.use(
   (config) => {
     const accessToken = localStorage.getItem('access_token')
@@ -26,21 +27,23 @@ api.interceptors.request.use(
     )
 
     if (accessToken && !isPublicUrl) {
-      config.headers.Authorization = `Bearer ${accessToken}`
+      config.headers.Authorization =
+        `Bearer ${accessToken}`
     }
 
     return config
   },
+
   (error) => {
     return Promise.reject(error)
   }
 )
 
-// ==============================
+
+// =====================================
 // RESPONSE INTERCEPTOR
-// ==============================
-// Nếu access token hết hạn và backend trả 401
-// thì tự dùng refresh token để lấy access token mới
+// =====================================
+
 api.interceptors.response.use(
   (response) => {
     return response
@@ -51,14 +54,17 @@ api.interceptors.response.use(
 
     if (
       error.response?.status === 401 &&
-      !originalRequest?._retry
+      originalRequest &&
+      !originalRequest._retry
     ) {
       originalRequest._retry = true
 
-      const refreshToken = localStorage.getItem('refresh_token')
+      const refreshToken =
+        localStorage.getItem('refresh_token')
 
       if (!refreshToken) {
         localStorage.removeItem('access_token')
+        localStorage.removeItem('refresh_token')
         localStorage.removeItem('user')
 
         window.location.href = '/login'
@@ -67,19 +73,43 @@ api.interceptors.response.use(
       }
 
       try {
-        const response = await axios.post(
+        const refreshResponse = await axios.post(
           'http://127.0.0.1:8000/api/accounts/refresh/',
           {
             refresh: refreshToken,
           }
         )
 
-        const newAccessToken = response.data.access
+        // NovaLife custom renderer:
+        // có thể là response.data.data
+        // fallback response.data để an toàn
+        const tokenData =
+          refreshResponse.data.data ||
+          refreshResponse.data
 
+        const newAccessToken = tokenData.access
+        const newRefreshToken = tokenData.refresh
+
+        if (!newAccessToken) {
+          throw new Error(
+            'Không nhận được access token mới.'
+          )
+        }
+
+        // Lưu access mới
         localStorage.setItem(
           'access_token',
           newAccessToken
         )
+
+        // ROTATE_REFRESH_TOKENS=True
+        // nên nếu backend trả refresh mới thì phải lưu lại
+        if (newRefreshToken) {
+          localStorage.setItem(
+            'refresh_token',
+            newRefreshToken
+          )
+        }
 
         originalRequest.headers =
           originalRequest.headers || {}
@@ -87,7 +117,9 @@ api.interceptors.response.use(
         originalRequest.headers.Authorization =
           `Bearer ${newAccessToken}`
 
+        // Gửi lại request vừa bị 401
         return api(originalRequest)
+
       } catch (refreshError) {
         localStorage.removeItem('access_token')
         localStorage.removeItem('refresh_token')

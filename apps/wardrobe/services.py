@@ -86,6 +86,7 @@ class OutfitRecommendationService:
         user,
         occasion,
         season,
+        request,
     ):
         wardrobe_items = OutfitRecommendationService.get_wardrobe_items(
             user=user,
@@ -177,6 +178,7 @@ class OutfitRecommendationService:
             item_serializer = ClothingItemListSerializer(
                 ordered_items,
                 many=True,
+                context ={"request":request},
             )
 
             validated_data["items"] = item_serializer.data

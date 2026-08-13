@@ -1,6 +1,7 @@
 from datetime import date
 from rest_framework import serializers
 from .models import Habit, HabitLog
+from .services import HabitService
 
 class HabitLogSerializer(serializers.ModelSerializer):
     class Meta:
@@ -99,6 +100,9 @@ class HabitListSerializer(serializers.ModelSerializer):
 
 class HabitDetailSerializer(serializers.ModelSerializer):
     recent_logs = serializers.SerializerMethodField()
+    progress = serializers.SerializerMethodField()
+    statistics = serializers.SerializerMethodField()
+
     class Meta:
         model = Habit
         fields = (
@@ -115,12 +119,24 @@ class HabitDetailSerializer(serializers.ModelSerializer):
             "is_active",
             "created_at",
             "updated_at",
+            "progress",
+            "statistics",
             "recent_logs",
         )
 
+    def get_progress(self, obj):
+        return HabitService.get_current_progress(obj)
+
+    def get_statistics(self, obj):
+        return HabitService.get_statistics(obj)
+
     def get_recent_logs(self, obj):
         logs = obj.logs.all()[:7]
-        return HabitLogSerializer(logs, many = True,).data
+
+        return HabitLogSerializer(
+            logs,
+            many=True,
+        ).data
 
 class HabitUpdateSerializer(serializers.ModelSerializer):
     class Meta:

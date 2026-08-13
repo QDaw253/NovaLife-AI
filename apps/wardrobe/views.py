@@ -81,6 +81,7 @@ class OutfitRecommendationAPIView(APIView):
             user=request.user,
             occasion=serializer.validated_data["occasion"],
             season=serializer.validated_data["season"],
+            request = request,
         )
 
         return Response(

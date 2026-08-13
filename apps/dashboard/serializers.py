@@ -14,6 +14,12 @@ class HabitSummarySerializer(serializers.Serializer):
     completion_rate = serializers.FloatField()
 
 
+class WardrobeSummarySerializer(serializers.Serializer):
+    total = serializers.IntegerField()
+    favorites = serializers.IntegerField()
+
+
 class DashboardSerializer(serializers.Serializer):
     goals = GoalSummarySerializer()
     habits = HabitSummarySerializer()
+    wardrobe = WardrobeSummarySerializer()

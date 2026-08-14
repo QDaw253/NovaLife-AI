@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { getDashboard } from '../../api/dashboard'
 
 function DashboardPage() {
-  const { user, logout } = useAuth()
+  const { user } = useAuth()
   const navigate = useNavigate()
 
   const [dashboard, setDashboard] = useState(null)
@@ -34,10 +34,6 @@ function DashboardPage() {
     fetchDashboard()
   }, [])
 
-  const handleLogout = async () => {
-    await logout()
-    navigate('/login')
-  }
 
   if (loading) {
     return <p>Đang tải Dashboard...</p>
@@ -165,13 +161,6 @@ function DashboardPage() {
       </section>
 
       <hr />
-
-      <button
-        type="button"
-        onClick={handleLogout}
-      >
-        Đăng xuất
-      </button>
     </div>
   )
 }

@@ -1,14 +1,17 @@
 import { useState } from 'react'
-import { login } from '../../api/auth'
+import { Link, useNavigate } from 'react-router-dom'
 
+import { login } from '../../api/auth'
 import { useAuth } from '../../contexts/AuthContext'
-import { useNavigate } from 'react-router-dom'
+
 
 function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+
   const { setUser } = useAuth()
   const navigate = useNavigate()
+
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -34,10 +37,10 @@ function LoginPage() {
     )
 
     setUser(result.data.user)
-    navigate('/dashboard')
 
-    
+    navigate('/dashboard')
   }
+
 
   return (
     <div>
@@ -45,22 +48,30 @@ function LoginPage() {
 
       <form onSubmit={handleSubmit}>
         <div>
-          <label>Email</label>
+          <label htmlFor="email">
+            Email
+          </label>
 
           <input
+            id="email"
             type="email"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
+            required
           />
         </div>
 
         <div>
-          <label>Mật khẩu</label>
+          <label htmlFor="password">
+            Mật khẩu
+          </label>
 
           <input
+            id="password"
             type="password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
+            required
           />
         </div>
 
@@ -68,8 +79,16 @@ function LoginPage() {
           Đăng nhập
         </button>
       </form>
+
+      <p>
+        Chưa có tài khoản?{' '}
+        <Link to="/register">
+          Đăng ký
+        </Link>
+      </p>
     </div>
   )
 }
+
 
 export default LoginPage

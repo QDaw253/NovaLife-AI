@@ -7,6 +7,7 @@ import {
 
 import ProtectedRoute from './routes/ProtectedRoute'
 import LoginPage from './pages/auth/LoginPage'
+import RegisterPage from './pages/auth/RegisterPage'
 import DashboardPage from './pages/dashboard/DashboardPage'
 import MainLayout from './layouts/MainLayout'
 
@@ -33,6 +34,7 @@ function App() {
 
         {/* Public */}
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route path="/" element={<Navigate to="/login" replace />} />
 
         {/* Protected */}

@@ -7,7 +7,7 @@ import {
 import {
   deleteGoal,
   getGoal,
-  updateTaskStatus
+  updateTaskStatus,
 } from '../../api/goals'
 
 
@@ -20,7 +20,7 @@ function GoalDetailPage() {
   const [updatingTaskId, setUpdatingTaskId] =
     useState(null)
 
-    const [message, setMessage] = useState('')
+  const [message, setMessage] = useState('')
 
 
   // =========================================
@@ -31,10 +31,13 @@ function GoalDetailPage() {
 
     setGoal(result.data)
 
-    return result.data }
+    return result.data
+  }
 
 
-    useEffect(() => { fetchGoal() }, [id])
+  useEffect(() => {
+    fetchGoal()
+  }, [id])
 
 
   // =========================================
@@ -42,7 +45,7 @@ function GoalDetailPage() {
   // =========================================
   const handleDelete = async () => {
     const confirmed = window.confirm(
-      'Bạn có chắc muốn xóa mục tiêu này không?'
+      'Bạn có chắc muốn xóa mục tiêu này không?',
     )
 
     if (!confirmed) {
@@ -94,289 +97,585 @@ function GoalDetailPage() {
     }
   }
 
+
+  const getCategoryLabel = (category) => {
+    switch (category) {
+      case 'study':
+        return 'Học tập'
+
+      case 'career':
+        return 'Sự nghiệp'
+
+      case 'health':
+        return 'Sức khỏe'
+
+      case 'personal':
+        return 'Cá nhân'
+
+      default:
+        return category
+    }
+  }
+
+
+  // =========================================
+  // TASK STATUS
+  // =========================================
   const handleTaskToggle = async (task) => {
     try {
-        setUpdatingTaskId(task.id)
-        setMessage('')
+      setUpdatingTaskId(task.id)
+      setMessage('')
 
-        const newStatus =
+      const newStatus =
         task.status === 'completed'
-            ? 'pending'
-            : 'completed'
+          ? 'pending'
+          : 'completed'
 
-        await updateTaskStatus(
+      await updateTaskStatus(
         task.id,
-        newStatus
-        )
+        newStatus,
+      )
 
-        const updatedGoal = await fetchGoal()
+      const updatedGoal = await fetchGoal()
 
-        if (newStatus === 'completed') {
+      if (newStatus === 'completed') {
         setMessage(
-            `✅ Đã hoàn thành "${task.title}". ` +
-            `Tiến độ mục tiêu hiện tại: ${updatedGoal.progress}%.`
+          `Đã hoàn thành "${task.title}". ` +
+          `Tiến độ mục tiêu hiện tại: ${updatedGoal.progress}%.`,
         )
-        } else {
+      } else {
         setMessage(
-            `↩️ Đã chuyển "${task.title}" về chưa hoàn thành. ` +
-            `Tiến độ mục tiêu hiện tại: ${updatedGoal.progress}%.`
+          `Đã chuyển "${task.title}" về chưa hoàn thành. ` +
+          `Tiến độ mục tiêu hiện tại: ${updatedGoal.progress}%.`,
         )
-        }
+      }
     } catch (error) {
-        console.error(
+      console.error(
         'Update task error:',
-        error
-        )
+        error,
+      )
 
-        setMessage(
-        'Không thể cập nhật trạng thái nhiệm vụ.'
-        )
+      setMessage(
+        'Không thể cập nhật trạng thái nhiệm vụ.',
+      )
     } finally {
-        setUpdatingTaskId(null)
+      setUpdatingTaskId(null)
     }
-    }
+  }
 
 
   // =========================================
   // LOADING
   // =========================================
   if (!goal) {
-    return <p>Đang tải mục tiêu...</p>
+    return (
+      <div className="goal-detail-state">
+        <div className="goals-state-spinner" />
+
+        <p>Đang tải mục tiêu...</p>
+      </div>
+    )
   }
 
 
+  const progress = Math.min(
+    Math.max(goal.progress || 0, 0),
+    100,
+  )
+
+
   return (
-    <div>
+    <div className="goal-detail-page">
+
       {/* =====================================
-          GOAL INFORMATION
+          BACK
       ====================================== */}
 
-      <section>
-        <h1>🎯 {goal.title}</h1>
+      <button
+        className="goal-detail-back"
+        type="button"
+        onClick={() => navigate('/goals')}
+      >
+        ← Quay lại danh sách mục tiêu
+      </button>
 
-        <p>
-          {goal.description || 'Không có mô tả'}
-        </p>
 
-        <p>
-          Danh mục: {goal.category}
-        </p>
+      {/* =====================================
+          GOAL OVERVIEW
+      ====================================== */}
 
-        <p>
-          Ưu tiên:{' '}
-          {getPriorityLabel(goal.priority)}
-        </p>
+      <section className="goal-detail-hero">
 
-        <p>
-          Trạng thái:{' '}
-          {getStatusLabel(goal.status)}
-        </p>
+        <div className="goal-detail-hero-main">
 
-        <p>
-          Tiến độ:{' '}
-          <strong>{goal.progress}%</strong>
-        </p>
+          <div className="goal-detail-badges">
+            <span className="goal-detail-category">
+              {getCategoryLabel(goal.category)}
+            </span>
 
-        <progress
-          value={goal.progress || 0}
-          max="100"
-        />
+            <span
+              className={
+                `goal-detail-status ` +
+                `goal-detail-status--${goal.status}`
+              }
+            >
+              <span />
 
-        <p>
-          Deadline:{' '}
-          {goal.deadline || 'Không có'}
-        </p>
+              {getStatusLabel(goal.status)}
+            </span>
+          </div>
 
-        <button
-          type="button"
-          onClick={handleDelete}
-        >
-          Xóa mục tiêu
-        </button>
+
+          <h1>{goal.title}</h1>
+
+          <p className="goal-detail-description">
+            {goal.description || 'Không có mô tả'}
+          </p>
+
+
+          <div className="goal-detail-meta">
+
+            <div className="goal-detail-meta-item">
+              <span>Ưu tiên</span>
+
+              <strong
+                className={
+                  `goal-detail-priority ` +
+                  `goal-detail-priority--${goal.priority}`
+                }
+              >
+                {getPriorityLabel(goal.priority)}
+              </strong>
+            </div>
+
+
+            <div className="goal-detail-meta-item">
+              <span>Deadline</span>
+
+              <strong>
+                {goal.deadline || 'Không có'}
+              </strong>
+            </div>
+
+          </div>
+
+
+          <div className="goal-detail-actions">
+
+            <button
+              className="goal-detail-edit"
+              type="button"
+              onClick={() =>
+                navigate(`/goals/${id}/edit`)
+              }
+            >
+              <span>✎</span>
+              Chỉnh sửa
+            </button>
+
+            <button
+              className="goal-detail-delete"
+              type="button"
+              onClick={handleDelete}
+            >
+              Xóa mục tiêu
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <div className="goal-detail-progress-card">
+
+          <span className="goal-detail-progress-label">
+            Tiến độ tổng thể
+          </span>
+
+          <div className="goal-detail-progress-value">
+            {progress}
+            <span>%</span>
+          </div>
+
+          <div className="goal-detail-progress-track">
+            <div
+              className="goal-detail-progress-bar"
+              style={{
+                width: `${progress}%`,
+              }}
+            />
+          </div>
+
+          <p>
+            {progress === 100
+              ? 'Mục tiêu đã hoàn thành.'
+              : 'Tiếp tục hoàn thành các nhiệm vụ trong lộ trình.'}
+          </p>
+
+        </div>
+
       </section>
-
-
-      <hr />
 
 
       {/* =====================================
           AI PLAN
       ====================================== */}
 
-      <section>
-        <h2>🤖 Kế hoạch AI</h2>
+      <section className="goal-ai-plan">
 
-        <p>
-          Độ khó:{' '}
-          {goal.ai_plan?.difficulty || 'Không có'}
-        </p>
+        <div className="goal-ai-plan-heading">
+          <div className="goal-ai-plan-icon">
+            ✦
+          </div>
 
-        <p>
-          Thời lượng dự kiến:{' '}
-          {goal.ai_plan?.estimated_duration || 'Không có'}
-        </p>
+          <div>
+            <span>NOVALIFE AI</span>
 
-        <p>
-          Số giờ / tuần:{' '}
-          {goal.ai_plan?.recommended_hours_per_week || 'Không có'}
-        </p>
+            <h2>Kế hoạch được đề xuất</h2>
+
+            <p>
+              Tổng quan lộ trình AI đã xây dựng
+              cho mục tiêu này.
+            </p>
+          </div>
+        </div>
+
+
+        <div className="goal-ai-plan-stats">
+
+          <div className="goal-ai-stat">
+            <span>Độ khó</span>
+
+            <strong>
+              {goal.ai_plan?.difficulty ||
+                'Không có'}
+            </strong>
+          </div>
+
+
+          <div className="goal-ai-stat">
+            <span>Thời lượng dự kiến</span>
+
+            <strong>
+              {goal.ai_plan?.estimated_duration ||
+                'Không có'}
+            </strong>
+          </div>
+
+
+          <div className="goal-ai-stat">
+            <span>Khuyến nghị / tuần</span>
+
+            <strong>
+              {goal.ai_plan
+                ?.recommended_hours_per_week ||
+                'Không có'}
+            </strong>
+          </div>
+
+        </div>
+
       </section>
-
-
-      <hr />
-
-      {message && (<> 
-        <p> <strong>{message}</strong> </p> 
-        <hr /> 
-        </>)}
 
 
       {/* =====================================
-          MILESTONES
+          FEEDBACK
       ====================================== */}
 
-      <section>
-        <h2>🗺️ Lộ trình mục tiêu</h2>
+      {message && (
+        <div className="goal-task-feedback">
+          <span className="goal-task-feedback-icon">
+            ✓
+          </span>
+
+          <p>{message}</p>
+        </div>
+      )}
+
+
+      {/* =====================================
+          ROADMAP
+      ====================================== */}
+
+      <section className="goal-roadmap">
+
+        <div className="goal-roadmap-heading">
+          <div>
+            <p className="goal-roadmap-eyebrow">
+              Lộ trình
+            </p>
+
+            <h2>Các cột mốc của mục tiêu</h2>
+
+            <p>
+              Hoàn thành từng nhiệm vụ để tiến gần
+              hơn đến mục tiêu của bạn.
+            </p>
+          </div>
+
+          <span className="goal-roadmap-count">
+            {goal.milestones?.length || 0}
+            {' '}cột mốc
+          </span>
+        </div>
+
 
         {goal.milestones?.length > 0 ? (
-          goal.milestones.map(
-            (milestone, milestoneIndex) => (
-              <div key={milestone.id}>
+          <div className="goal-milestone-list">
 
-                {/* ===========================
-                    MILESTONE
-                ============================ */}
+            {goal.milestones.map(
+              (milestone, milestoneIndex) => {
+                const completedTasks =
+                  milestone.tasks?.filter(
+                    (task) =>
+                      task.status === 'completed',
+                  ).length || 0
 
-                <h3>
-                  MILESTONE {milestoneIndex + 1}
-                </h3>
+                const totalTasks =
+                  milestone.tasks?.length || 0
 
-                <h2>
-                  {milestone.title}
-                </h2>
+                return (
+                  <article
+                    className="goal-milestone"
+                    key={milestone.id}
+                  >
 
-                <p>
-                  {milestone.description ||
-                    'Không có mô tả'}
-                </p>
+                    {/* ===========================
+                        MILESTONE HEADER
+                    ============================ */}
 
-                <p>
-                  Trạng thái:{' '}
-                  <strong>
-                    {getStatusLabel(
-                      milestone.status
-                    )}
-                  </strong>
-                </p>
+                    <div className="goal-milestone-header">
 
-                <p>
-                  Deadline:{' '}
-                  {milestone.deadline ||
-                    'Không có'}
-                </p>
+                      <div className="goal-milestone-number">
+                        {String(
+                          milestoneIndex + 1,
+                        ).padStart(2, '0')}
+                      </div>
 
 
-                {/* ===========================
-                    TASKS
-                ============================ */}
+                      <div className="goal-milestone-info">
 
-                <h4>
-                  📋 Các nhiệm vụ
-                </h4>
+                        <div className="goal-milestone-title-row">
+                          <h3>
+                            {milestone.title}
+                          </h3>
 
-                <p>
-                  Tổng số nhiệm vụ:{' '}
-                  {milestone.tasks?.length || 0}
-                </p>
+                          <span
+                            className={
+                              `goal-detail-status ` +
+                              `goal-detail-status--${milestone.status}`
+                            }
+                          >
+                            <span />
 
-                {milestone.tasks?.length > 0 ? (
-                  milestone.tasks.map(
-                    (task, taskIndex) => (
-                      <div key={task.id}>
-
-                        <div>
-                            <label>
-                                <input
-                                type="checkbox"
-                                checked={
-                                    task.status === 'completed'
-                                }
-                                disabled={
-                                    updatingTaskId === task.id
-                                }
-                                onChange={() =>
-                                    handleTaskToggle(task)
-                                }
-                                />
-
-                                {' '}
-
-                                <strong>
-                                {taskIndex + 1}. {task.title}
-                                </strong>
-                            </label>
-
-                            {updatingTaskId === task.id && (
-                                <span>
-                                {' '}Đang cập nhật...
-                                </span>
+                            {getStatusLabel(
+                              milestone.status,
                             )}
-                            </div>
+                          </span>
+                        </div>
+
 
                         <p>
-                          {task.description ||
+                          {milestone.description ||
                             'Không có mô tả'}
                         </p>
 
-                        <p>
-                          Ưu tiên:{' '}
-                          {getPriorityLabel(
-                            task.priority
-                          )}
-                        </p>
 
-                        <p>
-                          Trạng thái:{' '}
-                          {getStatusLabel(
-                            task.status
-                          )}
-                        </p>
+                        <div className="goal-milestone-meta">
+                          <span>
+                            Deadline:{' '}
+                            <strong>
+                              {milestone.deadline ||
+                                'Không có'}
+                            </strong>
+                          </span>
 
-                        <p>
-                          Deadline:{' '}
-                          {task.deadline ||
-                            'Không có'}
-                        </p>
+                          <span>
+                            <strong>
+                              {completedTasks}/{totalTasks}
+                            </strong>
+                            {' '}nhiệm vụ hoàn thành
+                          </span>
+                        </div>
 
-                        <p>
-                          Thời gian dự kiến:{' '}
-                          {task.estimated_minutes}{' '}
-                          phút
-                        </p>
-
-                        <br />
                       </div>
-                    )
-                  )
-                ) : (
-                  <p>
-                    Milestone này chưa có
-                    nhiệm vụ.
-                  </p>
-                )}
 
-                <hr />
-              </div>
-            )
-          )
+                    </div>
+
+
+                    {/* ===========================
+                        TASKS
+                    ============================ */}
+
+                    <div className="goal-task-section">
+
+                      <div className="goal-task-section-heading">
+                        <h4>Nhiệm vụ</h4>
+
+                        <span>
+                          {totalTasks} nhiệm vụ
+                        </span>
+                      </div>
+
+
+                      {totalTasks > 0 ? (
+                        <div className="goal-task-list">
+
+                          {milestone.tasks.map(
+                            (task, taskIndex) => {
+                              const isCompleted =
+                                task.status ===
+                                'completed'
+
+                              const isUpdating =
+                                updatingTaskId ===
+                                task.id
+
+                              return (
+                                <div
+                                  className={
+                                    `goal-task-item ${
+                                      isCompleted
+                                        ? 'goal-task-item--completed'
+                                        : ''
+                                    }`
+                                  }
+                                  key={task.id}
+                                >
+
+                                  <label className="goal-task-check">
+
+                                    <input
+                                      type="checkbox"
+                                      checked={
+                                        isCompleted
+                                      }
+                                      disabled={
+                                        isUpdating
+                                      }
+                                      onChange={() =>
+                                        handleTaskToggle(
+                                          task,
+                                        )
+                                      }
+                                    />
+
+                                    <span className="goal-task-custom-check">
+                                      ✓
+                                    </span>
+
+                                  </label>
+
+
+                                  <div className="goal-task-content">
+
+                                    <div className="goal-task-title-row">
+
+                                      <div>
+                                        <span className="goal-task-index">
+                                          {String(
+                                            taskIndex + 1,
+                                          ).padStart(
+                                            2,
+                                            '0',
+                                          )}
+                                        </span>
+
+                                        <strong>
+                                          {task.title}
+                                        </strong>
+                                      </div>
+
+
+                                      {isUpdating && (
+                                        <span className="goal-task-updating">
+                                          Đang cập nhật...
+                                        </span>
+                                      )}
+
+                                    </div>
+
+
+                                    <p>
+                                      {task.description ||
+                                        'Không có mô tả'}
+                                    </p>
+
+
+                                    <div className="goal-task-meta">
+
+                                      <span>
+                                        Ưu tiên:{' '}
+
+                                        <strong>
+                                          {getPriorityLabel(
+                                            task.priority,
+                                          )}
+                                        </strong>
+                                      </span>
+
+
+                                      <span>
+                                        Deadline:{' '}
+
+                                        <strong>
+                                          {task.deadline ||
+                                            'Không có'}
+                                        </strong>
+                                      </span>
+
+
+                                      <span>
+                                        Thời gian:{' '}
+
+                                        <strong>
+                                          {task.estimated_minutes ||
+                                            0}{' '}
+                                          phút
+                                        </strong>
+                                      </span>
+
+                                    </div>
+
+                                  </div>
+
+                                </div>
+                              )
+                            },
+                          )}
+
+                        </div>
+                      ) : (
+                        <div className="goal-task-empty">
+                          Milestone này chưa có nhiệm vụ.
+                        </div>
+                      )}
+
+                    </div>
+
+                  </article>
+                )
+              },
+            )}
+
+          </div>
         ) : (
-          <p>
-            Mục tiêu này chưa có milestone.
-          </p>
+          <div className="goal-roadmap-empty">
+            <div>◎</div>
+
+            <h3>Chưa có lộ trình</h3>
+
+            <p>
+              Mục tiêu này hiện chưa có milestone.
+            </p>
+          </div>
         )}
+
       </section>
+
     </div>
   )
 }
+
 
 export default GoalDetailPage

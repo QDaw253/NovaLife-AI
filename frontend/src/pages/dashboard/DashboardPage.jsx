@@ -1,7 +1,9 @@
-import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../../contexts/AuthContext'
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+
+import { useAuth } from '../../contexts/AuthContext'
 import { getDashboard } from '../../api/dashboard'
+
 
 function DashboardPage() {
   const { user } = useAuth()
@@ -10,6 +12,7 @@ function DashboardPage() {
   const [dashboard, setDashboard] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+
 
   useEffect(() => {
     const fetchDashboard = async () => {
@@ -20,8 +23,6 @@ function DashboardPage() {
         const result = await getDashboard()
 
         setDashboard(result.data)
-
-        console.log('Dashboard data:', result.data)
       } catch (error) {
         console.error('Dashboard error:', error)
 
@@ -36,133 +37,277 @@ function DashboardPage() {
 
 
   if (loading) {
-    return <p>Đang tải Dashboard...</p>
+    return (
+      <div className="dashboard-state">
+        <div className="dashboard-state-spinner" />
+
+        <p>Đang tải Dashboard...</p>
+      </div>
+    )
   }
+
 
   if (error) {
-    return <p>{error}</p>
+    return (
+      <div className="dashboard-state dashboard-state--error">
+        <h2>Không thể tải Dashboard</h2>
+
+        <p>{error}</p>
+      </div>
+    )
   }
+
 
   if (!dashboard) {
-    return <p>Không có dữ liệu Dashboard.</p>
+    return (
+      <div className="dashboard-state">
+        <p>Không có dữ liệu Dashboard.</p>
+      </div>
+    )
   }
 
+
   return (
-    <div>
-      <h1>NovaLife Dashboard</h1>
+    <div className="dashboard-page">
 
-      <p>Xin chào, {user?.username}</p>
-      <p>Email: {user?.email}</p>
+      <header className="dashboard-header">
+        <div>
+          <p className="dashboard-eyebrow">
+            Tổng quan
+          </p>
 
-      <hr />
+          <h1>
+            Xin chào, {user?.username || 'bạn'} 👋
+          </h1>
 
-      {/* GOALS */}
+          <p className="dashboard-header-description">
+            Theo dõi mục tiêu, thói quen và phong cách
+            của bạn tại một nơi.
+          </p>
+        </div>
 
-      <section>
-        <h2>🎯 Mục tiêu</h2>
+        <div className="dashboard-user">
+          <div className="dashboard-user-avatar">
+            {user?.username
+              ? user.username.charAt(0).toUpperCase()
+              : 'N'}
+          </div>
 
-        <p>
-          Tổng mục tiêu: {dashboard.goals.total}
-        </p>
+          <div>
+            <strong>
+              {user?.username || 'NovaLife User'}
+            </strong>
 
-        <p>
-          Đang thực hiện: {dashboard.goals.in_progress}
-        </p>
+            <span>
+              {user?.email}
+            </span>
+          </div>
+        </div>
+      </header>
 
-        <p>
-          Đã hoàn thành: {dashboard.goals.completed}
-        </p>
 
-        <p>
-          Tỷ lệ hoàn thành:{' '}
-          {dashboard.goals.completion_rate}%
-        </p>
+      <section className="dashboard-overview">
 
-        <button
-          type="button"
-          onClick={() => navigate('/goals')}
-        >
-          Xem mục tiêu
-        </button>
+        <article className="dashboard-card">
+          <div className="dashboard-card-header">
+            <div className="dashboard-card-icon">
+              ◎
+            </div>
+
+            <span className="dashboard-card-label">
+              Mục tiêu
+            </span>
+          </div>
+
+          <div className="dashboard-card-value">
+            {dashboard.goals.total}
+          </div>
+
+          <p className="dashboard-card-description">
+            Tổng mục tiêu của bạn
+          </p>
+
+          <div className="dashboard-card-meta">
+            <span>
+              {dashboard.goals.in_progress} đang thực hiện
+            </span>
+
+            <span>
+              {dashboard.goals.completed} hoàn thành
+            </span>
+          </div>
+
+          <div className="dashboard-progress">
+            <div className="dashboard-progress-info">
+              <span>Tiến độ</span>
+
+              <strong>
+                {dashboard.goals.completion_rate}%
+              </strong>
+            </div>
+
+            <div className="dashboard-progress-track">
+              <div
+                className="dashboard-progress-bar"
+                style={{
+                  width: `${Math.min(
+                    dashboard.goals.completion_rate,
+                    100,
+                  )}%`,
+                }}
+              />
+            </div>
+          </div>
+
+          <button
+            className="dashboard-card-action"
+            type="button"
+            onClick={() => navigate('/goals')}
+          >
+            Xem mục tiêu
+            <span>→</span>
+          </button>
+        </article>
+
+
+        <article className="dashboard-card">
+          <div className="dashboard-card-header">
+            <div className="dashboard-card-icon">
+              ✓
+            </div>
+
+            <span className="dashboard-card-label">
+              Thói quen
+            </span>
+          </div>
+
+          <div className="dashboard-card-value">
+            {dashboard.habits.active}
+          </div>
+
+          <p className="dashboard-card-description">
+            Thói quen đang hoạt động
+          </p>
+
+          <div className="dashboard-card-meta">
+            <span>
+              {dashboard.habits.completed_today}
+              {' '}hoàn thành hôm nay
+            </span>
+          </div>
+
+          <div className="dashboard-progress">
+            <div className="dashboard-progress-info">
+              <span>Hôm nay</span>
+
+              <strong>
+                {dashboard.habits.completion_rate}%
+              </strong>
+            </div>
+
+            <div className="dashboard-progress-track">
+              <div
+                className="dashboard-progress-bar"
+                style={{
+                  width: `${Math.min(
+                    dashboard.habits.completion_rate,
+                    100,
+                  )}%`,
+                }}
+              />
+            </div>
+          </div>
+
+          <button
+            className="dashboard-card-action"
+            type="button"
+            onClick={() => navigate('/habits')}
+          >
+            Xem thói quen
+            <span>→</span>
+          </button>
+        </article>
+
+
+        <article className="dashboard-card">
+          <div className="dashboard-card-header">
+            <div className="dashboard-card-icon">
+              ◇
+            </div>
+
+            <span className="dashboard-card-label">
+              Tủ đồ
+            </span>
+          </div>
+
+          <div className="dashboard-card-value">
+            {dashboard.wardrobe.total}
+          </div>
+
+          <p className="dashboard-card-description">
+            Trang phục trong tủ đồ
+          </p>
+
+          <div className="dashboard-card-meta">
+            <span>
+              {dashboard.wardrobe.favorites}
+              {' '}trang phục yêu thích
+            </span>
+          </div>
+
+          <div className="dashboard-card-spacer" />
+
+          <button
+            className="dashboard-card-action"
+            type="button"
+            onClick={() => navigate('/wardrobe')}
+          >
+            Xem tủ đồ
+            <span>→</span>
+          </button>
+        </article>
+
       </section>
 
-      <hr />
 
-      {/* HABITS */}
+      <section className="dashboard-ai-card">
 
-      <section>
-        <h2>🔁 Thói quen</h2>
+        <div className="dashboard-ai-icon">
+          ✦
+        </div>
 
-        <p>
-          Thói quen đang hoạt động:{' '}
-          {dashboard.habits.active}
-        </p>
+        <div className="dashboard-ai-content">
+          <span className="dashboard-ai-badge">
+            NOVALIFE AI
+          </span>
 
-        <p>
-          Hoàn thành hôm nay:{' '}
-          {dashboard.habits.completed_today}
-        </p>
+          <h2>
+            Hôm nay mặc gì?
+          </h2>
 
-        <p>
-          Tỷ lệ hoàn thành hôm nay:{' '}
-          {dashboard.habits.completion_rate}%
-        </p>
-
-        <button
-          type="button"
-          onClick={() => navigate('/habits')}
-        >
-          Xem thói quen
-        </button>
-      </section>
-
-      <hr />
-
-      {/* WARDROBE */}
-
-      <section>
-        <h2>👕 Tủ đồ</h2>
-
-        <p>
-          Tổng trang phục: {dashboard.wardrobe.total}
-        </p>
-
-        <p>
-          Trang phục yêu thích:{' '}
-          {dashboard.wardrobe.favorites}
-        </p>
+          <p>
+            Sử dụng AI để tạo gợi ý phối đồ từ chính
+            những trang phục đang có trong tủ đồ của bạn.
+          </p>
+        </div>
 
         <button
-          type="button"
-          onClick={() => navigate('/wardrobe')}
-        >
-          Xem tủ đồ
-        </button>
-      </section>
-
-      <hr />
-
-      {/* AI OUTFIT */}
-
-      <section>
-        <h2>✨ AI Outfit</h2>
-
-        <p>
-          Nhận gợi ý phối đồ từ những trang phục
-          hiện có trong tủ đồ của bạn.
-        </p>
-
-        <button
+          className="dashboard-ai-button"
           type="button"
           onClick={() => navigate('/ai-outfit')}
         >
-          Gợi ý phối đồ bằng AI
+          Gợi ý phối đồ
+
+          <span>
+            ✦
+          </span>
         </button>
+
       </section>
 
-      <hr />
     </div>
   )
 }
+
 
 export default DashboardPage

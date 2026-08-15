@@ -24,14 +24,17 @@ function HabitDetailPage() {
   })
 
   const [message, setMessage] = useState('')
+  const [messageType, setMessageType] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
 
   // =========================================
   // LOAD HABIT DETAIL
   // =========================================
+
   const fetchHabit = async () => {
     const result = await getHabit(id)
+
     setHabit(result.data)
 
     return result.data
@@ -46,6 +49,7 @@ function HabitDetailPage() {
   // =========================================
   // HANDLE LOG FORM
   // =========================================
+
   const handleLogChange = (e) => {
     setLogData({
       ...logData,
@@ -57,12 +61,14 @@ function HabitDetailPage() {
   // =========================================
   // UPDATE TODAY PROGRESS
   // =========================================
+
   const handleCompleteToday = async (e) => {
     e.preventDefault()
 
     try {
       setSubmitting(true)
       setMessage('')
+      setMessageType('')
 
       await completeHabitToday(id, {
         value: logData.value,
@@ -70,17 +76,20 @@ function HabitDetailPage() {
       })
 
       const updatedHabit = await fetchHabit()
-
       const progress = updatedHabit.progress
 
       if (progress?.completed) {
         setMessage(
-          `🎉 Đã hoàn thành mục tiêu! Tiến độ hiện tại: ${progress.current}/${progress.target} ${updatedHabit.unit}.`
+          `Đã hoàn thành mục tiêu! Tiến độ hiện tại: ${progress.current}/${progress.target} ${updatedHabit.unit}.`
         )
+
+        setMessageType('success')
       } else {
         setMessage(
-          `✅ Đã ghi nhận tiến độ: ${progress.current}/${progress.target} ${updatedHabit.unit} (${progress.percentage}%).`
+          `Đã ghi nhận tiến độ: ${progress.current}/${progress.target} ${updatedHabit.unit} (${progress.percentage}%).`
         )
+
+        setMessageType('progress')
       }
 
       setLogData({
@@ -93,6 +102,8 @@ function HabitDetailPage() {
       setMessage(
         'Không thể cập nhật tiến độ thói quen.'
       )
+
+      setMessageType('error')
     } finally {
       setSubmitting(false)
     }
@@ -102,6 +113,7 @@ function HabitDetailPage() {
   // =========================================
   // SOFT DELETE HABIT
   // =========================================
+
   const handleDelete = async () => {
     const confirmed = window.confirm(
       'Bạn có chắc muốn xóa thói quen này không?'
@@ -120,6 +132,30 @@ function HabitDetailPage() {
   // =========================================
   // HELPERS
   // =========================================
+
+  const getCategoryLabel = (category) => {
+    switch (category) {
+      case 'health':
+        return 'Sức khỏe'
+
+      case 'fitness':
+        return 'Thể hình'
+
+      case 'study':
+        return 'Học tập'
+
+      case 'personal':
+        return 'Cá nhân'
+
+      case 'other':
+        return 'Khác'
+
+      default:
+        return category
+    }
+  }
+
+
   const getFrequencyLabel = (frequency) => {
     switch (frequency) {
       case 'daily':
@@ -171,7 +207,10 @@ function HabitDetailPage() {
   }
 
 
-  const getLogStatusLabel = (status, frequency) => {
+  const getLogStatusLabel = (
+    status,
+    frequency
+  ) => {
     if (
       frequency === 'weekly' ||
       frequency === 'monthly'
@@ -199,11 +238,81 @@ function HabitDetailPage() {
   }
 
 
+  const getLogStatusClass = (
+    status,
+    frequency
+  ) => {
+    if (
+      frequency === 'weekly' ||
+      frequency === 'monthly'
+    ) {
+      if (status === 'skipped') {
+        return 'skipped'
+      }
+
+      return 'recorded'
+    }
+
+    switch (status) {
+      case 'completed':
+        return 'completed'
+
+      case 'pending':
+        return 'pending'
+
+      case 'skipped':
+        return 'skipped'
+
+      default:
+        return 'recorded'
+    }
+  }
+
+
+  const formatNumber = (value) => {
+    const number = Number(value)
+
+    if (Number.isNaN(number)) {
+      return value
+    }
+
+    return Number.isInteger(number)
+      ? number
+      : Number(number.toFixed(2))
+  }
+
+
+  const formatDate = (date) => {
+    if (!date) {
+      return 'Không có'
+    }
+
+    const parts = date.split('-')
+
+    if (parts.length !== 3) {
+      return date
+    }
+
+    return `${parts[2]}/${parts[1]}/${parts[0]}`
+  }
+
+
   // =========================================
   // LOADING
   // =========================================
+
   if (!habit) {
-    return <p>Đang tải thói quen...</p>
+    return (
+      <div className="habit-detail-loading">
+        <div className="habit-detail-spinner" />
+
+        <h2>Đang tải thói quen...</h2>
+
+        <p>
+          NovaLife đang chuẩn bị tiến độ của bạn.
+        </p>
+      </div>
+    )
   }
 
 
@@ -214,282 +323,565 @@ function HabitDetailPage() {
     habit.frequency
   )
 
+  const percentage = Math.min(
+    Number(progress?.percentage || 0),
+    100
+  )
+
 
   return (
-    <div>
+    <div className="habit-detail-page">
+
       {/* =====================================
-          HABIT INFORMATION
+          BACK
       ====================================== */}
-
-      <h1>{habit.title}</h1>
-
-      <p>
-        {habit.description || 'Không có mô tả'}
-      </p>
-
-      <p>
-        Danh mục: {habit.category}
-      </p>
-
-      <p>
-        Tần suất:{' '}
-        {getFrequencyLabel(habit.frequency)}
-      </p>
-
-      <p>
-        Mục tiêu:{' '}
-        {habit.target_value} {habit.unit}
-      </p>
-
-      <p>
-        Ngày bắt đầu: {habit.start_date}
-      </p>
-
-      <p>
-        Ngày kết thúc:{' '}
-        {habit.end_date || 'Không có'}
-      </p>
-
-      <p>
-        Giờ nhắc:{' '}
-        {habit.reminder_time || 'Không có'}
-      </p>
-
-      <br />
-
-      <Link to={`/habits/${id}/edit`}>
-        <button type="button">
-          Chỉnh sửa thói quen
-        </button>
-      </Link>
-
-      {' '}
 
       <button
         type="button"
-        onClick={handleDelete}
+        className="habit-detail-back"
+        onClick={() => navigate('/habits')}
       >
-        Xóa thói quen
+        ← Quay lại thói quen
       </button>
 
 
-      <hr />
+      {/* =====================================
+          HERO
+      ====================================== */}
+
+      <section className="habit-detail-hero">
+
+        <div className="habit-detail-hero-main">
+
+          <div className="habit-detail-badges">
+
+            <span className="habit-detail-category">
+              {getCategoryLabel(habit.category)}
+            </span>
+
+            <span className="habit-detail-frequency">
+              <span />
+              {getFrequencyLabel(habit.frequency)}
+            </span>
+
+          </div>
+
+
+          <h1>{habit.title}</h1>
+
+
+          <p className="habit-detail-description">
+            {habit.description ||
+              'Chưa có mô tả cho thói quen này.'}
+          </p>
+
+
+          <div className="habit-detail-meta">
+
+            <div className="habit-detail-meta-item">
+
+              <span className="habit-detail-meta-label">
+                Mục tiêu
+              </span>
+
+              <strong>
+                {formatNumber(habit.target_value)}{' '}
+                {habit.unit}
+              </strong>
+
+            </div>
+
+
+            <div className="habit-detail-meta-item">
+
+              <span className="habit-detail-meta-label">
+                Bắt đầu
+              </span>
+
+              <strong>
+                {formatDate(habit.start_date)}
+              </strong>
+
+            </div>
+
+
+            <div className="habit-detail-meta-item">
+
+              <span className="habit-detail-meta-label">
+                Kết thúc
+              </span>
+
+              <strong>
+                {formatDate(habit.end_date)}
+              </strong>
+
+            </div>
+
+
+            <div className="habit-detail-meta-item">
+
+              <span className="habit-detail-meta-label">
+                Nhắc lúc
+              </span>
+
+              <strong>
+                {habit.reminder_time ||
+                  'Chưa thiết lập'}
+              </strong>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div className="habit-detail-actions">
+
+          <Link
+            to={`/habits/${id}/edit`}
+            className="habit-detail-edit"
+          >
+            Chỉnh sửa
+          </Link>
+
+          <button
+            type="button"
+            className="habit-detail-delete"
+            onClick={handleDelete}
+          >
+            Xóa
+          </button>
+
+        </div>
+
+      </section>
 
 
       {/* =====================================
           CURRENT PROGRESS
       ====================================== */}
 
-      <section>
-        <h2>
-          🎯 {getPeriodLabel(habit.frequency)}
-        </h2>
+      <section className="habit-progress-card">
+
+        <div className="habit-progress-heading">
+
+          <div>
+
+            <p className="habit-detail-section-eyebrow">
+              TIẾN ĐỘ HIỆN TẠI
+            </p>
+
+            <h2>
+              {getPeriodLabel(habit.frequency)}
+            </h2>
+
+          </div>
+
+
+          {progress && (
+            <span
+              className={
+                progress.completed
+                  ? 'habit-progress-status completed'
+                  : 'habit-progress-status pending'
+              }
+            >
+              {progress.completed
+                ? '✓ Đã hoàn thành'
+                : 'Đang thực hiện'}
+            </span>
+          )}
+
+        </div>
+
 
         {progress ? (
           <>
-            <p>
-              Tiến độ:{' '}
-              <strong>
-                {progress.current}
-                {' / '}
-                {progress.target}
-                {' '}
-                {habit.unit}
+            <div className="habit-progress-values">
+
+              <div>
+
+                <strong>
+                  {formatNumber(progress.current)}
+                </strong>
+
+                <span>
+                  {' / '}
+                  {formatNumber(progress.target)}{' '}
+                  {habit.unit}
+                </span>
+
+              </div>
+
+              <strong className="habit-progress-percentage">
+                {formatNumber(progress.percentage)}%
               </strong>
-            </p>
 
-            <p>
-              Phần trăm:{' '}
-              <strong>
-                {progress.percentage}%
-              </strong>
-            </p>
+            </div>
 
-            <progress
-              value={progress.percentage}
-              max="100"
-            />
 
-            <p>
-              {progress.completed
-                ? '✅ Đã hoàn thành mục tiêu của kỳ này.'
-                : '⏳ Chưa hoàn thành mục tiêu của kỳ này.'}
-            </p>
+            <div className="habit-progress-track">
 
-            <p>
-              Thời gian:{' '}
-              {progress.start_date}
-              {' → '}
-              {progress.end_date}
-            </p>
+              <div
+                className="habit-progress-fill"
+                style={{
+                  width: `${percentage}%`,
+                }}
+              />
+
+            </div>
+
+
+            <div className="habit-progress-footer">
+
+              <p>
+                {progress.completed
+                  ? 'Bạn đã hoàn thành mục tiêu của kỳ này.'
+                  : 'Tiếp tục duy trì để hoàn thành mục tiêu của kỳ này.'}
+              </p>
+
+              <span>
+                {formatDate(progress.start_date)}
+                {' → '}
+                {formatDate(progress.end_date)}
+              </span>
+
+            </div>
           </>
         ) : (
-          <p>Chưa có dữ liệu tiến độ.</p>
+          <div className="habit-detail-empty-inline">
+            Chưa có dữ liệu tiến độ.
+          </div>
         )}
+
       </section>
-
-
-      <hr />
 
 
       {/* =====================================
           STATISTICS
       ====================================== */}
 
-      <section>
-        <h2>📊 Thống kê</h2>
+      <section className="habit-statistics-section">
+
+        <div className="habit-detail-section-header">
+
+          <div>
+            <p className="habit-detail-section-eyebrow">
+              THỐNG KÊ
+            </p>
+
+            <h2>
+              Hành trình của bạn
+            </h2>
+          </div>
+
+          <p>
+            Theo dõi sự nhất quán qua từng kỳ.
+          </p>
+
+        </div>
+
 
         {statistics ? (
-          <>
-            <p>
-              🔥 Chuỗi hiện tại:{' '}
-              <strong>
-                {statistics.current_streak}{' '}
-                {streakUnit}
-              </strong>
-            </p>
+          <div className="habit-statistics-grid">
 
-            <p>
-              🏆 Chuỗi dài nhất:{' '}
-              <strong>
-                {statistics.longest_streak}{' '}
-                {streakUnit}
-              </strong>
-            </p>
+            <div className="habit-stat-card">
 
-            <p>
-              ✅ Tổng số kỳ hoàn thành:{' '}
+              <div className="habit-stat-icon">
+                ↗
+              </div>
+
+              <span>Chuỗi hiện tại</span>
+
+              <strong>
+                {statistics.current_streak}
+                <small> {streakUnit}</small>
+              </strong>
+
+              <p>
+                Số {streakUnit} liên tiếp
+                đạt mục tiêu.
+              </p>
+
+            </div>
+
+
+            <div className="habit-stat-card">
+
+              <div className="habit-stat-icon">
+                ★
+              </div>
+
+              <span>Chuỗi dài nhất</span>
+
+              <strong>
+                {statistics.longest_streak}
+                <small> {streakUnit}</small>
+              </strong>
+
+              <p>
+                Thành tích duy trì tốt nhất.
+              </p>
+
+            </div>
+
+
+            <div className="habit-stat-card">
+
+              <div className="habit-stat-icon">
+                ✓
+              </div>
+
+              <span>Kỳ hoàn thành</span>
+
               <strong>
                 {statistics.total_completions}
+                <small> kỳ</small>
               </strong>
+
+              <p>
+                Tổng số kỳ đã đạt mục tiêu.
+              </p>
+
+            </div>
+
+
+            <div className="habit-stat-card">
+
+              <div className="habit-stat-icon">
+                %
+              </div>
+
+              <span>Tỷ lệ duy trì</span>
+
+              <strong>
+                {formatNumber(
+                  statistics.completion_rate
+                )}
+                <small>%</small>
+              </strong>
+
+              <p>
+                Tỷ lệ hoàn thành theo lịch sử.
+              </p>
+
+            </div>
+
+          </div>
+        ) : (
+          <div className="habit-detail-empty-inline">
+            Chưa có dữ liệu thống kê.
+          </div>
+        )}
+
+      </section>
+
+
+      {/* =====================================
+          ACTIVITY GRID
+      ====================================== */}
+
+      <div className="habit-activity-grid">
+
+        {/* =================================
+            UPDATE PROGRESS
+        ================================== */}
+
+        <section className="habit-log-card">
+
+          <div className="habit-log-card-header">
+
+            <p className="habit-detail-section-eyebrow">
+              GHI NHẬN
             </p>
+
+            <h2>Cập nhật tiến độ</h2>
 
             <p>
-              📈 Tỷ lệ duy trì:{' '}
-              <strong>
-                {statistics.completion_rate}%
-              </strong>
+              Ghi lại những gì bạn đã thực hiện
+              trong hôm nay.
             </p>
-          </>
-        ) : (
-          <p>Chưa có dữ liệu thống kê.</p>
-        )}
-      </section>
 
-
-      <hr />
-
-
-      {/* =====================================
-          UPDATE PROGRESS
-      ====================================== */}
-
-      <section>
-        <h2>Cập nhật tiến độ</h2>
-
-        <form onSubmit={handleCompleteToday}>
-          <div>
-            <label>
-              Giá trị hôm nay
-            </label>
-
-            <br />
-
-            <input
-              type="number"
-              step="0.01"
-              min="0"
-              name="value"
-              value={logData.value}
-              onChange={handleLogChange}
-              required
-            />
-
-            {' '}
-
-            <span>{habit.unit}</span>
           </div>
 
-          <br />
 
-          <div>
-            <label>Ghi chú</label>
-
-            <br />
-
-            <textarea
-              name="note"
-              value={logData.note}
-              onChange={handleLogChange}
-            />
-          </div>
-
-          <br />
-
-          <button
-            type="submit"
-            disabled={submitting}
+          <form
+            className="habit-log-form"
+            onSubmit={handleCompleteToday}
           >
-            {submitting
-              ? 'Đang cập nhật...'
-              : 'Cập nhật tiến độ'}
-          </button>
-        </form>
 
-        {message && (
-          <p>
-            <strong>{message}</strong>
-          </p>
-        )}
-      </section>
+            <div className="habit-log-field">
 
+              <label htmlFor="habit-log-value">
+                Giá trị hôm nay
+              </label>
 
-      <hr />
+              <div className="habit-log-value-input">
 
+                <input
+                  id="habit-log-value"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  name="value"
+                  value={logData.value}
+                  onChange={handleLogChange}
+                  placeholder="0"
+                  required
+                />
 
-      {/* =====================================
-          RECENT LOGS
-      ====================================== */}
+                <span>{habit.unit}</span>
 
-      <section>
-        <h2>Lịch sử gần đây</h2>
+              </div>
 
-        {habit.recent_logs?.length > 0 ? (
-          habit.recent_logs.map((log) => (
-            <div key={log.id}>
-              <p>
-                Ngày: {log.date}
-              </p>
-
-              <p>
-                Giá trị:{' '}
-                {log.value} {habit.unit}
-              </p>
-
-              <p>
-                Trạng thái:{' '}
-                {getLogStatusLabel(
-                  log.status,
-                  habit.frequency
-                )}
-              </p>
-
-              <p>
-                Ghi chú:{' '}
-                {log.note || 'Không có'}
-              </p>
-
-              <hr />
             </div>
-          ))
-        ) : (
-          <p>
-            Chưa có lịch sử thực hiện.
-          </p>
-        )}
-      </section>
+
+
+            <div className="habit-log-field">
+
+              <label htmlFor="habit-log-note">
+                Ghi chú
+              </label>
+
+              <textarea
+                id="habit-log-note"
+                name="note"
+                value={logData.note}
+                onChange={handleLogChange}
+                placeholder="Bạn cảm thấy thế nào sau khi thực hiện?"
+                rows="5"
+              />
+
+            </div>
+
+
+            <button
+              type="submit"
+              className="habit-log-submit"
+              disabled={submitting}
+            >
+              {submitting
+                ? 'Đang cập nhật...'
+                : '✓ Cập nhật tiến độ'}
+            </button>
+
+          </form>
+
+
+          {message && (
+            <div
+              className={`habit-log-message ${messageType}`}
+            >
+              {message}
+            </div>
+          )}
+
+        </section>
+
+
+        {/* =================================
+            RECENT LOGS
+        ================================== */}
+
+        <section className="habit-history-card">
+
+          <div className="habit-history-header">
+
+            <div>
+              <p className="habit-detail-section-eyebrow">
+                LỊCH SỬ
+              </p>
+
+              <h2>Gần đây</h2>
+            </div>
+
+            <span>
+              {habit.recent_logs?.length || 0}{' '}
+              bản ghi
+            </span>
+
+          </div>
+
+
+          {habit.recent_logs?.length > 0 ? (
+            <div className="habit-history-list">
+
+              {habit.recent_logs.map((log) => (
+
+                <div
+                  key={log.id}
+                  className="habit-history-item"
+                >
+
+                  <div className="habit-history-date">
+
+                    <strong>
+                      {formatDate(log.date)}
+                    </strong>
+
+                    <span>
+                      {log.note ||
+                        'Không có ghi chú'}
+                    </span>
+
+                  </div>
+
+
+                  <div className="habit-history-value">
+
+                    <strong>
+                      {formatNumber(log.value)}
+                    </strong>
+
+                    <span>
+                      {habit.unit}
+                    </span>
+
+                  </div>
+
+
+                  <span
+                    className={`habit-history-status ${getLogStatusClass(
+                      log.status,
+                      habit.frequency
+                    )}`}
+                  >
+                    {getLogStatusLabel(
+                      log.status,
+                      habit.frequency
+                    )}
+                  </span>
+
+                </div>
+
+              ))}
+
+            </div>
+          ) : (
+            <div className="habit-history-empty">
+
+              <div>✓</div>
+
+              <h3>
+                Chưa có lịch sử
+              </h3>
+
+              <p>
+                Bản ghi tiến độ đầu tiên của bạn
+                sẽ xuất hiện tại đây.
+              </p>
+
+            </div>
+          )}
+
+        </section>
+
+      </div>
+
     </div>
   )
 }
+
 
 export default HabitDetailPage

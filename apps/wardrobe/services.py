@@ -3,16 +3,29 @@ import json
 from django.conf import settings
 from google import genai
 from google.genai import types
-from google.genai.errors import ServerError
+from google.genai.errors import (
+    ClientError,
+    ServerError,
+)
 from rest_framework.exceptions import ValidationError
 
-from .prompts import WARDROBE_ANALYZE_PROMPT, build_outfit_recommendation_prompt
-from .serializers import ClothingAnalysisResultSerializer, OutfitRecommendationResultSerializer, ClothingItemListSerializer
 from .models import ClothingItem
+from .prompts import (
+    WARDROBE_ANALYZE_PROMPT,
+    build_outfit_recommendation_prompt,
+)
+from .serializers import (
+    ClothingAnalysisResultSerializer,
+    ClothingItemListSerializer,
+    OutfitRecommendationResultSerializer,
+)
 
 
+# =========================================================
+# GEMINI COMMON SERVICE
+# =========================================================
 
-class ClothingVisionService:
+class GeminiService:
 
     @staticmethod
     def get_client():
@@ -21,24 +34,64 @@ class ClothingVisionService:
         )
 
     @staticmethod
-    def analyze_image(*, image):
-        client = ClothingVisionService.get_client()
+    def generate_json(*, contents):
+        client = GeminiService.get_client()
 
-        image_bytes = image.read()
-
-        image_part = types.Part.from_bytes(
-            data=image_bytes,
-            mime_type=image.content_type,
-        )
+        # =========================================
+        # CALL GEMINI
+        # =========================================
 
         try:
             response = client.models.generate_content(
                 model=settings.GEMINI_MODEL,
-                contents=[
-                    image_part,
-                    WARDROBE_ANALYZE_PROMPT,
-                ],
+                contents=contents,
             )
+
+        # =========================================
+        # GEMINI CLIENT ERROR
+        # Ví dụ:
+        # - 429 RESOURCE_EXHAUSTED
+        # - quota / rate limit
+        # =========================================
+
+        except ClientError as exc:
+
+            status_code = getattr(
+                exc,
+                "code",
+                None,
+            )
+
+            if status_code is None:
+                status_code = getattr(
+                    exc,
+                    "status_code",
+                    None,
+                )
+
+            if status_code == 429:
+                raise ValidationError(
+                    {
+                        "ai": [
+                            "AI đang tạm đạt giới hạn "
+                            "sử dụng. Vui lòng đợi một "
+                            "lúc rồi thử lại."
+                        ]
+                    }
+                ) from exc
+
+            raise ValidationError(
+                {
+                    "ai": [
+                        "Không thể kết nối đến dịch vụ AI. "
+                        "Vui lòng thử lại sau."
+                    ]
+                }
+            ) from exc
+
+        # =========================================
+        # GEMINI SERVER ERROR
+        # =========================================
 
         except ServerError as exc:
             raise ValidationError(
@@ -50,9 +103,62 @@ class ClothingVisionService:
                 }
             ) from exc
 
-        result = json.loads(
-            response.text,
+        # =========================================
+        # PARSE JSON
+        # =========================================
+
+        try:
+            result = json.loads(
+                response.text,
+            )
+
+        except json.JSONDecodeError as exc:
+            raise ValidationError(
+                {
+                    "ai": [
+                        "AI trả về dữ liệu "
+                        "không đúng định dạng JSON."
+                    ]
+                }
+            ) from exc
+
+        return result
+
+
+# =========================================================
+# AI VISION
+# =========================================================
+
+class ClothingVisionService:
+
+    @staticmethod
+    def analyze_image(*, image):
+
+        # =========================================
+        # PREPARE IMAGE
+        # =========================================
+
+        image_bytes = image.read()
+
+        image_part = types.Part.from_bytes(
+            data=image_bytes,
+            mime_type=image.content_type,
         )
+
+        # =========================================
+        # CALL GEMINI
+        # =========================================
+
+        result = GeminiService.generate_json(
+            contents=[
+                image_part,
+                WARDROBE_ANALYZE_PROMPT,
+            ],
+        )
+
+        # =========================================
+        # VALIDATE AI RESULT
+        # =========================================
 
         serializer = ClothingAnalysisResultSerializer(
             data=result,
@@ -63,6 +169,11 @@ class ClothingVisionService:
         )
 
         return serializer.validated_data
+
+
+# =========================================================
+# AI OUTFIT
+# =========================================================
 
 class OutfitRecommendationService:
 
@@ -88,11 +199,21 @@ class OutfitRecommendationService:
         season,
         request,
     ):
-        wardrobe_items = OutfitRecommendationService.get_wardrobe_items(
-            user=user,
+
+        # =========================================
+        # GET ACTIVE WARDROBE ITEMS
+        # =========================================
+
+        wardrobe_items = list(
+            OutfitRecommendationService
+            .get_wardrobe_items(
+                user=user,
+            )
         )
 
-        wardrobe_items = list(wardrobe_items)
+        # =========================================
+        # EMPTY WARDROBE
+        # =========================================
 
         if not wardrobe_items:
             return {
@@ -102,36 +223,32 @@ class OutfitRecommendationService:
                 "explanation": None,
             }
 
+        # =========================================
+        # BUILD PROMPT
+        # =========================================
+
         prompt = build_outfit_recommendation_prompt(
             occasion=occasion,
             season=season,
             wardrobe_items=wardrobe_items,
         )
 
-        client = genai.Client(
-            api_key=settings.GEMINI_API_KEY,
+        # =========================================
+        # CALL GEMINI
+        # =========================================
+
+        result = GeminiService.generate_json(
+            contents=prompt,
         )
 
-        try:
-            response = client.models.generate_content(
-                model=settings.GEMINI_MODEL,
-                contents=prompt,
+        # =========================================
+        # VALIDATE AI RESULT
+        # =========================================
+
+        serializer = (
+            OutfitRecommendationResultSerializer(
+                data=result,
             )
-        except ServerError as exc:
-            raise ValidationError(
-                {
-                    "ai": [
-                        "Dịch vụ AI hiện đang quá tải. Vui lòng thử lại sau."
-                    ]
-                }
-            ) from exc
-
-        result = json.loads(
-            response.text,
-        )
-
-        serializer = OutfitRecommendationResultSerializer(
-            data=result,
         )
 
         serializer.is_valid(
@@ -140,7 +257,12 @@ class OutfitRecommendationService:
 
         validated_data = serializer.validated_data
 
+        # =========================================
+        # SUCCESS
+        # =========================================
+
         if validated_data["status"] == "success":
+
             valid_item_ids = {
                 item["id"]
                 for item in wardrobe_items
@@ -150,20 +272,39 @@ class OutfitRecommendationService:
                 validated_data["item_ids"]
             )
 
-            if not recommended_item_ids.issubset(valid_item_ids):
+            # =====================================
+            # DATA INTEGRITY CHECK
+            # =====================================
+
+            if not recommended_item_ids.issubset(
+                valid_item_ids
+            ):
                 raise ValidationError(
                     {
                         "ai": [
-                            "AI trả về trang phục không tồn tại trong tủ đồ."
+                            "AI trả về trang phục "
+                            "không tồn tại trong tủ đồ."
                         ]
                     }
                 )
 
-            recommended_items = ClothingItem.objects.filter(
-                user=user,
-                is_active=True,
-                id__in=validated_data["item_ids"],
+            # =====================================
+            # LOAD RECOMMENDED ITEMS
+            # =====================================
+
+            recommended_items = (
+                ClothingItem.objects.filter(
+                    user=user,
+                    is_active=True,
+                    id__in=validated_data[
+                        "item_ids"
+                    ],
+                )
             )
+
+            # =====================================
+            # PRESERVE AI ORDER
+            # =====================================
 
             items_by_id = {
                 item.id: item
@@ -172,15 +313,26 @@ class OutfitRecommendationService:
 
             ordered_items = [
                 items_by_id[item_id]
-                for item_id in validated_data["item_ids"]
+                for item_id
+                in validated_data["item_ids"]
             ]
 
-            item_serializer = ClothingItemListSerializer(
-                ordered_items,
-                many=True,
-                context ={"request":request},
+            # =====================================
+            # SERIALIZE ITEMS
+            # =====================================
+
+            item_serializer = (
+                ClothingItemListSerializer(
+                    ordered_items,
+                    many=True,
+                    context={
+                        "request": request,
+                    },
+                )
             )
 
-            validated_data["items"] = item_serializer.data
+            validated_data["items"] = (
+                item_serializer.data
+            )
 
         return validated_data

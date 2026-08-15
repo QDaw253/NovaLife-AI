@@ -3533,3 +3533,6271 @@ a {
     padding: 16px;
   }
 }
+
+/* =========================================================
+   NOVALIFE - HABITS PAGE
+========================================================= */
+
+.habits-page {
+  width: 100%;
+  max-width: 1450px;
+  margin: 0 auto;
+  padding: 38px 48px 70px;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.habits-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 30px;
+  margin-bottom: 28px;
+}
+
+.habits-eyebrow {
+  margin: 0 0 8px;
+  color: #25835f;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 1.3px;
+}
+
+.habits-header h1 {
+  margin: 0;
+  color: #111b17;
+  font-size: 44px;
+  line-height: 1.1;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+}
+
+.habits-subtitle {
+  margin: 12px 0 0;
+  color: #55635d;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.habits-create-button {
+  min-height: 48px;
+  padding: 0 22px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  background: #2d8965;
+  color: white;
+
+  border-radius: 12px;
+
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 700;
+
+  box-shadow: 0 8px 22px rgba(37, 112, 82, 0.14);
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.habits-create-button:hover {
+  background: #247654;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(37, 112, 82, 0.2);
+}
+
+
+/* =========================================================
+   SUMMARY
+========================================================= */
+
+.habits-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+
+  margin-bottom: 26px;
+  padding: 10px 16px 10px 10px;
+
+  background: #eef7f2;
+  border: 1px solid #dcece4;
+  border-radius: 14px;
+}
+
+.habits-summary-icon {
+  width: 36px;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  background: #dcefe5;
+  color: #25835f;
+
+  font-size: 19px;
+  font-weight: 800;
+}
+
+.habits-summary > div:last-child {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.habits-summary strong {
+  color: #163d2e;
+  font-size: 17px;
+}
+
+.habits-summary span {
+  color: #66736d;
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   GRID
+========================================================= */
+
+.habits-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+
+/* =========================================================
+   HABIT CARD
+========================================================= */
+
+.habit-card {
+  min-height: 330px;
+  padding: 27px;
+
+  display: flex;
+  flex-direction: column;
+
+  background: #ffffff;
+
+  border: 1px solid #dde6e1;
+  border-radius: 20px;
+
+  box-shadow:
+    0 7px 24px rgba(26, 58, 45, 0.055);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.habit-card:hover {
+  transform: translateY(-3px);
+
+  border-color: #c7ded2;
+
+  box-shadow:
+    0 14px 34px rgba(26, 58, 45, 0.09);
+}
+
+
+/* =========================================================
+   CARD TOP
+========================================================= */
+
+.habit-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+
+  margin-bottom: 22px;
+}
+
+.habit-category {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 7px 11px;
+
+  border-radius: 999px;
+
+  background: #e7f4ed;
+  color: #287d5c;
+
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.habit-frequency {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  color: #59655f;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.habit-frequency-dot {
+  width: 8px;
+  height: 8px;
+
+  background: #2d8965;
+
+  border-radius: 50%;
+}
+
+
+/* =========================================================
+   TITLE
+========================================================= */
+
+.habit-card-title {
+  margin: 0 0 26px;
+
+  color: #17211d;
+
+  font-size: 23px;
+  line-height: 1.35;
+  font-weight: 800;
+}
+
+
+/* =========================================================
+   TARGET
+========================================================= */
+
+.habit-target {
+  margin-bottom: 24px;
+}
+
+.habit-target-label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #7a8580;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.habit-target-value {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+}
+
+.habit-target-value strong {
+  color: #1c684c;
+
+  font-size: 32px;
+  line-height: 1;
+  font-weight: 800;
+}
+
+.habit-target-value span {
+  color: #26352f;
+
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.habit-target p {
+  margin: 7px 0 0;
+
+  color: #7a8580;
+
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   REMINDER
+========================================================= */
+
+.habit-reminder {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  margin-bottom: 24px;
+}
+
+.habit-reminder-icon {
+  width: 38px;
+  height: 38px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #f1f6f3;
+
+  border-radius: 10px;
+
+  color: #3b795f;
+
+  font-size: 18px;
+}
+
+.habit-reminder > div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.habit-reminder span {
+  color: #7b8781;
+  font-size: 11px;
+}
+
+.habit-reminder strong {
+  color: #27332e;
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   CARD FOOTER
+========================================================= */
+
+.habit-card-footer {
+  margin-top: auto;
+  padding-top: 18px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  border-top: 1px solid #e4ebe7;
+}
+
+.habit-detail-link,
+.habit-detail-arrow {
+  color: #257a59;
+  text-decoration: none;
+  font-weight: 800;
+}
+
+.habit-detail-link {
+  font-size: 14px;
+}
+
+.habit-detail-arrow {
+  font-size: 20px;
+
+  transition: transform 0.2s ease;
+}
+
+.habit-card:hover .habit-detail-arrow {
+  transform: translateX(4px);
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.habits-empty {
+  min-height: 360px;
+
+  padding: 55px 25px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  background: #ffffff;
+
+  border: 1px dashed #cbdcd3;
+  border-radius: 20px;
+}
+
+.habits-empty-icon {
+  width: 58px;
+  height: 58px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 17px;
+
+  background: #e8f4ed;
+
+  border-radius: 16px;
+
+  color: #29805e;
+
+  font-size: 26px;
+  font-weight: 800;
+}
+
+.habits-empty h2 {
+  margin: 0 0 8px;
+
+  color: #17211d;
+
+  font-size: 23px;
+}
+
+.habits-empty p {
+  max-width: 430px;
+
+  margin: 0 0 22px;
+
+  color: #718079;
+
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.habits-empty-button {
+  padding: 12px 18px;
+
+  background: #2d8965;
+  color: white;
+
+  border-radius: 11px;
+
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1000px) {
+
+  .habits-page {
+    padding: 32px 28px 60px;
+  }
+
+  .habits-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+@media (max-width: 700px) {
+
+  .habits-page {
+    padding: 24px 18px 50px;
+  }
+
+  .habits-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .habits-header h1 {
+    font-size: 34px;
+  }
+
+  .habits-create-button {
+    width: 100%;
+  }
+
+  .habit-card {
+    min-height: auto;
+    padding: 22px;
+  }
+
+}
+
+
+@media (max-width: 480px) {
+
+  .habits-header h1 {
+    font-size: 30px;
+  }
+
+  .habit-card-top {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .habits-summary {
+    width: 100%;
+  }
+
+}
+
+/* =========================================================
+   CREATE HABIT PAGE
+   ========================================================= */
+
+.habit-create-page {
+  padding: 52px 48px 80px;
+  max-width: 1450px;
+  margin: 0 auto;
+}
+
+.habit-create-header {
+  margin-bottom: 34px;
+}
+
+.habit-back-button {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin-bottom: 34px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #17211c;
+  cursor: pointer;
+}
+
+.habit-back-button:hover {
+  color: #25855f;
+}
+
+.habit-create-eyebrow {
+  color: #25855f;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  margin-bottom: 8px;
+}
+
+.habit-create-header h1 {
+  margin: 0;
+  color: #111b16;
+  font-size: 46px;
+  line-height: 1.1;
+  letter-spacing: -1.5px;
+}
+
+.habit-create-header > p {
+  margin: 12px 0 0;
+  color: #55635c;
+  font-size: 16px;
+  line-height: 1.7;
+  max-width: 760px;
+}
+
+.habit-create-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 310px;
+  gap: 28px;
+  align-items: start;
+}
+
+/* FORM */
+
+.habit-create-form {
+  background: #ffffff;
+  border: 1px solid #dfe8e3;
+  border-radius: 24px;
+  padding: 0 34px;
+  box-shadow: 0 12px 35px rgba(26, 68, 51, 0.05);
+}
+
+.habit-form-section {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  gap: 36px;
+  padding: 38px 0;
+  border-bottom: 1px solid #e2ebe6;
+}
+
+.habit-section-info {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.habit-section-number {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  border-radius: 12px;
+  background: #e9f5ef;
+  color: #25855f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.habit-section-info h2 {
+  margin: 2px 0 7px;
+  font-size: 17px;
+  color: #111b16;
+}
+
+.habit-section-info p {
+  margin: 0;
+  color: #65736c;
+  line-height: 1.6;
+  font-size: 13px;
+}
+
+.habit-section-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.habit-field-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.habit-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.habit-field label {
+  margin-bottom: 9px;
+  color: #17211c;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.habit-field label span {
+  color: #c44d4d;
+}
+
+.habit-field input,
+.habit-field textarea,
+.habit-field select {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #d7e1dc;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #17211c;
+  font: inherit;
+  font-size: 14px;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.habit-field input,
+.habit-field select {
+  height: 52px;
+  padding: 0 15px;
+}
+
+.habit-field textarea {
+  min-height: 130px;
+  padding: 15px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.habit-field input::placeholder,
+.habit-field textarea::placeholder {
+  color: #a2ada7;
+}
+
+.habit-field input:focus,
+.habit-field textarea:focus,
+.habit-field select:focus {
+  border-color: #25855f;
+  box-shadow: 0 0 0 3px rgba(37, 133, 95, 0.1);
+}
+
+.habit-field small {
+  margin-top: 7px;
+  color: #8a9690;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* ACTIONS */
+
+.habit-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 28px 0 32px;
+}
+
+.habit-cancel-button,
+.habit-submit-button {
+  min-height: 48px;
+  padding: 0 22px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.habit-cancel-button {
+  background: #ffffff;
+  border: 1px solid #d5dfda;
+  color: #536159;
+}
+
+.habit-cancel-button:hover {
+  background: #f4f7f5;
+}
+
+.habit-submit-button {
+  border: 1px solid #25855f;
+  background: #25855f;
+  color: #ffffff;
+}
+
+.habit-submit-button:hover {
+  background: #1f7453;
+  border-color: #1f7453;
+  transform: translateY(-1px);
+}
+
+.habit-submit-button:disabled,
+.habit-cancel-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.habit-form-error {
+  margin-top: 24px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: #fff1f1;
+  border: 1px solid #f0cccc;
+  color: #b54141;
+  font-size: 14px;
+}
+
+/* GUIDE */
+
+.habit-create-guide {
+  position: sticky;
+  top: 30px;
+  padding: 30px 28px;
+  border-radius: 24px;
+  background: linear-gradient(145deg, #195d45, #2f8b67);
+  color: #ffffff;
+  box-shadow: 0 18px 40px rgba(25, 93, 69, 0.15);
+}
+
+.habit-guide-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  font-size: 21px;
+  margin-bottom: 28px;
+}
+
+.habit-create-guide h2 {
+  margin: 0 0 20px;
+  font-size: 21px;
+}
+
+.habit-guide-item {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 8px;
+  padding: 18px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.habit-guide-item > span {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.habit-guide-item strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.habit-guide-item p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1100px) {
+  .habit-create-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .habit-create-guide {
+    position: static;
+  }
+}
+
+@media (max-width: 800px) {
+  .habit-create-page {
+    padding: 32px 20px 60px;
+  }
+
+  .habit-create-header h1 {
+    font-size: 36px;
+  }
+
+  .habit-create-form {
+    padding: 0 22px;
+  }
+
+  .habit-form-section {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .habit-field-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================================
+   EDIT HABIT PAGE
+========================================================= */
+
+.habit-edit-page {
+  width: 100%;
+  max-width: 1450px;
+  margin: 0 auto;
+  padding: 52px 48px 80px;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.habit-edit-header {
+  margin-bottom: 34px;
+}
+
+.habit-edit-back {
+  padding: 0;
+  margin: 0 0 34px;
+
+  border: none;
+  background: transparent;
+
+  color: #17211c;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.habit-edit-back:hover {
+  color: #25855f;
+}
+
+.habit-edit-eyebrow {
+  margin-bottom: 8px;
+
+  color: #25855f;
+
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+}
+
+.habit-edit-header h1 {
+  margin: 0;
+
+  color: #111b16;
+
+  font-size: 46px;
+  line-height: 1.1;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+}
+
+.habit-edit-header > p {
+  max-width: 720px;
+
+  margin: 12px 0 0;
+
+  color: #55635c;
+
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+
+/* =========================================================
+   LAYOUT
+========================================================= */
+
+.habit-edit-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 310px;
+
+  gap: 28px;
+
+  align-items: start;
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.habit-edit-form {
+  padding: 0 34px;
+
+  background: #ffffff;
+
+  border: 1px solid #dfe8e3;
+  border-radius: 24px;
+
+  box-shadow:
+    0 12px 35px rgba(26, 68, 51, 0.05);
+}
+
+.habit-edit-section {
+  display: grid;
+
+  grid-template-columns: 250px minmax(0, 1fr);
+
+  gap: 36px;
+
+  padding: 38px 0;
+
+  border-bottom: 1px solid #e2ebe6;
+}
+
+
+/* =========================================================
+   SECTION INFO
+========================================================= */
+
+.habit-edit-section-info {
+  display: flex;
+
+  gap: 16px;
+
+  align-items: flex-start;
+}
+
+.habit-edit-section-number {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #e9f5ef;
+  color: #25855f;
+
+  border-radius: 12px;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.habit-edit-section-info h2 {
+  margin: 2px 0 7px;
+
+  color: #111b16;
+
+  font-size: 17px;
+}
+
+.habit-edit-section-info p {
+  margin: 0;
+
+  color: #65736c;
+
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   FIELDS
+========================================================= */
+
+.habit-edit-fields {
+  display: flex;
+  flex-direction: column;
+
+  gap: 22px;
+}
+
+.habit-edit-field-row {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 20px;
+}
+
+.habit-edit-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.habit-edit-field label {
+  margin-bottom: 9px;
+
+  color: #17211c;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.habit-edit-field label span {
+  color: #c44d4d;
+}
+
+.habit-edit-field input,
+.habit-edit-field textarea,
+.habit-edit-field select {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  background: #ffffff;
+
+  border: 1px solid #d7e1dc;
+  border-radius: 12px;
+
+  color: #17211c;
+
+  font: inherit;
+  font-size: 14px;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.habit-edit-field input,
+.habit-edit-field select {
+  height: 52px;
+
+  padding: 0 15px;
+}
+
+.habit-edit-field textarea {
+  min-height: 130px;
+
+  padding: 15px;
+
+  resize: vertical;
+
+  line-height: 1.6;
+}
+
+.habit-edit-field input:focus,
+.habit-edit-field textarea:focus,
+.habit-edit-field select:focus {
+  border-color: #25855f;
+
+  box-shadow:
+    0 0 0 3px rgba(37, 133, 95, 0.1);
+}
+
+.habit-edit-field small {
+  margin-top: 7px;
+
+  color: #8a9690;
+
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.habit-edit-actions {
+  display: flex;
+  justify-content: flex-end;
+
+  gap: 12px;
+
+  padding: 28px 0 32px;
+}
+
+.habit-edit-cancel,
+.habit-edit-submit {
+  min-height: 48px;
+
+  padding: 0 22px;
+
+  border-radius: 12px;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.habit-edit-cancel {
+  background: #ffffff;
+
+  border: 1px solid #d5dfda;
+
+  color: #536159;
+}
+
+.habit-edit-cancel:hover {
+  background: #f4f7f5;
+}
+
+.habit-edit-submit {
+  background: #25855f;
+  color: #ffffff;
+
+  border: 1px solid #25855f;
+}
+
+.habit-edit-submit:hover {
+  background: #1f7453;
+  border-color: #1f7453;
+
+  transform: translateY(-1px);
+}
+
+.habit-edit-submit:disabled,
+.habit-edit-cancel:disabled {
+  opacity: 0.65;
+
+  cursor: not-allowed;
+
+  transform: none;
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.habit-edit-error {
+  margin-top: 24px;
+
+  padding: 14px 16px;
+
+  background: #fff1f1;
+  color: #b54141;
+
+  border: 1px solid #f0cccc;
+  border-radius: 10px;
+
+  font-size: 14px;
+}
+
+
+/* =========================================================
+   GUIDE
+========================================================= */
+
+.habit-edit-guide {
+  position: sticky;
+
+  top: 30px;
+
+  padding: 30px 28px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #195d45,
+      #2f8b67
+    );
+
+  color: #ffffff;
+
+  border-radius: 24px;
+
+  box-shadow:
+    0 18px 40px rgba(25, 93, 69, 0.15);
+}
+
+.habit-edit-guide-icon {
+  width: 48px;
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 24px;
+
+  background: rgba(255, 255, 255, 0.12);
+
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 14px;
+
+  font-size: 21px;
+}
+
+.habit-edit-guide-label {
+  margin: 0 0 8px;
+
+  color: rgba(255, 255, 255, 0.62);
+
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+}
+
+.habit-edit-guide h2 {
+  margin: 0;
+
+  font-size: 22px;
+  line-height: 1.35;
+}
+
+.habit-edit-guide-description {
+  margin: 12px 0 0;
+
+  color: rgba(255, 255, 255, 0.74);
+
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.habit-edit-guide-divider {
+  height: 1px;
+
+  margin: 25px 0 5px;
+
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.habit-edit-tip {
+  display: grid;
+
+  grid-template-columns: 28px 1fr;
+
+  gap: 8px;
+
+  padding: 18px 0;
+
+  border-bottom:
+    1px solid rgba(255, 255, 255, 0.12);
+}
+
+.habit-edit-tip:last-child {
+  border-bottom: none;
+}
+
+.habit-edit-tip > span {
+  color: rgba(255, 255, 255, 0.48);
+
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.habit-edit-tip strong {
+  display: block;
+
+  margin-bottom: 6px;
+
+  font-size: 14px;
+}
+
+.habit-edit-tip p {
+  margin: 0;
+
+  color: rgba(255, 255, 255, 0.7);
+
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   LOADING / ERROR STATE
+========================================================= */
+
+.habit-edit-state {
+  min-height: 65vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  color: #17211c;
+}
+
+.habit-edit-state h2 {
+  margin: 15px 0 5px;
+}
+
+.habit-edit-state p {
+  margin: 0;
+
+  color: #738079;
+}
+
+.habit-edit-state button {
+  margin-top: 18px;
+
+  padding: 11px 17px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: #25855f;
+  color: white;
+
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.habit-edit-loader {
+  width: 32px;
+  height: 32px;
+
+  border: 3px solid #dcebe4;
+  border-top-color: #25855f;
+
+  border-radius: 50%;
+
+  animation:
+    habitEditSpin 0.8s linear infinite;
+}
+
+@keyframes habitEditSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1100px) {
+
+  .habit-edit-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .habit-edit-guide {
+    position: static;
+  }
+
+}
+
+
+@media (max-width: 800px) {
+
+  .habit-edit-page {
+    padding: 32px 20px 60px;
+  }
+
+  .habit-edit-header h1 {
+    font-size: 36px;
+  }
+
+  .habit-edit-form {
+    padding: 0 22px;
+  }
+
+  .habit-edit-section {
+    grid-template-columns: 1fr;
+
+    gap: 24px;
+  }
+
+  .habit-edit-field-row {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+/* =========================================================
+   EDIT HABIT - TARGET NOTE
+========================================================= */
+
+.habit-edit-target-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+
+  padding: 14px 16px;
+
+  background: #f1f8f4;
+
+  border: 1px solid #dcece4;
+  border-radius: 12px;
+
+  color: #52665c;
+}
+
+.habit-edit-target-note > span {
+  flex-shrink: 0;
+
+  color: #25855f;
+
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.habit-edit-target-note p {
+  margin: 0;
+
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* =========================================================
+   NOVALIFE - HABIT DETAIL
+========================================================= */
+
+.habit-detail-page {
+  width: 100%;
+  max-width: 1450px;
+  margin: 0 auto;
+  padding: 42px 48px 80px;
+}
+
+.habit-detail-back {
+  padding: 0;
+  margin: 0 0 28px;
+
+  border: none;
+  background: transparent;
+
+  color: #536159;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.habit-detail-back:hover {
+  color: #25855f;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.habit-detail-hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 40px;
+
+  margin-bottom: 26px;
+  padding: 34px 36px;
+
+  background: #ffffff;
+
+  border: 1px solid #dfe8e3;
+  border-radius: 24px;
+
+  box-shadow:
+    0 10px 32px rgba(26, 68, 51, 0.05);
+}
+
+.habit-detail-hero-main {
+  min-width: 0;
+}
+
+.habit-detail-badges {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  margin-bottom: 17px;
+}
+
+.habit-detail-category {
+  padding: 7px 11px;
+
+  background: #e7f4ed;
+  color: #287d5c;
+
+  border-radius: 999px;
+
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+.habit-detail-frequency {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  color: #5f6c65;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.habit-detail-frequency > span {
+  width: 7px;
+  height: 7px;
+
+  background: #2d8965;
+
+  border-radius: 50%;
+}
+
+.habit-detail-hero h1 {
+  margin: 0;
+
+  color: #111b16;
+
+  font-size: 38px;
+  line-height: 1.2;
+  letter-spacing: -1px;
+}
+
+.habit-detail-description {
+  max-width: 760px;
+
+  margin: 12px 0 27px;
+
+  color: #637069;
+
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.habit-detail-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+}
+
+.habit-detail-meta-item {
+  min-width: 145px;
+
+  padding: 0 24px;
+
+  border-right: 1px solid #e2e9e5;
+}
+
+.habit-detail-meta-item:first-child {
+  padding-left: 0;
+}
+
+.habit-detail-meta-item:last-child {
+  border-right: none;
+}
+
+.habit-detail-meta-label {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #8a958f;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.habit-detail-meta-item strong {
+  color: #23322b;
+
+  font-size: 14px;
+}
+
+.habit-detail-actions {
+  display: flex;
+  gap: 10px;
+
+  flex-shrink: 0;
+}
+
+.habit-detail-edit,
+.habit-detail-delete {
+  min-height: 42px;
+
+  padding: 0 17px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 11px;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.habit-detail-edit {
+  background: #25855f;
+  color: #ffffff;
+
+  border: 1px solid #25855f;
+
+  text-decoration: none;
+}
+
+.habit-detail-edit:hover {
+  background: #1f7453;
+}
+
+.habit-detail-delete {
+  background: #ffffff;
+  color: #b84d4d;
+
+  border: 1px solid #ebcece;
+}
+
+.habit-detail-delete:hover {
+  background: #fff5f5;
+}
+
+
+/* =========================================================
+   COMMON SECTION
+========================================================= */
+
+.habit-detail-section-eyebrow {
+  margin: 0 0 5px;
+
+  color: #25855f;
+
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.habit-detail-section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+
+  margin-bottom: 18px;
+}
+
+.habit-detail-section-header h2 {
+  margin: 0;
+
+  color: #16211c;
+
+  font-size: 23px;
+}
+
+.habit-detail-section-header > p {
+  margin: 0;
+
+  color: #849089;
+
+  font-size: 13px;
+}
+
+.habit-detail-empty-inline {
+  padding: 25px;
+
+  background: #f7faf8;
+
+  border-radius: 12px;
+
+  color: #748078;
+
+  text-align: center;
+}
+
+
+/* =========================================================
+   PROGRESS
+========================================================= */
+
+.habit-progress-card {
+  margin-bottom: 28px;
+  padding: 30px 34px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f4faf7,
+      #ffffff
+    );
+
+  border: 1px solid #dbe9e1;
+  border-radius: 22px;
+}
+
+.habit-progress-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+
+  margin-bottom: 28px;
+}
+
+.habit-progress-heading h2 {
+  margin: 0;
+
+  color: #16211c;
+
+  font-size: 24px;
+}
+
+.habit-progress-status {
+  padding: 7px 11px;
+
+  border-radius: 999px;
+
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.habit-progress-status.completed {
+  background: #dff3e8;
+  color: #21724f;
+}
+
+.habit-progress-status.pending {
+  background: #fff3d9;
+  color: #946c18;
+}
+
+.habit-progress-values {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+
+  margin-bottom: 13px;
+}
+
+.habit-progress-values > div {
+  display: flex;
+  align-items: baseline;
+}
+
+.habit-progress-values > div > strong {
+  color: #1f704f;
+
+  font-size: 36px;
+  line-height: 1;
+}
+
+.habit-progress-values > div > span {
+  color: #526159;
+
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.habit-progress-percentage {
+  color: #1f704f;
+
+  font-size: 21px;
+}
+
+.habit-progress-track {
+  width: 100%;
+  height: 10px;
+
+  overflow: hidden;
+
+  background: #dfeae4;
+
+  border-radius: 999px;
+}
+
+.habit-progress-fill {
+  height: 100%;
+
+  background:
+    linear-gradient(
+      90deg,
+      #2b8a65,
+      #65ad8e
+    );
+
+  border-radius: inherit;
+
+  transition: width 0.35s ease;
+}
+
+.habit-progress-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+  margin-top: 13px;
+}
+
+.habit-progress-footer p,
+.habit-progress-footer span {
+  margin: 0;
+
+  color: #78847e;
+
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   STATISTICS
+========================================================= */
+
+.habit-statistics-section {
+  margin-bottom: 28px;
+}
+
+.habit-statistics-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 16px;
+}
+
+.habit-stat-card {
+  min-height: 180px;
+
+  padding: 22px;
+
+  background: #ffffff;
+
+  border: 1px solid #dfe8e3;
+  border-radius: 18px;
+
+  box-shadow:
+    0 6px 22px rgba(26, 68, 51, 0.035);
+}
+
+.habit-stat-icon {
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 17px;
+
+  background: #edf7f2;
+  color: #25855f;
+
+  border-radius: 10px;
+
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.habit-stat-card > span {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #78847e;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.habit-stat-card > strong {
+  display: block;
+
+  color: #16211c;
+
+  font-size: 26px;
+}
+
+.habit-stat-card > strong small {
+  color: #647169;
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.habit-stat-card > p {
+  margin: 10px 0 0;
+
+  color: #8a958f;
+
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   ACTIVITY GRID
+========================================================= */
+
+.habit-activity-grid {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 0.85fr)
+    minmax(0, 1.15fr);
+
+  gap: 22px;
+
+  align-items: stretch;
+}
+
+
+/* =========================================================
+   LOG FORM
+========================================================= */
+
+.habit-log-card,
+.habit-history-card {
+  padding: 28px;
+
+  background: #ffffff;
+
+  border: 1px solid #dfe8e3;
+  border-radius: 20px;
+
+  box-shadow:
+    0 7px 25px rgba(26, 68, 51, 0.04);
+}
+
+.habit-log-card-header {
+  margin-bottom: 23px;
+}
+
+.habit-log-card-header h2,
+.habit-history-header h2 {
+  margin: 0;
+
+  color: #16211c;
+
+  font-size: 21px;
+}
+
+.habit-log-card-header > p:last-child {
+  margin: 8px 0 0;
+
+  color: #7d8982;
+
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.habit-log-form {
+  display: flex;
+  flex-direction: column;
+
+  gap: 20px;
+}
+
+.habit-log-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.habit-log-field label {
+  margin-bottom: 8px;
+
+  color: #26332d;
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.habit-log-value-input {
+  display: flex;
+  align-items: center;
+
+  overflow: hidden;
+
+  border: 1px solid #d7e1dc;
+  border-radius: 11px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.habit-log-value-input:focus-within {
+  border-color: #25855f;
+
+  box-shadow:
+    0 0 0 3px rgba(37, 133, 95, 0.1);
+}
+
+.habit-log-value-input input {
+  flex: 1;
+
+  height: 50px;
+
+  padding: 0 14px;
+
+  border: none;
+  outline: none;
+
+  font: inherit;
+}
+
+.habit-log-value-input span {
+  align-self: stretch;
+
+  padding: 0 16px;
+
+  display: flex;
+  align-items: center;
+
+  background: #f4f8f6;
+  color: #526159;
+
+  border-left: 1px solid #dfe7e3;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.habit-log-field textarea {
+  min-height: 120px;
+
+  padding: 13px 14px;
+
+  resize: vertical;
+
+  border: 1px solid #d7e1dc;
+  border-radius: 11px;
+
+  outline: none;
+
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.habit-log-field textarea:focus {
+  border-color: #25855f;
+
+  box-shadow:
+    0 0 0 3px rgba(37, 133, 95, 0.1);
+}
+
+.habit-log-submit {
+  min-height: 48px;
+
+  border: none;
+  border-radius: 11px;
+
+  background: #25855f;
+  color: #ffffff;
+
+  font-size: 13px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.habit-log-submit:hover {
+  background: #1f7453;
+  transform: translateY(-1px);
+}
+
+.habit-log-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.habit-log-message {
+  margin-top: 18px;
+
+  padding: 13px 14px;
+
+  border-radius: 10px;
+
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.habit-log-message.success {
+  background: #e7f5ed;
+  color: #237451;
+
+  border: 1px solid #cde7d9;
+}
+
+.habit-log-message.progress {
+  background: #eef6f2;
+  color: #326d55;
+
+  border: 1px solid #d7e9df;
+}
+
+.habit-log-message.error {
+  background: #fff1f1;
+  color: #b44848;
+
+  border: 1px solid #efd0d0;
+}
+
+
+/* =========================================================
+   HISTORY
+========================================================= */
+
+.habit-history-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-bottom: 18px;
+}
+
+.habit-history-header > span {
+  padding: 6px 9px;
+
+  background: #f0f5f2;
+  color: #6d7972;
+
+  border-radius: 999px;
+
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.habit-history-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.habit-history-item {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    85px
+    105px;
+
+  align-items: center;
+
+  gap: 14px;
+
+  padding: 16px 0;
+
+  border-bottom: 1px solid #e7ece9;
+}
+
+.habit-history-item:last-child {
+  border-bottom: none;
+}
+
+.habit-history-date {
+  min-width: 0;
+}
+
+.habit-history-date strong {
+  display: block;
+
+  margin-bottom: 4px;
+
+  color: #25322c;
+
+  font-size: 12px;
+}
+
+.habit-history-date span {
+  display: block;
+
+  overflow: hidden;
+
+  color: #89948e;
+
+  font-size: 11px;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.habit-history-value {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.habit-history-value strong {
+  color: #1f704f;
+
+  font-size: 15px;
+}
+
+.habit-history-value span {
+  color: #78847e;
+
+  font-size: 10px;
+}
+
+.habit-history-status {
+  justify-self: end;
+
+  padding: 6px 9px;
+
+  border-radius: 999px;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  white-space: nowrap;
+}
+
+.habit-history-status.completed {
+  background: #e1f3e9;
+  color: #237451;
+}
+
+.habit-history-status.pending {
+  background: #fff3d9;
+  color: #946c18;
+}
+
+.habit-history-status.recorded {
+  background: #e8f1ed;
+  color: #42715d;
+}
+
+.habit-history-status.skipped {
+  background: #f1f1f1;
+  color: #747474;
+}
+
+.habit-history-empty {
+  min-height: 250px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+.habit-history-empty > div {
+  width: 44px;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 13px;
+
+  background: #e9f5ef;
+  color: #25855f;
+
+  border-radius: 12px;
+
+  font-weight: 800;
+}
+
+.habit-history-empty h3 {
+  margin: 0 0 5px;
+
+  color: #26332d;
+
+  font-size: 15px;
+}
+
+.habit-history-empty p {
+  max-width: 280px;
+
+  margin: 0;
+
+  color: #89948e;
+
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.habit-detail-loading {
+  min-height: 65vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  color: #17211c;
+
+  text-align: center;
+}
+
+.habit-detail-loading h2 {
+  margin: 15px 0 5px;
+}
+
+.habit-detail-loading p {
+  margin: 0;
+
+  color: #78847e;
+}
+
+.habit-detail-spinner {
+  width: 32px;
+  height: 32px;
+
+  border: 3px solid #dcebe4;
+  border-top-color: #25855f;
+
+  border-radius: 50%;
+
+  animation:
+    habitDetailSpin 0.8s linear infinite;
+}
+
+@keyframes habitDetailSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1100px) {
+
+  .habit-statistics-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .habit-activity-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+@media (max-width: 850px) {
+
+  .habit-detail-page {
+    padding: 32px 20px 60px;
+  }
+
+  .habit-detail-hero {
+    flex-direction: column;
+  }
+
+  .habit-detail-actions {
+    width: 100%;
+  }
+
+  .habit-detail-edit,
+  .habit-detail-delete {
+    flex: 1;
+  }
+
+  .habit-detail-meta-item {
+    width: 50%;
+    min-width: 0;
+
+    padding: 14px 0;
+
+    border-right: none;
+    border-bottom: 1px solid #e6ece8;
+  }
+
+  .habit-detail-meta {
+    gap: 0;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .habit-detail-hero {
+    padding: 25px 22px;
+  }
+
+  .habit-detail-hero h1 {
+    font-size: 30px;
+  }
+
+  .habit-statistics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .habit-progress-card {
+    padding: 24px 21px;
+  }
+
+  .habit-progress-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .habit-history-item {
+    grid-template-columns: 1fr auto;
+  }
+
+  .habit-history-status {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+
+}
+
+/* =========================================================
+   NOVALIFE - WARDROBE LIST
+   ========================================================= */
+
+
+/* =========================================================
+   PAGE
+   ========================================================= */
+
+.wardrobe-page {
+  width: 100%;
+  max-width: 1450px;
+
+  margin: 0 auto;
+  padding: 52px 48px 80px;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.wardrobe-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 32px;
+
+  margin-bottom: 30px;
+}
+
+.wardrobe-header-main {
+  min-width: 0;
+}
+
+.wardrobe-eyebrow,
+.wardrobe-section-eyebrow {
+  margin: 0 0 7px;
+
+  color: #25855f;
+
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+}
+
+.wardrobe-header h1 {
+  margin: 0;
+
+  color: #111b16;
+
+  font-size: 46px;
+  line-height: 1.1;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+}
+
+.wardrobe-subtitle {
+  max-width: 680px;
+
+  margin: 12px 0 0;
+
+  color: #65736c;
+
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+
+/* =========================================================
+   HEADER ACTION
+   ========================================================= */
+
+.wardrobe-header-actions {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  flex-shrink: 0;
+}
+
+.wardrobe-create-button {
+  min-height: 46px;
+
+  padding: 0 18px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #25855f;
+  color: #ffffff;
+
+  border: 1px solid #25855f;
+  border-radius: 11px;
+
+  font-size: 13px;
+  font-weight: 750;
+
+  text-decoration: none;
+
+  box-shadow:
+    0 6px 16px rgba(37, 133, 95, 0.14);
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.wardrobe-create-button:hover {
+  background: #1f7453;
+  border-color: #1f7453;
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 9px 20px rgba(37, 133, 95, 0.18);
+}
+
+
+/* =========================================================
+   SUMMARY
+   ========================================================= */
+
+.wardrobe-summary {
+  min-height: 88px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 25px;
+
+  margin-bottom: 40px;
+  padding: 18px 24px;
+
+  background: #ffffff;
+
+  border: 1px solid #dfe8e3;
+  border-radius: 18px;
+
+  box-shadow:
+    0 6px 22px rgba(26, 68, 51, 0.035);
+}
+
+.wardrobe-summary-item {
+  display: flex;
+  align-items: baseline;
+
+  gap: 7px;
+
+  flex-shrink: 0;
+}
+
+.wardrobe-summary-item strong {
+  color: #1e7554;
+
+  font-size: 25px;
+  font-weight: 800;
+}
+
+.wardrobe-summary-item span {
+  color: #65736c;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.wardrobe-summary-divider {
+  width: 1px;
+  height: 34px;
+
+  flex-shrink: 0;
+
+  background: #e0e8e4;
+}
+
+.wardrobe-summary-note {
+  max-width: 480px;
+
+  margin-left: auto;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+}
+
+.wardrobe-summary-note > span {
+  width: 32px;
+  height: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  background: #edf7f2;
+  color: #25855f;
+
+  border-radius: 9px;
+
+  font-size: 14px;
+}
+
+.wardrobe-summary-note p {
+  margin: 0;
+
+  color: #7b8780;
+
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+
+/* =========================================================
+   CONTENT HEADER
+   ========================================================= */
+
+.wardrobe-content-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-bottom: 18px;
+}
+
+.wardrobe-content-header h2 {
+  margin: 0;
+
+  color: #17211c;
+
+  font-size: 23px;
+  font-weight: 800;
+}
+
+.wardrobe-content-header > span {
+  color: #8a958f;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   GRID
+   ========================================================= */
+
+.wardrobe-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 20px;
+}
+
+
+/* =========================================================
+   WARDROBE CARD
+   ========================================================= */
+
+.wardrobe-card {
+  min-width: 0;
+
+  overflow: hidden;
+
+  display: block;
+
+  background: #ffffff;
+  color: inherit;
+
+  border: 1px solid #dfe7e3;
+  border-radius: 18px;
+
+  text-decoration: none;
+
+  box-shadow:
+    0 6px 20px rgba(28, 67, 52, 0.035);
+
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    border-color 0.22s ease;
+}
+
+.wardrobe-card:hover {
+  transform: translateY(-4px);
+
+  border-color: #c8dbd1;
+
+  box-shadow:
+    0 15px 34px rgba(28, 67, 52, 0.09);
+}
+
+
+/* =========================================================
+   CARD IMAGE
+   ========================================================= */
+
+.wardrobe-card-image {
+  position: relative;
+
+  width: 100%;
+  aspect-ratio: 4 / 5;
+
+  overflow: hidden;
+
+  background: #f1f4f2;
+}
+
+.wardrobe-card-image img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  transition: transform 0.35s ease;
+}
+
+.wardrobe-card:hover .wardrobe-card-image img {
+  transform: scale(1.025);
+}
+
+
+/* =========================================================
+   IMAGE PLACEHOLDER
+   ========================================================= */
+
+.wardrobe-image-placeholder {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  color: #99a59e;
+}
+
+.wardrobe-image-placeholder span {
+  margin-bottom: 7px;
+
+  font-size: 34px;
+}
+
+.wardrobe-image-placeholder p {
+  margin: 0;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   CATEGORY BADGE
+   ========================================================= */
+
+.wardrobe-card-category {
+  position: absolute;
+
+  top: 13px;
+  left: 13px;
+
+  padding: 6px 9px;
+
+  background: rgba(255, 255, 255, 0.92);
+  color: #2e674f;
+
+  border: 1px solid rgba(218, 231, 224, 0.9);
+  border-radius: 999px;
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  font-size: 9px;
+  font-weight: 800;
+
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+
+  z-index: 2;
+}
+
+
+/* =========================================================
+   FAVORITE BADGE
+   ========================================================= */
+
+.wardrobe-card-favorite {
+  position: absolute;
+
+  top: 13px;
+  right: 13px;
+
+  width: 32px;
+  height: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(255, 255, 255, 0.93);
+  color: #d35b67;
+
+  border: 1px solid rgba(230, 220, 221, 0.9);
+  border-radius: 50%;
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  font-size: 14px;
+
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.05);
+
+  z-index: 2;
+}
+
+
+/* =========================================================
+   CARD CONTENT
+   ========================================================= */
+
+.wardrobe-card-content {
+  padding: 17px 17px 15px;
+}
+
+.wardrobe-card-heading {
+  min-height: 57px;
+}
+
+.wardrobe-card-heading h3 {
+  overflow: hidden;
+
+  margin: 0 0 6px;
+
+  color: #18231e;
+
+  font-size: 15px;
+  line-height: 1.35;
+  font-weight: 800;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.wardrobe-card-heading > span {
+  color: #849089;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   CARD FOOTER
+   ========================================================= */
+
+.wardrobe-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 10px;
+
+  margin-top: 13px;
+  padding-top: 13px;
+
+  border-top: 1px solid #e7ece9;
+
+  color: #33785d;
+}
+
+.wardrobe-card-footer > span {
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.wardrobe-card-footer > strong {
+  font-size: 15px;
+
+  transition: transform 0.2s ease;
+}
+
+.wardrobe-card:hover
+.wardrobe-card-footer > strong {
+  transform: translateX(3px);
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.wardrobe-empty {
+  min-height: 430px;
+
+  padding: 60px 25px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  background: #ffffff;
+
+  border: 1px dashed #ceddd5;
+  border-radius: 22px;
+
+  text-align: center;
+}
+
+.wardrobe-empty-visual {
+  width: 82px;
+  height: 82px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 22px;
+
+  background: #edf7f2;
+
+  border-radius: 24px;
+}
+
+.wardrobe-empty-hanger {
+  color: #25855f;
+
+  font-size: 37px;
+}
+
+.wardrobe-empty h2 {
+  margin: 0;
+
+  color: #17211c;
+
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.wardrobe-empty-description {
+  max-width: 480px;
+
+  margin: 12px 0 23px;
+
+  color: #7b8780;
+
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.wardrobe-empty-button {
+  min-height: 46px;
+
+  padding: 0 18px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #25855f;
+  color: #ffffff;
+
+  border-radius: 11px;
+
+  font-size: 12px;
+  font-weight: 800;
+
+  text-decoration: none;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.wardrobe-empty-button:hover {
+  background: #1f7453;
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.wardrobe-page-error {
+  margin-bottom: 25px;
+
+  padding: 13px 15px;
+
+  background: #fff1f1;
+  color: #b44848;
+
+  border: 1px solid #efd0d0;
+  border-radius: 11px;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   LOADING STATE
+   ========================================================= */
+
+.wardrobe-page-state {
+  min-height: 65vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  color: #17211c;
+}
+
+.wardrobe-page-state h2 {
+  margin: 15px 0 5px;
+
+  color: #17211c;
+
+  font-size: 21px;
+  font-weight: 800;
+}
+
+.wardrobe-page-state p {
+  margin: 0;
+
+  color: #7c8881;
+
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   LOADING SPINNER
+   ========================================================= */
+
+.wardrobe-page-spinner {
+  width: 32px;
+  height: 32px;
+
+  border: 3px solid #dcebe4;
+  border-top-color: #25855f;
+
+  border-radius: 50%;
+
+  animation:
+    wardrobeSpin 0.8s linear infinite;
+}
+
+@keyframes wardrobeSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =========================================================
+   RESPONSIVE - LARGE TABLET
+   ========================================================= */
+
+@media (max-width: 1200px) {
+
+  .wardrobe-grid {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+  }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE - TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  .wardrobe-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .wardrobe-summary-note {
+    display: none;
+  }
+
+  .wardrobe-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE - MOBILE
+   ========================================================= */
+
+@media (max-width: 650px) {
+
+  .wardrobe-page {
+    padding: 32px 20px 60px;
+  }
+
+  .wardrobe-header {
+    gap: 22px;
+  }
+
+  .wardrobe-header h1 {
+    font-size: 36px;
+  }
+
+  .wardrobe-header-actions {
+    width: 100%;
+  }
+
+  .wardrobe-create-button {
+    width: 100%;
+  }
+
+  .wardrobe-summary {
+    gap: 17px;
+
+    padding: 16px 18px;
+  }
+
+  .wardrobe-summary-item strong {
+    font-size: 22px;
+  }
+
+  .wardrobe-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE - SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+  .wardrobe-page {
+    padding:
+      28px 16px
+      50px;
+  }
+
+  .wardrobe-header h1 {
+    font-size: 32px;
+  }
+
+  .wardrobe-subtitle {
+    font-size: 14px;
+  }
+
+  .wardrobe-summary {
+    gap: 13px;
+  }
+
+  .wardrobe-summary-divider {
+    height: 28px;
+  }
+
+  .wardrobe-card-content {
+    padding: 16px;
+  }
+
+}
+
+/* =========================================================
+   NOVALIFE - CREATE WARDROBE
+   ========================================================= */
+
+
+/* =========================================================
+   PAGE
+   ========================================================= */
+
+.wardrobe-create-page {
+  width: 100%;
+  max-width: 1400px;
+
+  margin: 0 auto;
+  padding: 44px 48px 80px;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.wardrobe-create-header {
+  max-width: 760px;
+
+  margin-bottom: 32px;
+}
+
+.wardrobe-create-back {
+  margin: 0 0 25px;
+  padding: 0;
+
+  background: transparent;
+  color: #536159;
+
+  border: none;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: color 0.2s ease;
+}
+
+.wardrobe-create-back:hover {
+  color: #25855f;
+}
+
+.wardrobe-create-eyebrow {
+  margin: 0 0 7px;
+
+  color: #25855f;
+
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+}
+
+.wardrobe-create-header h1 {
+  margin: 0;
+
+  color: #111b16;
+
+  font-size: 42px;
+  line-height: 1.15;
+  font-weight: 800;
+  letter-spacing: -1.2px;
+}
+
+.wardrobe-create-subtitle {
+  max-width: 650px;
+
+  margin: 11px 0 0;
+
+  color: #69766f;
+
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+
+/* =========================================================
+   LAYOUT
+   ========================================================= */
+
+.wardrobe-create-layout {
+  display: grid;
+
+  grid-template-columns:
+    minmax(330px, 0.8fr)
+    minmax(480px, 1.2fr);
+
+  gap: 24px;
+
+  align-items: start;
+}
+
+.wardrobe-create-left {
+  display: flex;
+  flex-direction: column;
+
+  gap: 20px;
+}
+
+
+/* =========================================================
+   CARDS
+   ========================================================= */
+
+.wardrobe-create-image-card,
+.wardrobe-create-form-card,
+.wardrobe-ai-vision-card {
+  background: #ffffff;
+
+  border: 1px solid #dfe8e3;
+  border-radius: 20px;
+
+  box-shadow:
+    0 7px 25px rgba(26, 68, 51, 0.04);
+}
+
+.wardrobe-create-image-card,
+.wardrobe-create-form-card {
+  padding: 26px;
+}
+
+
+/* =========================================================
+   SECTION HEADING
+   ========================================================= */
+
+.wardrobe-create-section-heading {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 13px;
+
+  margin-bottom: 23px;
+}
+
+.wardrobe-create-step {
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  background: #edf7f2;
+  color: #25855f;
+
+  border-radius: 10px;
+
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+}
+
+.wardrobe-create-section-heading h2 {
+  margin: 0;
+
+  color: #18231e;
+
+  font-size: 18px;
+  line-height: 1.3;
+}
+
+.wardrobe-create-section-heading p {
+  margin: 5px 0 0;
+
+  color: #849089;
+
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   IMAGE PREVIEW
+   ========================================================= */
+
+.wardrobe-create-preview {
+  position: relative;
+
+  width: 100%;
+  aspect-ratio: 4 / 5;
+
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    linear-gradient(
+      145deg,
+      #f6f9f7,
+      #edf3f0
+    );
+
+  border: 1px dashed #cbdad2;
+  border-radius: 16px;
+}
+
+.wardrobe-create-preview.has-image {
+  background: #f2f4f3;
+
+  border-style: solid;
+  border-color: #dce5e0;
+}
+
+.wardrobe-create-preview img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+}
+
+.wardrobe-create-placeholder {
+  max-width: 250px;
+
+  padding: 30px 20px;
+
+  text-align: center;
+}
+
+.wardrobe-create-placeholder-icon {
+  width: 58px;
+  height: 58px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin: 0 auto 14px;
+
+  background: #e4f1ea;
+  color: #25855f;
+
+  border-radius: 17px;
+
+  font-size: 27px;
+}
+
+.wardrobe-create-placeholder strong {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #26332d;
+
+  font-size: 13px;
+}
+
+.wardrobe-create-placeholder p {
+  margin: 0;
+
+  color: #89958e;
+
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   REMOVE IMAGE
+   ========================================================= */
+
+.wardrobe-create-remove-image {
+  position: absolute;
+
+  top: 12px;
+  right: 12px;
+
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  background: rgba(255, 255, 255, 0.94);
+  color: #b34f4f;
+
+  border: 1px solid rgba(225, 211, 211, 0.95);
+  border-radius: 50%;
+
+  font-size: 20px;
+  line-height: 1;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.08);
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.wardrobe-create-remove-image:hover {
+  background: #fff4f4;
+
+  transform: scale(1.05);
+}
+
+
+/* =========================================================
+   UPLOAD BUTTON
+   ========================================================= */
+
+.wardrobe-create-upload {
+  min-height: 62px;
+
+  margin-top: 14px;
+  padding: 11px 14px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 11px;
+
+  background: #f7faf8;
+
+  border: 1px solid #dce6e1;
+  border-radius: 12px;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.wardrobe-create-upload:hover {
+  background: #f1f7f4;
+
+  border-color: #bdd6c9;
+}
+
+.wardrobe-create-upload input {
+  display: none;
+}
+
+.wardrobe-create-upload-icon {
+  width: 36px;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  background: #e4f2eb;
+  color: #25855f;
+
+  border-radius: 9px;
+
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.wardrobe-create-upload strong {
+  display: block;
+
+  color: #29372f;
+
+  font-size: 11px;
+}
+
+.wardrobe-create-upload small {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #8b9690;
+
+  font-size: 9px;
+}
+
+
+/* =========================================================
+   AI VISION CARD
+   ========================================================= */
+
+.wardrobe-ai-vision-card {
+  padding: 24px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #f7fbf9,
+      #ffffff
+    );
+
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.wardrobe-ai-vision-card.analyzed {
+  border-color: #bfdcca;
+
+  box-shadow:
+    0 8px 28px rgba(37, 133, 95, 0.07);
+}
+
+.wardrobe-ai-vision-top {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+}
+
+.wardrobe-ai-vision-icon {
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  background:
+    linear-gradient(
+      145deg,
+      #dff2e8,
+      #edf8f3
+    );
+
+  color: #25855f;
+
+  border: 1px solid #d0e8dc;
+  border-radius: 12px;
+
+  font-size: 18px;
+}
+
+.wardrobe-ai-vision-top p {
+  margin: 0 0 3px;
+
+  color: #25855f;
+
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.wardrobe-ai-vision-top h3 {
+  margin: 0;
+
+  color: #1c2922;
+
+  font-size: 15px;
+}
+
+.wardrobe-ai-vision-description {
+  margin: 17px 0;
+
+  color: #748078;
+
+  font-size: 11px;
+  line-height: 1.65;
+}
+
+
+/* =========================================================
+   AI NOTE
+   ========================================================= */
+
+.wardrobe-ai-vision-note {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 9px;
+
+  margin-bottom: 17px;
+  padding: 11px 12px;
+
+  background: #edf6f1;
+
+  border: 1px solid #dbece3;
+  border-radius: 10px;
+}
+
+.wardrobe-ai-vision-note > span {
+  width: 20px;
+  height: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  background: #d9eee3;
+  color: #287a59;
+
+  border-radius: 50%;
+
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.wardrobe-ai-vision-note p {
+  margin: 0;
+
+  color: #617069;
+
+  font-size: 9px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   AI ANALYZE BUTTON
+   ========================================================= */
+
+.wardrobe-ai-analyze-button {
+  width: 100%;
+  min-height: 45px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  background: #ffffff;
+  color: #257957;
+
+  border: 1px solid #bcd8c9;
+  border-radius: 11px;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.wardrobe-ai-analyze-button:hover:not(:disabled) {
+  background: #edf7f2;
+
+  border-color: #9fcab5;
+
+  transform: translateY(-1px);
+}
+
+.wardrobe-ai-analyze-button:disabled {
+  background: #f4f6f5;
+  color: #a4ada8;
+
+  border-color: #e0e5e2;
+
+  cursor: not-allowed;
+}
+
+
+/* =========================================================
+   AI SPINNER
+   ========================================================= */
+
+.wardrobe-ai-small-spinner {
+  width: 15px;
+  height: 15px;
+
+  border: 2px solid #d5e8de;
+  border-top-color: #25855f;
+
+  border-radius: 50%;
+
+  animation:
+    wardrobeAiSpin 0.7s linear infinite;
+}
+
+@keyframes wardrobeAiSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =========================================================
+   AI SUCCESS
+   ========================================================= */
+
+.wardrobe-ai-success {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 8px;
+
+  margin-top: 13px;
+  padding: 11px 12px;
+
+  background: #e8f5ee;
+  color: #287555;
+
+  border: 1px solid #cee8da;
+  border-radius: 10px;
+}
+
+.wardrobe-ai-success > span {
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.wardrobe-ai-success p {
+  margin: 0;
+
+  font-size: 9px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   FORM AI BADGE
+   ========================================================= */
+
+.wardrobe-ai-form-badge {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  margin: -4px 0 20px;
+  padding: 10px 12px;
+
+  background: #edf7f2;
+  color: #39725b;
+
+  border: 1px solid #d7eae0;
+  border-radius: 10px;
+}
+
+.wardrobe-ai-form-badge > span {
+  color: #25855f;
+
+  font-size: 12px;
+}
+
+.wardrobe-ai-form-badge p {
+  margin: 0;
+
+  font-size: 9px;
+  font-weight: 650;
+}
+
+
+/* =========================================================
+   FORM FIELDS
+   ========================================================= */
+
+.wardrobe-create-fields {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 20px 16px;
+}
+
+.wardrobe-create-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.wardrobe-create-field:first-child {
+  grid-column: 1 / -1;
+}
+
+.wardrobe-create-field label {
+  margin-bottom: 7px;
+
+  color: #29362f;
+
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.wardrobe-create-field label span {
+  color: #c35656;
+}
+
+.wardrobe-create-field input,
+.wardrobe-create-field select {
+  width: 100%;
+  height: 47px;
+
+  padding: 0 13px;
+
+  background: #ffffff;
+  color: #26332d;
+
+  border: 1px solid #d7e1dc;
+  border-radius: 10px;
+
+  outline: none;
+
+  font: inherit;
+  font-size: 12px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.wardrobe-create-field input:focus,
+.wardrobe-create-field select:focus {
+  border-color: #25855f;
+
+  box-shadow:
+    0 0 0 3px rgba(37, 133, 95, 0.09);
+}
+
+.wardrobe-create-field input::placeholder {
+  color: #a3aca7;
+}
+
+
+/* =========================================================
+   FAVORITE
+   ========================================================= */
+
+.wardrobe-create-favorite {
+  grid-column: 1 / -1;
+
+  min-height: 76px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 13px;
+
+  padding: 14px;
+
+  background: #fafcfb;
+
+  border: 1px solid #e0e7e3;
+  border-radius: 12px;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.wardrobe-create-favorite:hover {
+  background: #f7faf8;
+
+  border-color: #ccdcd4;
+}
+
+.wardrobe-create-favorite input {
+  position: absolute;
+
+  opacity: 0;
+  pointer-events: none;
+}
+
+.wardrobe-create-favorite-box {
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  background: #ffffff;
+  color: #b8c0bc;
+
+  border: 1px solid #dce4e0;
+  border-radius: 10px;
+
+  font-size: 15px;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.wardrobe-create-favorite
+input:checked
++
+.wardrobe-create-favorite-box {
+  background: #fff0f2;
+  color: #d35b67;
+
+  border-color: #efd1d5;
+}
+
+.wardrobe-create-favorite strong {
+  display: block;
+
+  margin-bottom: 4px;
+
+  color: #2b3731;
+
+  font-size: 11px;
+}
+
+.wardrobe-create-favorite p {
+  margin: 0;
+
+  color: #8b9690;
+
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.wardrobe-create-error {
+  margin-top: 20px;
+
+  padding: 12px 14px;
+
+  background: #fff1f1;
+  color: #b44848;
+
+  border: 1px solid #efd0d0;
+  border-radius: 10px;
+
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.wardrobe-create-actions {
+  display: flex;
+  justify-content: flex-end;
+
+  gap: 10px;
+
+  margin-top: 28px;
+  padding-top: 22px;
+
+  border-top: 1px solid #e5ebe8;
+}
+
+.wardrobe-create-cancel,
+.wardrobe-create-submit {
+  min-height: 44px;
+
+  padding: 0 18px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.wardrobe-create-cancel {
+  background: #ffffff;
+  color: #66736c;
+
+  border: 1px solid #d8e1dc;
+}
+
+.wardrobe-create-cancel:hover {
+  background: #f6f8f7;
+}
+
+.wardrobe-create-submit {
+  background: #25855f;
+  color: #ffffff;
+
+  border: 1px solid #25855f;
+
+  box-shadow:
+    0 6px 16px rgba(37, 133, 95, 0.14);
+}
+
+.wardrobe-create-submit:hover:not(:disabled) {
+  background: #1f7453;
+
+  border-color: #1f7453;
+
+  transform: translateY(-1px);
+}
+
+.wardrobe-create-submit:disabled,
+.wardrobe-create-cancel:disabled {
+  opacity: 0.6;
+
+  cursor: not-allowed;
+
+  transform: none;
+}
+
+
+/* =========================================================
+   RESPONSIVE - TABLET
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+  .wardrobe-create-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .wardrobe-create-left {
+    display: grid;
+
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    align-items: start;
+  }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE - MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  .wardrobe-create-page {
+    padding: 32px 20px 60px;
+  }
+
+  .wardrobe-create-header h1 {
+    font-size: 34px;
+  }
+
+  .wardrobe-create-left {
+    display: flex;
+  }
+
+  .wardrobe-create-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .wardrobe-create-field:first-child,
+  .wardrobe-create-favorite {
+    grid-column: auto;
+  }
+
+  .wardrobe-create-actions {
+    flex-direction: column-reverse;
+  }
+
+  .wardrobe-create-cancel,
+  .wardrobe-create-submit {
+    width: 100%;
+  }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE - SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+  .wardrobe-create-page {
+    padding:
+      28px 16px
+      50px;
+  }
+
+  .wardrobe-create-image-card,
+  .wardrobe-create-form-card,
+  .wardrobe-ai-vision-card {
+    padding: 20px;
+  }
+
+  .wardrobe-create-header h1 {
+    font-size: 30px;
+  }
+
+}
+
+/* =========================================================
+   WARDROBE DETAIL
+   ========================================================= */
+
+.wardrobe-detail-page {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+}
+
+
+/* BACK */
+
+.wardrobe-detail-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  margin-bottom: 34px;
+
+  color: #15241e;
+  font-size: 14px;
+  font-weight: 700;
+
+  text-decoration: none;
+
+  transition: 0.2s ease;
+}
+
+.wardrobe-detail-back:hover {
+  color: #27865f;
+}
+
+
+/* HEADER */
+
+.wardrobe-detail-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 30px;
+
+  margin-bottom: 34px;
+}
+
+.wardrobe-detail-eyebrow {
+  margin: 0 0 8px;
+
+  color: #27865f;
+
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+}
+
+.wardrobe-detail-header h1 {
+  margin: 0;
+
+  color: #101c17;
+
+  font-size: 42px;
+  line-height: 1.15;
+  font-weight: 800;
+  letter-spacing: -1.2px;
+}
+
+.wardrobe-detail-subtitle {
+  margin: 12px 0 0;
+
+  color: #69756f;
+
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.wardrobe-detail-favorite-badge {
+  flex-shrink: 0;
+
+  padding: 10px 16px;
+
+  border: 1px solid #d9e9e1;
+  border-radius: 999px;
+
+  background: #edf7f2;
+
+  color: #27865f;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+
+/* MAIN CARD */
+
+.wardrobe-detail-card {
+  display: grid;
+  grid-template-columns: minmax(360px, 0.9fr) minmax(420px, 1.1fr);
+
+  overflow: hidden;
+
+  border: 1px solid #dce6e1;
+  border-radius: 24px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 16px 45px rgba(26, 69, 52, 0.07);
+}
+
+
+/* IMAGE SECTION */
+
+.wardrobe-detail-image-section {
+  padding: 34px;
+
+  border-right: 1px solid #e3ebe7;
+
+  background: #fbfdfc;
+}
+
+.wardrobe-detail-section-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 44px;
+  height: 44px;
+
+  flex-shrink: 0;
+
+  border-radius: 13px;
+
+  background: #eaf5ef;
+
+  color: #27865f;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.wardrobe-detail-image-heading {
+  margin-top: 18px;
+  margin-bottom: 24px;
+}
+
+.wardrobe-detail-image-heading h2,
+.wardrobe-detail-info-title h2 {
+  margin: 0;
+
+  color: #101c17;
+
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.wardrobe-detail-image-heading p,
+.wardrobe-detail-info-title p {
+  margin: 7px 0 0;
+
+  color: #849089;
+
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+
+/* IMAGE */
+
+.wardrobe-detail-image-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  min-height: 480px;
+
+  overflow: hidden;
+
+  border: 1px solid #e0e9e4;
+  border-radius: 20px;
+
+  background: #f5f8f6;
+}
+
+.wardrobe-detail-image-box img {
+  display: block;
+
+  width: 100%;
+  height: 480px;
+
+  object-fit: contain;
+
+  background: #ffffff;
+}
+
+.wardrobe-detail-no-image {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  color: #8a9690;
+}
+
+.wardrobe-detail-no-image span {
+  margin-bottom: 10px;
+
+  color: #27865f;
+
+  font-size: 34px;
+}
+
+.wardrobe-detail-no-image p {
+  margin: 0;
+
+  font-size: 14px;
+}
+
+
+/* INFO SECTION */
+
+.wardrobe-detail-info-section {
+  display: flex;
+  flex-direction: column;
+
+  padding: 34px 38px;
+}
+
+.wardrobe-detail-info-title {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+
+  padding-bottom: 26px;
+
+  border-bottom: 1px solid #e5ece8;
+}
+
+
+/* INFO LIST */
+
+.wardrobe-detail-info-list {
+  flex: 1;
+
+  padding-top: 8px;
+}
+
+.wardrobe-detail-info-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+
+  min-height: 68px;
+
+  border-bottom: 1px solid #edf1ef;
+}
+
+.wardrobe-detail-info-row span {
+  color: #78847e;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.wardrobe-detail-info-row strong {
+  color: #17251f;
+
+  font-size: 14px;
+  font-weight: 800;
+
+  text-align: right;
+}
+
+
+/* ACTIONS */
+
+.wardrobe-detail-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  margin-top: 32px;
+}
+
+.wardrobe-detail-edit-button,
+.wardrobe-detail-delete-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  min-height: 48px;
+
+  padding: 0 20px;
+
+  border-radius: 12px;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+
+/* EDIT */
+
+.wardrobe-detail-edit-button {
+  border: 1px solid #27865f;
+
+  background: #27865f;
+
+  color: #ffffff;
+
+  text-decoration: none;
+
+  box-shadow:
+    0 8px 20px rgba(39, 134, 95, 0.18);
+}
+
+.wardrobe-detail-edit-button:hover {
+  transform: translateY(-1px);
+
+  background: #217653;
+
+  box-shadow:
+    0 10px 24px rgba(39, 134, 95, 0.24);
+}
+
+
+/* DELETE */
+
+.wardrobe-detail-delete-button {
+  border: 1px solid #f0cece;
+
+  background: #ffffff;
+
+  color: #bd4d4d;
+}
+
+.wardrobe-detail-delete-button:hover {
+  transform: translateY(-1px);
+
+  background: #fff7f7;
+}
+
+.wardrobe-detail-delete-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+
+/* LOADING / ERROR */
+
+.wardrobe-detail-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 400px;
+
+  color: #69756f;
+
+  font-size: 15px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1050px) {
+  .wardrobe-detail-card {
+    grid-template-columns: 1fr;
+  }
+
+  .wardrobe-detail-image-section {
+    border-right: none;
+    border-bottom: 1px solid #e3ebe7;
+  }
+
+  .wardrobe-detail-image-box {
+    min-height: 420px;
+  }
+
+  .wardrobe-detail-image-box img {
+    height: 420px;
+  }
+}
+
+
+@media (max-width: 700px) {
+  .wardrobe-detail-page {
+    padding: 32px 20px 60px;
+  }
+
+  .wardrobe-detail-header {
+    flex-direction: column;
+  }
+
+  .wardrobe-detail-header h1 {
+    font-size: 32px;
+  }
+
+  .wardrobe-detail-image-section,
+  .wardrobe-detail-info-section {
+    padding: 24px;
+  }
+
+  .wardrobe-detail-image-box {
+    min-height: 340px;
+  }
+
+  .wardrobe-detail-image-box img {
+    height: 340px;
+  }
+
+  .wardrobe-detail-info-row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 7px;
+
+    padding: 17px 0;
+  }
+
+  .wardrobe-detail-info-row strong {
+    text-align: left;
+  }
+
+  .wardrobe-detail-actions {
+    flex-direction: column;
+  }
+
+  .wardrobe-detail-edit-button,
+  .wardrobe-detail-delete-button {
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   EDIT WARDROBE
+   ========================================================= */
+
+.wardrobe-edit-page {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+}
+
+
+/* BACK */
+
+.wardrobe-edit-back {
+  display: inline-flex;
+  align-items: center;
+
+  margin-bottom: 30px;
+
+  color: #15241e;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  text-decoration: none;
+
+  transition: color 0.2s ease;
+}
+
+.wardrobe-edit-back:hover {
+  color: #27865f;
+}
+
+
+/* HEADER */
+
+.wardrobe-edit-header {
+  margin-bottom: 34px;
+}
+
+.wardrobe-edit-eyebrow {
+  margin: 0 0 8px;
+
+  color: #27865f;
+
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+}
+
+.wardrobe-edit-header h1 {
+  margin: 0;
+
+  color: #101c17;
+
+  font-size: 42px;
+  line-height: 1.15;
+  font-weight: 800;
+
+  letter-spacing: -1.2px;
+}
+
+.wardrobe-edit-header > p:last-child {
+  max-width: 620px;
+
+  margin: 12px 0 0;
+
+  color: #69756f;
+
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+
+/* LAYOUT */
+
+.wardrobe-edit-layout {
+  display: grid;
+  grid-template-columns:
+    minmax(300px, 0.72fr)
+    minmax(500px, 1.28fr);
+
+  align-items: start;
+
+  gap: 24px;
+}
+
+
+/* CARDS */
+
+.wardrobe-edit-image-card,
+.wardrobe-edit-form-card {
+  border: 1px solid #dce6e1;
+  border-radius: 22px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 14px 40px
+    rgba(27, 68, 52, 0.06);
+}
+
+.wardrobe-edit-image-card {
+  padding: 30px;
+}
+
+.wardrobe-edit-form-card {
+  padding: 32px;
+}
+
+
+/* CARD HEADING */
+
+.wardrobe-edit-card-heading {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 15px;
+
+  margin-bottom: 26px;
+}
+
+.wardrobe-edit-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 44px;
+  height: 44px;
+
+  flex-shrink: 0;
+
+  border-radius: 13px;
+
+  background: #eaf5ef;
+
+  color: #27865f;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.wardrobe-edit-card-heading h2 {
+  margin: 1px 0 0;
+
+  color: #101c17;
+
+  font-size: 19px;
+  font-weight: 800;
+}
+
+.wardrobe-edit-card-heading p {
+  margin: 6px 0 0;
+
+  color: #849089;
+
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+
+/* IMAGE */
+
+.wardrobe-edit-image-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 410px;
+
+  overflow: hidden;
+
+  border: 1px solid #e0e9e4;
+  border-radius: 18px;
+
+  background: #f6f9f7;
+}
+
+.wardrobe-edit-image-preview img {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+
+  background: #ffffff;
+}
+
+.wardrobe-edit-empty-image {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  color: #89958f;
+}
+
+.wardrobe-edit-empty-image span {
+  margin-bottom: 8px;
+
+  color: #27865f;
+
+  font-size: 34px;
+}
+
+.wardrobe-edit-empty-image p {
+  margin: 0;
+
+  font-size: 14px;
+}
+
+
+/* UPLOAD */
+
+.wardrobe-edit-upload {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  margin-top: 16px;
+  padding: 14px;
+
+  border: 1px solid #dce6e1;
+  border-radius: 14px;
+
+  background: #fbfdfc;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.wardrobe-edit-upload:hover {
+  border-color: #b7d9c9;
+
+  background: #f5faf7;
+}
+
+.wardrobe-edit-upload input {
+  display: none;
+}
+
+.wardrobe-edit-upload-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 42px;
+  height: 42px;
+
+  flex-shrink: 0;
+
+  border-radius: 12px;
+
+  background: #eaf5ef;
+
+  color: #27865f;
+
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.wardrobe-edit-upload > span:last-of-type {
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.wardrobe-edit-upload strong {
+  color: #17251f;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.wardrobe-edit-upload small {
+  color: #8a9690;
+
+  font-size: 11px;
+}
+
+
+/* NEW IMAGE */
+
+.wardrobe-edit-new-image-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  margin-top: 12px;
+  padding: 12px 14px;
+
+  border-radius: 12px;
+
+  background: #edf7f2;
+}
+
+.wardrobe-edit-new-image-info div {
+  display: flex;
+  flex-direction: column;
+
+  min-width: 0;
+
+  gap: 3px;
+}
+
+.wardrobe-edit-new-image-info span {
+  color: #718078;
+
+  font-size: 11px;
+}
+
+.wardrobe-edit-new-image-info strong {
+  overflow: hidden;
+
+  color: #206f50;
+
+  font-size: 12px;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wardrobe-edit-new-image-info button {
+  border: 0;
+
+  background: transparent;
+
+  color: #bd4d4d;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+
+/* FIELDS */
+
+.wardrobe-edit-field-full {
+  margin-bottom: 22px;
+}
+
+.wardrobe-edit-fields-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  gap: 20px;
+}
+
+.wardrobe-edit-field {
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+.wardrobe-edit-field label {
+  color: #17251f;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.wardrobe-edit-field label span {
+  color: #c85b5b;
+}
+
+.wardrobe-edit-field input,
+.wardrobe-edit-field select {
+  width: 100%;
+  height: 52px;
+
+  box-sizing: border-box;
+
+  padding: 0 15px;
+
+  outline: none;
+
+  border: 1px solid #d8e3dd;
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  color: #17251f;
+
+  font-family: inherit;
+  font-size: 14px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.wardrobe-edit-field input:focus,
+.wardrobe-edit-field select:focus {
+  border-color: #72b294;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(39, 134, 95, 0.09);
+}
+
+
+/* FAVORITE */
+
+.wardrobe-edit-favorite {
+  display: flex;
+  align-items: center;
+
+  gap: 13px;
+
+  margin-top: 26px;
+  padding: 16px;
+
+  border: 1px solid #dce6e1;
+  border-radius: 14px;
+
+  background: #fbfdfc;
+
+  cursor: pointer;
+}
+
+.wardrobe-edit-favorite input {
+  width: 17px;
+  height: 17px;
+
+  accent-color: #27865f;
+}
+
+.wardrobe-edit-heart {
+  color: #27865f;
+
+  font-size: 19px;
+}
+
+.wardrobe-edit-favorite-text {
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.wardrobe-edit-favorite-text strong {
+  color: #17251f;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.wardrobe-edit-favorite-text small {
+  color: #89958f;
+
+  font-size: 11px;
+}
+
+
+/* ERROR */
+
+.wardrobe-edit-error {
+  margin-top: 20px;
+  padding: 13px 15px;
+
+  border: 1px solid #f0cccc;
+  border-radius: 12px;
+
+  background: #fff4f4;
+
+  color: #bd4d4d;
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+
+/* ACTIONS */
+
+.wardrobe-edit-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 12px;
+
+  margin-top: 30px;
+  padding-top: 24px;
+
+  border-top: 1px solid #e5ece8;
+}
+
+.wardrobe-edit-cancel,
+.wardrobe-edit-save {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 48px;
+
+  box-sizing: border-box;
+
+  padding: 0 20px;
+
+  border-radius: 12px;
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 800;
+
+  text-decoration: none;
+
+  cursor: pointer;
+}
+
+.wardrobe-edit-cancel {
+  border: 1px solid #d7e1dc;
+
+  background: #ffffff;
+
+  color: #59665f;
+}
+
+.wardrobe-edit-cancel:hover {
+  background: #f7faf8;
+}
+
+.wardrobe-edit-save {
+  border: 1px solid #27865f;
+
+  background: #27865f;
+
+  color: #ffffff;
+
+  box-shadow:
+    0 8px 20px
+    rgba(39, 134, 95, 0.18);
+}
+
+.wardrobe-edit-save:hover:not(:disabled) {
+  background: #217653;
+}
+
+.wardrobe-edit-save:disabled {
+  opacity: 0.6;
+
+  cursor: not-allowed;
+}
+
+
+/* STATE */
+
+.wardrobe-edit-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 400px;
+
+  color: #69756f;
+
+  font-size: 14px;
+}
+
+
+/* =========================================================
+   EDIT WARDROBE RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1050px) {
+  .wardrobe-edit-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .wardrobe-edit-image-card {
+    max-width: none;
+  }
+
+  .wardrobe-edit-image-preview {
+    height: 440px;
+  }
+}
+
+
+@media (max-width: 700px) {
+  .wardrobe-edit-page {
+    padding: 32px 20px 60px;
+  }
+
+  .wardrobe-edit-header h1 {
+    font-size: 32px;
+  }
+
+  .wardrobe-edit-image-card,
+  .wardrobe-edit-form-card {
+    padding: 22px;
+  }
+
+  .wardrobe-edit-fields-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .wardrobe-edit-image-preview {
+    height: 340px;
+  }
+
+  .wardrobe-edit-actions {
+    flex-direction: column-reverse;
+  }
+
+  .wardrobe-edit-cancel,
+  .wardrobe-edit-save {
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   AI OUTFIT
+   ========================================================= */
+
+.outfit-page {
+  width: 100%;
+  max-width: 1280px;
+
+  margin: 0 auto;
+  padding: 48px 40px 90px;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.outfit-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 30px;
+
+  margin-bottom: 34px;
+}
+
+.outfit-eyebrow {
+  margin: 0 0 8px;
+
+  color: #27865f;
+
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+}
+
+.outfit-header h1 {
+  margin: 0;
+
+  color: #101c17;
+
+  font-size: 42px;
+  line-height: 1.15;
+  font-weight: 800;
+
+  letter-spacing: -1.2px;
+}
+
+.outfit-subtitle {
+  max-width: 620px;
+
+  margin: 12px 0 0;
+
+  color: #69756f;
+
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+
+/* AI BADGE */
+
+.outfit-ai-badge {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  flex-shrink: 0;
+
+  padding: 12px 16px;
+
+  border: 1px solid #d9e9e1;
+  border-radius: 16px;
+
+  background: #f2f9f5;
+}
+
+.outfit-ai-badge > span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 40px;
+  height: 40px;
+
+  border-radius: 12px;
+
+  background: #27865f;
+
+  color: #ffffff;
+
+  font-size: 18px;
+}
+
+.outfit-ai-badge div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+.outfit-ai-badge strong {
+  color: #17251f;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.outfit-ai-badge small {
+  color: #7f8c85;
+
+  font-size: 11px;
+}
+
+
+/* =========================================================
+   CONFIG CARD
+   ========================================================= */
+
+.outfit-config-card {
+  overflow: hidden;
+
+  border: 1px solid #dce6e1;
+  border-radius: 24px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 14px 40px
+    rgba(27, 68, 52, 0.06);
+}
+
+.outfit-config-section {
+  padding: 32px;
+}
+
+.outfit-config-section +
+.outfit-config-section {
+  border-top: 1px solid #e4ebe7;
+}
+
+
+/* SECTION HEADING */
+
+.outfit-section-heading {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 15px;
+
+  margin-bottom: 26px;
+}
+
+.outfit-section-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 44px;
+  height: 44px;
+
+  flex-shrink: 0;
+
+  border-radius: 13px;
+
+  background: #eaf5ef;
+
+  color: #27865f;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.outfit-section-heading h2 {
+  margin: 1px 0 0;
+
+  color: #101c17;
+
+  font-size: 19px;
+  font-weight: 800;
+}
+
+.outfit-section-heading p {
+  margin: 6px 0 0;
+
+  color: #849089;
+
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+
+/* =========================================================
+   OCCASION
+   ========================================================= */
+
+.outfit-occasion-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 12px;
+}
+
+.outfit-occasion-option {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  min-height: 112px;
+
+  padding: 18px;
+
+  text-align: left;
+
+  border: 1px solid #dce5e0;
+  border-radius: 15px;
+
+  background: #ffffff;
+
+  font-family: inherit;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.outfit-occasion-option:hover {
+  transform: translateY(-1px);
+
+  border-color: #acd2c0;
+
+  box-shadow:
+    0 7px 20px
+    rgba(39, 134, 95, 0.07);
+}
+
+.outfit-occasion-option.active {
+  border-color: #27865f;
+
+  background: #f1f8f4;
+
+  box-shadow:
+    0 0 0 2px
+    rgba(39, 134, 95, 0.07);
+}
+
+.outfit-option-check {
+  position: absolute;
+
+  top: 14px;
+  right: 14px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 22px;
+  height: 22px;
+
+  border: 1px solid #d7e2dc;
+  border-radius: 50%;
+
+  background: #ffffff;
+
+  color: #ffffff;
+
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.outfit-occasion-option.active
+.outfit-option-check {
+  border-color: #27865f;
+
+  background: #27865f;
+}
+
+.outfit-occasion-option strong {
+  margin-top: 15px;
+
+  padding-right: 26px;
+
+  color: #17251f;
+
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.outfit-occasion-option small {
+  margin-top: 6px;
+
+  color: #849089;
+
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+
+/* =========================================================
+   SEASON
+   ========================================================= */
+
+.outfit-season-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 24px;
+}
+
+.outfit-season-select {
+  display: flex;
+  flex-direction: column;
+
+  width: min(100%, 360px);
+
+  gap: 8px;
+}
+
+.outfit-season-select label {
+  color: #17251f;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.outfit-season-select select {
+  width: 100%;
+  height: 52px;
+
+  box-sizing: border-box;
+
+  padding: 0 15px;
+
+  outline: none;
+
+  border: 1px solid #d8e3dd;
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  color: #17251f;
+
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.outfit-season-select select:focus {
+  border-color: #72b294;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(39, 134, 95, 0.09);
+}
+
+
+/* GENERATE */
+
+.outfit-generate-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 9px;
+
+  min-width: 210px;
+  height: 52px;
+
+  padding: 0 22px;
+
+  border: 1px solid #27865f;
+  border-radius: 12px;
+
+  background: #27865f;
+
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 8px 20px
+    rgba(39, 134, 95, 0.18);
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.outfit-generate-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+
+  background: #217653;
+
+  box-shadow:
+    0 10px 24px
+    rgba(39, 134, 95, 0.23);
+}
+
+.outfit-generate-button:disabled {
+  opacity: 0.65;
+
+  cursor: not-allowed;
+}
+
+
+/* =========================================================
+   MESSAGE
+   ========================================================= */
+
+.outfit-message {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 13px;
+
+  margin-top: 22px;
+  padding: 17px 19px;
+
+  border: 1px solid #efd6b4;
+  border-radius: 15px;
+
+  background: #fffaf1;
+}
+
+.outfit-message > span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 30px;
+  height: 30px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: #fff0d7;
+
+  color: #ad792c;
+
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.outfit-message strong {
+  color: #6f532a;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.outfit-message p {
+  margin: 4px 0 0;
+
+  color: #89734f;
+
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+
+/* =========================================================
+   LOADING
+   ========================================================= */
+
+.outfit-loading-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  margin-top: 24px;
+  padding: 44px 30px;
+
+  text-align: center;
+
+  border: 1px solid #dce6e1;
+  border-radius: 22px;
+
+  background: #fbfdfc;
+}
+
+.outfit-loading-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 54px;
+  height: 54px;
+
+  margin-bottom: 16px;
+
+  border-radius: 17px;
+
+  background: #eaf5ef;
+
+  color: #27865f;
+
+  font-size: 23px;
+}
+
+.outfit-loading-card h3 {
+  margin: 0;
+
+  color: #17251f;
+
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.outfit-loading-card p {
+  max-width: 440px;
+
+  margin: 8px 0 20px;
+
+  color: #849089;
+
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.outfit-loading-bar {
+  width: min(100%, 360px);
+  height: 5px;
+
+  overflow: hidden;
+
+  border-radius: 999px;
+
+  background: #e1ebe6;
+}
+
+.outfit-loading-bar span {
+  display: block;
+
+  width: 45%;
+  height: 100%;
+
+  border-radius: inherit;
+
+  background: #27865f;
+
+  animation:
+    outfitLoading 1.25s
+    ease-in-out infinite;
+}
+
+@keyframes outfitLoading {
+  0% {
+    transform: translateX(-110%);
+  }
+
+  100% {
+    transform: translateX(250%);
+  }
+}
+
+
+/* =========================================================
+   RESULT
+   ========================================================= */
+
+.outfit-result {
+  margin-top: 46px;
+}
+
+.outfit-result-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 24px;
+
+  margin-bottom: 24px;
+}
+
+.outfit-result-heading h2 {
+  margin: 0;
+
+  color: #101c17;
+
+  font-size: 30px;
+  font-weight: 800;
+
+  letter-spacing: -0.7px;
+}
+
+.outfit-result-heading
+> div
+> p:last-child {
+  margin: 8px 0 0;
+
+  color: #849089;
+
+  font-size: 13px;
+}
+
+.outfit-regenerate-button {
+  flex-shrink: 0;
+
+  padding: 10px 15px;
+
+  border: 1px solid #d7e2dc;
+  border-radius: 11px;
+
+  background: #ffffff;
+
+  color: #456057;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+.outfit-regenerate-button:hover {
+  background: #f6faf8;
+}
+
+
+/* ITEMS */
+
+.outfit-items-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 18px;
+}
+
+.outfit-item-card {
+  position: relative;
+
+  overflow: hidden;
+
+  border: 1px solid #dce6e1;
+  border-radius: 19px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 10px 30px
+    rgba(27, 68, 52, 0.05);
+}
+
+.outfit-item-number {
+  position: absolute;
+
+  top: 14px;
+  left: 14px;
+
+  z-index: 2;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 34px;
+  height: 34px;
+
+  border-radius: 10px;
+
+  background:
+    rgba(255, 255, 255, 0.92);
+
+  color: #27865f;
+
+  font-size: 11px;
+  font-weight: 900;
+
+  backdrop-filter: blur(8px);
+}
+
+.outfit-item-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 300px;
+
+  overflow: hidden;
+
+  background: #f5f8f6;
+}
+
+.outfit-item-image img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+
+  background: #ffffff;
+}
+
+.outfit-item-no-image {
+  color: #9aa59f;
+
+  font-size: 34px;
+}
+
+.outfit-item-content {
+  padding: 18px;
+}
+
+.outfit-item-tags {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 6px;
+
+  margin-bottom: 10px;
+}
+
+.outfit-item-tags span {
+  padding: 5px 9px;
+
+  border-radius: 999px;
+
+  background: #edf6f1;
+
+  color: #37775c;
+
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.outfit-item-content h3 {
+  margin: 0;
+
+  color: #17251f;
+
+  font-size: 16px;
+  line-height: 1.4;
+  font-weight: 800;
+}
+
+.outfit-item-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-top: 17px;
+  padding-top: 14px;
+
+  border-top: 1px solid #edf1ef;
+
+  color: #27865f;
+
+  font-size: 12px;
+  font-weight: 800;
+
+  text-decoration: none;
+}
+
+.outfit-item-link:hover {
+  color: #1e6e4e;
+}
+
+
+/* =========================================================
+   EXPLANATION
+   ========================================================= */
+
+.outfit-explanation {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 17px;
+
+  margin-top: 22px;
+  padding: 24px;
+
+  border: 1px solid #cfe3d8;
+  border-radius: 19px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f0f8f4 0%,
+      #fbfdfc 100%
+    );
+}
+
+.outfit-explanation-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 46px;
+  height: 46px;
+
+  flex-shrink: 0;
+
+  border-radius: 14px;
+
+  background: #27865f;
+
+  color: #ffffff;
+
+  font-size: 19px;
+}
+
+.outfit-explanation-label {
+  margin: 0 0 4px;
+
+  color: #27865f;
+
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1.2px;
+}
+
+.outfit-explanation h3 {
+  margin: 0;
+
+  color: #17251f;
+
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.outfit-explanation-text {
+  max-width: 900px;
+
+  margin: 9px 0 0;
+
+  color: #65736c;
+
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1000px) {
+  .outfit-occasion-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .outfit-items-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+}
+
+
+@media (max-width: 700px) {
+  .outfit-page {
+    padding: 32px 20px 60px;
+  }
+
+  .outfit-header {
+    flex-direction: column;
+  }
+
+  .outfit-header h1 {
+    font-size: 32px;
+  }
+
+  .outfit-ai-badge {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .outfit-config-section {
+    padding: 22px;
+  }
+
+  .outfit-occasion-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .outfit-season-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .outfit-season-select {
+    width: 100%;
+  }
+
+  .outfit-generate-button {
+    width: 100%;
+  }
+
+  .outfit-result-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .outfit-items-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .outfit-item-image {
+    height: 340px;
+  }
+
+  .outfit-explanation {
+    flex-direction: column;
+  }
+}

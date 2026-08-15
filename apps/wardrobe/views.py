@@ -1,19 +1,21 @@
-from rest_framework import viewsets
+from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import ClothingItem
 from .serializers import (
+    ClothingImageAnalyzeSerializer,
     ClothingItemCreateSerializer,
     ClothingItemDetailSerializer,
     ClothingItemListSerializer,
     ClothingItemUpdateSerializer,
-    ClothingImageAnalyzeSerializer,
-    OutfitRecommendationRequestSerializer
+    OutfitRecommendationRequestSerializer,
 )
-from .services import ClothingVisionService, OutfitRecommendationService
+from .services import (
+    ClothingVisionService,
+    OutfitRecommendationService,
+)
 
 
 class ClothingItemViewSet(viewsets.ModelViewSet):
@@ -32,20 +34,33 @@ class ClothingItemViewSet(viewsets.ModelViewSet):
         if self.action == "retrieve":
             return ClothingItemDetailSerializer
 
-        if self.action in ("update", "partial_update"):
+        if self.action in (
+            "update",
+            "partial_update",
+        ):
             return ClothingItemUpdateSerializer
 
         return ClothingItemCreateSerializer
 
     def destroy(self, request, *args, **kwargs):
         item = self.get_object()
-        item.is_active = False
-        item.save(update_fields=["is_active", "updated_at",])
 
-        return Response(status=status.HTTP_204_NO_CONTENT,)
+        item.is_active = False
+
+        item.save(
+            update_fields=[
+                "is_active",
+                "updated_at",
+            ]
+        )
+
+        return Response(
+            status=status.HTTP_204_NO_CONTENT,
+        )
+
 
 class ClothingImageAnalyzeAPIView(APIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         serializer = ClothingImageAnalyzeSerializer(
@@ -65,8 +80,9 @@ class ClothingImageAnalyzeAPIView(APIView):
             status=status.HTTP_200_OK,
         )
 
+
 class OutfitRecommendationAPIView(APIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         serializer = OutfitRecommendationRequestSerializer(
@@ -81,7 +97,7 @@ class OutfitRecommendationAPIView(APIView):
             user=request.user,
             occasion=serializer.validated_data["occasion"],
             season=serializer.validated_data["season"],
-            request = request,
+            request=request,
         )
 
         return Response(

@@ -1,6 +1,92 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { recommendOutfit } from '../../api/wardrobe'
+
+import {
+  recommendOutfit,
+} from '../../api/wardrobe'
+
+
+const OCCASION_OPTIONS = [
+  {
+    value: 'casual',
+    label: 'Hằng ngày',
+    description: 'Thoải mái và dễ mặc',
+  },
+  {
+    value: 'work',
+    label: 'Đi làm',
+    description: 'Gọn gàng và chuyên nghiệp',
+  },
+  {
+    value: 'sport',
+    label: 'Thể thao',
+    description: 'Năng động và tiện lợi',
+  },
+  {
+    value: 'party',
+    label: 'Đi tiệc',
+    description: 'Nổi bật và có điểm nhấn',
+  },
+  {
+    value: 'formal',
+    label: 'Trang trọng',
+    description: 'Chỉn chu và lịch sự',
+  },
+  {
+    value: 'versatile',
+    label: 'Đa dụng',
+    description: 'Linh hoạt cho nhiều hoàn cảnh',
+  },
+]
+
+
+const SEASON_OPTIONS = [
+  {
+    value: 'spring',
+    label: 'Mùa xuân',
+  },
+  {
+    value: 'summer',
+    label: 'Mùa hè',
+  },
+  {
+    value: 'autumn',
+    label: 'Mùa thu',
+  },
+  {
+    value: 'winter',
+    label: 'Mùa đông',
+  },
+  {
+    value: 'all_season',
+    label: 'Mọi mùa',
+  },
+]
+
+
+const CATEGORY_LABELS = {
+  top: 'Áo',
+  bottom: 'Quần',
+  shoes: 'Giày',
+  outerwear: 'Áo khoác',
+  accessory: 'Phụ kiện',
+}
+
+
+const COLOR_LABELS = {
+  white: 'Trắng',
+  black: 'Đen',
+  gray: 'Xám',
+  blue: 'Xanh dương',
+  green: 'Xanh lá',
+  red: 'Đỏ',
+  yellow: 'Vàng',
+  orange: 'Cam',
+  pink: 'Hồng',
+  purple: 'Tím',
+  brown: 'Nâu',
+  beige: 'Be',
+}
 
 
 function getImageUrl(image) {
@@ -8,7 +94,6 @@ function getImageUrl(image) {
     return null
   }
 
-  // Nếu backend đã trả full URL thì dùng luôn
   if (
     image.startsWith('http://') ||
     image.startsWith('https://')
@@ -16,43 +101,7 @@ function getImageUrl(image) {
     return image
   }
 
-  // Nếu backend trả dạng:
-  // /media/wardrobe/ao.webp
-  // thì nối thêm host Django
   return `http://127.0.0.1:8000${image}`
-}
-
-
-function translateCategory(category) {
-  const categories = {
-    top: 'Áo',
-    bottom: 'Quần',
-    shoes: 'Giày',
-    outerwear: 'Áo khoác',
-    accessory: 'Phụ kiện',
-  }
-
-  return categories[category] || category
-}
-
-
-function translateColor(color) {
-  const colors = {
-    white: 'Trắng',
-    black: 'Đen',
-    gray: 'Xám',
-    blue: 'Xanh dương',
-    green: 'Xanh lá',
-    red: 'Đỏ',
-    yellow: 'Vàng',
-    orange: 'Cam',
-    pink: 'Hồng',
-    purple: 'Tím',
-    brown: 'Nâu',
-    beige: 'Be',
-  }
-
-  return colors[color] || color
 }
 
 
@@ -65,16 +114,26 @@ function OutfitRecommendationPage() {
   const [recommendation, setRecommendation] =
     useState(null)
 
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] =
+    useState(false)
 
-  const [message, setMessage] = useState('')
+  const [message, setMessage] =
+    useState('')
 
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    })
+  const handleOccasionChange = (occasion) => {
+    setFormData((previous) => ({
+      ...previous,
+      occasion,
+    }))
+  }
+
+
+  const handleSeasonChange = (e) => {
+    setFormData((previous) => ({
+      ...previous,
+      season: e.target.value,
+    }))
   }
 
 
@@ -86,45 +145,36 @@ function OutfitRecommendationPage() {
       setMessage('')
       setRecommendation(null)
 
-      const result = await recommendOutfit(formData)
-
-      console.log(
-        'Outfit recommendation:',
-        result
-      )
+      const result =
+        await recommendOutfit(formData)
 
       const data = result.data
 
-      if (data.status === 'cannot_recommend') {
+      if (
+        data.status ===
+        'cannot_recommend'
+      ) {
         setMessage(
-          'Tủ đồ hiện tại chưa đủ trang phục phù hợp để tạo outfit.'
+          'Tủ đồ hiện tại chưa đủ trang phục phù hợp để tạo outfit cho lựa chọn này.'
         )
 
         return
       }
 
       setRecommendation(data)
-
     } catch (error) {
       console.error(
         'Recommend outfit error:',
         error
       )
 
-      console.error(
-        'Status:',
-        error.response?.status
-      )
-
-      console.error(
-        'Response:',
-        error.response?.data
-      )
+      const apiMessage =
+        error.response?.data?.errors?.ai?.[0]
 
       setMessage(
-        'Không thể tạo gợi ý phối đồ. Vui lòng thử lại.'
+        apiMessage ||
+        'Không thể tạo gợi ý phối đồ. Vui lòng thử lại sau.'
       )
-
     } finally {
       setLoading(false)
     }
@@ -132,218 +182,420 @@ function OutfitRecommendationPage() {
 
 
   return (
-    <div>
-      <h1>Gợi ý phối đồ AI</h1>
+    <div className="outfit-page">
 
-      <p>
-        Chọn hoàn cảnh và mùa để NovaLife gợi ý
-        trang phục từ tủ đồ của bạn.
-      </p>
+      {/* =====================================
+          HEADER
+          ===================================== */}
 
-
-      {/* FORM GỢI Ý */}
-
-      <form onSubmit={handleRecommend}>
+      <div className="outfit-header">
 
         <div>
-          <label>
-            Dịp sử dụng
-          </label>
+          <p className="outfit-eyebrow">
+            NOVALIFE AI STYLIST
+          </p>
 
-          <br />
+          <h1>
+            Gợi ý phối đồ
+          </h1>
 
-          <select
-            name="occasion"
-            value={formData.occasion}
-            onChange={handleChange}
-          >
-            <option value="casual">
-              Hằng ngày
-            </option>
-
-            <option value="work">
-              Đi làm
-            </option>
-
-            <option value="sport">
-              Thể thao
-            </option>
-
-            <option value="party">
-              Tiệc
-            </option>
-
-            <option value="formal">
-              Trang trọng
-            </option>
-
-            <option value="versatile">
-              Đa dụng
-            </option>
-          </select>
+          <p className="outfit-subtitle">
+            Chọn hoàn cảnh và mùa.
+            NovaLife AI sẽ tìm những món đồ
+            phù hợp ngay trong tủ đồ của bạn.
+          </p>
         </div>
 
 
-        <br />
+        <div className="outfit-ai-badge">
+          <span>✦</span>
+
+          <div>
+            <strong>
+              AI Stylist
+            </strong>
+
+            <small>
+              Phối từ tủ đồ của bạn
+            </small>
+          </div>
+        </div>
+
+      </div>
 
 
-        <div>
-          <label>
-            Mùa
-          </label>
+      <form
+        className="outfit-config-card"
+        onSubmit={handleRecommend}
+      >
 
-          <br />
+        {/* =====================================
+            OCCASION
+            ===================================== */}
 
-          <select
-            name="season"
-            value={formData.season}
-            onChange={handleChange}
-          >
-            <option value="spring">
-              Mùa xuân
-            </option>
+        <div className="outfit-config-section">
 
-            <option value="summer">
-              Mùa hè
-            </option>
+          <div className="outfit-section-heading">
 
-            <option value="autumn">
-              Mùa thu
-            </option>
+            <div className="outfit-section-number">
+              01
+            </div>
 
-            <option value="winter">
-              Mùa đông
-            </option>
+            <div>
+              <h2>
+                Bạn sẽ mặc outfit này ở đâu?
+              </h2>
 
-            <option value="all_season">
-              Quanh năm
-            </option>
-          </select>
+              <p>
+                Chọn hoàn cảnh để AI xác định
+                phong cách phù hợp.
+              </p>
+            </div>
+
+          </div>
+
+
+          <div className="outfit-occasion-grid">
+
+            {OCCASION_OPTIONS.map(
+              (option) => {
+
+                const active =
+                  formData.occasion ===
+                  option.value
+
+                return (
+                  <button
+                    key={option.value}
+                    type="button"
+                    className={
+                      `outfit-occasion-option ${
+                        active
+                          ? 'active'
+                          : ''
+                      }`
+                    }
+                    onClick={() =>
+                      handleOccasionChange(
+                        option.value
+                      )
+                    }
+                  >
+                    <span className="outfit-option-check">
+                      {active ? '✓' : ''}
+                    </span>
+
+                    <strong>
+                      {option.label}
+                    </strong>
+
+                    <small>
+                      {option.description}
+                    </small>
+                  </button>
+                )
+              }
+            )}
+
+          </div>
+
         </div>
 
 
-        <br />
+        {/* =====================================
+            SEASON
+            ===================================== */}
+
+        <div className="outfit-config-section outfit-season-section">
+
+          <div className="outfit-section-heading">
+
+            <div className="outfit-section-number">
+              02
+            </div>
+
+            <div>
+              <h2>
+                Mùa phù hợp
+              </h2>
+
+              <p>
+                AI sẽ ưu tiên các món đồ phù hợp
+                với mùa bạn lựa chọn.
+              </p>
+            </div>
+
+          </div>
 
 
-        <button
-          type="submit"
-          disabled={loading}
-        >
-          {
-            loading
-              ? 'AI đang phối đồ...'
-              : '✨ Gợi ý outfit bằng AI'
-          }
-        </button>
+          <div className="outfit-season-row">
+
+            <div className="outfit-season-select">
+
+              <label htmlFor="outfit-season">
+                Chọn mùa
+              </label>
+
+              <select
+                id="outfit-season"
+                value={formData.season}
+                onChange={
+                  handleSeasonChange
+                }
+              >
+                {SEASON_OPTIONS.map(
+                  (option) => (
+                    <option
+                      key={option.value}
+                      value={option.value}
+                    >
+                      {option.label}
+                    </option>
+                  )
+                )}
+              </select>
+
+            </div>
+
+
+            <button
+              type="submit"
+              className="outfit-generate-button"
+              disabled={loading}
+            >
+              <span>
+                {loading ? '◌' : '✦'}
+              </span>
+
+              {
+                loading
+                  ? 'AI đang phối đồ...'
+                  : 'Tạo outfit với AI'
+              }
+            </button>
+
+          </div>
+
+        </div>
 
       </form>
 
 
-      {/* MESSAGE */}
+      {/* =====================================
+          MESSAGE
+          ===================================== */}
 
-      {
-        message && (
-          <>
-            <br />
+      {message && (
+        <div className="outfit-message">
+          <span>!</span>
+
+          <div>
+            <strong>
+              Chưa thể tạo outfit
+            </strong>
 
             <p>
               {message}
             </p>
-          </>
-        )
-      }
+          </div>
+        </div>
+      )}
 
 
-      {/* KẾT QUẢ AI */}
+      {/* =====================================
+          LOADING
+          ===================================== */}
+
+      {loading && (
+        <div className="outfit-loading-card">
+
+          <div className="outfit-loading-icon">
+            ✦
+          </div>
+
+          <h3>
+            NovaLife AI đang phối đồ
+          </h3>
+
+          <p>
+            AI đang xem các món đồ trong tủ
+            và tìm sự kết hợp phù hợp nhất.
+          </p>
+
+          <div className="outfit-loading-bar">
+            <span />
+          </div>
+
+        </div>
+      )}
+
+
+      {/* =====================================
+          RESULT
+          ===================================== */}
 
       {
-        recommendation && (
-          <>
-            <hr />
+        recommendation &&
+        !loading && (
+          <section className="outfit-result">
 
-            <h2>
-              Outfit AI đề xuất
-            </h2>
+            <div className="outfit-result-heading">
+
+              <div>
+                <p className="outfit-eyebrow">
+                  OUTFIT ĐƯỢC ĐỀ XUẤT
+                </p>
+
+                <h2>
+                  Outfit dành cho bạn
+                </h2>
+
+                <p>
+                  Các món đồ dưới đây đều được
+                  chọn trực tiếp từ tủ đồ NovaLife.
+                </p>
+              </div>
 
 
-            {/* DANH SÁCH TRANG PHỤC */}
+              <button
+                type="button"
+                className="outfit-regenerate-button"
+                onClick={handleRecommend}
+              >
+                ↻ Gợi ý lại
+              </button>
 
-            {
-              recommendation.items?.map(
-                (item) => {
+            </div>
 
-                  const imageUrl =
-                    getImageUrl(item.image)
 
-                  return (
-                    <div key={item.id}>
+            {/* ITEMS */}
 
-                      {
-                        imageUrl && (
-                          <>
+            <div className="outfit-items-grid">
+
+              {
+                recommendation.items?.map(
+                  (item, index) => {
+
+                    const imageUrl =
+                      getImageUrl(
+                        item.image
+                      )
+
+                    return (
+                      <article
+                        key={item.id}
+                        className="outfit-item-card"
+                      >
+
+                        <div className="outfit-item-number">
+                          {
+                            String(
+                              index + 1
+                            ).padStart(
+                              2,
+                              '0'
+                            )
+                          }
+                        </div>
+
+
+                        <div className="outfit-item-image">
+
+                          {imageUrl ? (
                             <img
                               src={imageUrl}
-                              alt={item.name}
-                              width="200"
+                              alt={
+                                item.name ||
+                                'Trang phục'
+                              }
                             />
+                          ) : (
+                            <div className="outfit-item-no-image">
+                              ◇
+                            </div>
+                          )}
 
-                            <br />
-                          </>
-                        )
-                      }
-
-
-                      <h3>
-                        {item.name}
-                      </h3>
+                        </div>
 
 
-                      <p>
-                        Danh mục:{' '}
-                        {
-                          translateCategory(
-                            item.category
-                          )
-                        }
-                      </p>
+                        <div className="outfit-item-content">
+
+                          <div className="outfit-item-tags">
+
+                            <span>
+                              {
+                                CATEGORY_LABELS[
+                                  item.category
+                                ] ||
+                                item.category
+                              }
+                            </span>
+
+                            <span>
+                              {
+                                COLOR_LABELS[
+                                  item.color
+                                ] ||
+                                item.color
+                              }
+                            </span>
+
+                          </div>
 
 
-                      <p>
-                        Màu sắc:{' '}
-                        {
-                          translateColor(
-                            item.color
-                          )
-                        }
-                      </p>
+                          <h3>
+                            {
+                              item.name ||
+                              'Chưa đặt tên'
+                            }
+                          </h3>
 
 
-                      <Link
-                        to={`/wardrobe/${item.id}`}
-                      >
-                        Xem trang phục
-                      </Link>
+                          <Link
+                            to={`/wardrobe/${item.id}`}
+                            className="outfit-item-link"
+                          >
+                            Xem trang phục
+                            <span>→</span>
+                          </Link>
+
+                        </div>
+
+                      </article>
+                    )
+                  }
+                )
+              }
+
+            </div>
 
 
-                      <hr />
-                    </div>
-                  )
-                }
-              )
-            }
+            {/* AI EXPLANATION */}
+
+            <div className="outfit-explanation">
+
+              <div className="outfit-explanation-icon">
+                ✦
+              </div>
 
 
-            {/* EXPLANATION */}
+              <div>
+                <p className="outfit-explanation-label">
+                  NOVALIFE AI
+                </p>
 
-            <h3>
-              💡 Lý do AI đề xuất
-            </h3>
+                <h3>
+                  Vì sao outfit này phù hợp?
+                </h3>
 
-            <p>
-              {recommendation.explanation}
-            </p>
+                <p className="outfit-explanation-text">
+                  {recommendation.explanation}
+                </p>
+              </div>
 
-          </>
+            </div>
+
+          </section>
         )
       }
 

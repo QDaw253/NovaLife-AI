@@ -145,6 +145,9 @@ class HabitUpdateSerializer(serializers.ModelSerializer):
             "title",
             "description",
             "category",
+            "frequency",
+            "target_value",
+            "unit",
             "reminder_time",
             "end_date",
             "is_active",
@@ -154,6 +157,14 @@ class HabitUpdateSerializer(serializers.ModelSerializer):
         if not value.strip():
             raise serializers.ValidationError(
                 "Tên thói quen không được để trống."
+            )
+
+        return value
+
+    def validate_target_value(self, value):
+        if value <= 0:
+            raise serializers.ValidationError(
+                "Giá trị mục tiêu phải lớn hơn 0."
             )
 
         return value

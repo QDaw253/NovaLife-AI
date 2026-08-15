@@ -17,6 +17,9 @@ function CreateHabitPage() {
     reminder_time: '',
   })
 
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState('')
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -26,6 +29,8 @@ function CreateHabitPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setError('')
+    setSubmitting(true)
 
     const data = {
       ...formData,
@@ -33,158 +38,333 @@ function CreateHabitPage() {
       reminder_time: formData.reminder_time || null,
     }
 
-    await createHabit(data)
-
-    navigate('/habits')
+    try {
+      await createHabit(data)
+      navigate('/habits')
+    } catch (err) {
+      console.error(err)
+      setError('Không thể tạo thói quen. Vui lòng kiểm tra lại thông tin.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
-    <div>
-      <h1>Tạo thói quen mới</h1>
-
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Tên thói quen</label>
-          <br />
-
-          <input
-            type="text"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <br />
-
-        <div>
-          <label>Mô tả</label>
-          <br />
-
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-          />
-        </div>
-
-        <br />
-
-        <div>
-          <label>Danh mục</label>
-          <br />
-
-          <select
-            name="category"
-            value={formData.category}
-            onChange={handleChange}
-          >
-            <option value="health">Sức khỏe</option>
-            <option value="fitness">Thể hình</option>
-            <option value="study">Học tập</option>
-            <option value="personal">Cá nhân</option>
-            <option value="other">Khác</option>
-          </select>
-        </div>
-
-        <br />
-
-        <div>
-          <label>Tần suất</label>
-          <br />
-
-          <select
-            name="frequency"
-            value={formData.frequency}
-            onChange={handleChange}
-          >
-            <option value="daily">Hằng ngày</option>
-            <option value="weekly">Hằng tuần</option>
-            <option value="monthly">Hằng tháng</option>
-          </select>
-        </div>
-
-        <br />
-
-        <div>
-          <label>Giá trị mục tiêu</label>
-          <br />
-
-          <input
-            type="number"
-            step="0.01"
-            name="target_value"
-            value={formData.target_value}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <br />
-
-        <div>
-          <label>Đơn vị</label>
-          <br />
-
-          <input
-            type="text"
-            name="unit"
-            value={formData.unit}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <br />
-
-        <div>
-          <label>Ngày bắt đầu</label>
-          <br />
-
-          <input
-            type="date"
-            name="start_date"
-            value={formData.start_date}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <br />
-
-        <div>
-          <label>Ngày kết thúc</label>
-          <br />
-
-          <input
-            type="date"
-            name="end_date"
-            value={formData.end_date}
-            onChange={handleChange}
-          />
-        </div>
-
-        <br />
-
-        <div>
-          <label>Giờ nhắc</label>
-          <br />
-
-          <input
-            type="time"
-            name="reminder_time"
-            value={formData.reminder_time}
-            onChange={handleChange}
-          />
-        </div>
-
-        <br />
-
-        <button type="submit">
-          Tạo thói quen
+    <div className="habit-create-page">
+      {/* HEADER */}
+      <div className="habit-create-header">
+        <button
+          type="button"
+          className="habit-back-button"
+          onClick={() => navigate('/habits')}
+        >
+          ← Quay lại thói quen
         </button>
-      </form>
+
+        <div className="habit-create-eyebrow">
+          THÓI QUEN MỚI
+        </div>
+
+        <h1>Tạo thói quen</h1>
+
+        <p>
+          Xây dựng những thay đổi nhỏ và duy trì chúng mỗi ngày.
+          NovaLife sẽ giúp bạn theo dõi hành trình của mình.
+        </p>
+      </div>
+
+      <div className="habit-create-layout">
+        {/* FORM */}
+        <form
+          className="habit-create-form"
+          onSubmit={handleSubmit}
+        >
+          {/* SECTION 01 */}
+          <section className="habit-form-section">
+            <div className="habit-section-info">
+              <div className="habit-section-number">01</div>
+
+              <div>
+                <h2>Thông tin thói quen</h2>
+                <p>
+                  Mô tả điều bạn muốn duy trì thường xuyên.
+                </p>
+              </div>
+            </div>
+
+            <div className="habit-section-fields">
+              <div className="habit-field">
+                <label htmlFor="title">
+                  Tên thói quen <span>*</span>
+                </label>
+
+                <input
+                  id="title"
+                  type="text"
+                  name="title"
+                  value={formData.title}
+                  onChange={handleChange}
+                  placeholder="Ví dụ: Uống đủ nước mỗi ngày"
+                  required
+                />
+              </div>
+
+              <div className="habit-field">
+                <label htmlFor="description">
+                  Mô tả
+                </label>
+
+                <textarea
+                  id="description"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  placeholder="Mô tả ngắn về thói quen bạn muốn xây dựng..."
+                  rows="5"
+                />
+              </div>
+            </div>
+          </section>
+
+          {/* SECTION 02 */}
+          <section className="habit-form-section">
+            <div className="habit-section-info">
+              <div className="habit-section-number">02</div>
+
+              <div>
+                <h2>Thiết lập thói quen</h2>
+                <p>
+                  Chọn danh mục, tần suất và mục tiêu phù hợp.
+                </p>
+              </div>
+            </div>
+
+            <div className="habit-section-fields">
+              <div className="habit-field-row">
+                <div className="habit-field">
+                  <label htmlFor="category">
+                    Danh mục <span>*</span>
+                  </label>
+
+                  <select
+                    id="category"
+                    name="category"
+                    value={formData.category}
+                    onChange={handleChange}
+                  >
+                    <option value="health">Sức khỏe</option>
+                    <option value="fitness">Thể hình</option>
+                    <option value="study">Học tập</option>
+                    <option value="personal">Cá nhân</option>
+                    <option value="other">Khác</option>
+                  </select>
+                </div>
+
+                <div className="habit-field">
+                  <label htmlFor="frequency">
+                    Tần suất <span>*</span>
+                  </label>
+
+                  <select
+                    id="frequency"
+                    name="frequency"
+                    value={formData.frequency}
+                    onChange={handleChange}
+                  >
+                    <option value="daily">Hằng ngày</option>
+                    <option value="weekly">Hằng tuần</option>
+                    <option value="monthly">Hằng tháng</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="habit-field-row">
+                <div className="habit-field">
+                  <label htmlFor="target_value">
+                    Giá trị mục tiêu <span>*</span>
+                  </label>
+
+                  <input
+                    id="target_value"
+                    type="number"
+                    step="0.01"
+                    min="0.01"
+                    name="target_value"
+                    value={formData.target_value}
+                    onChange={handleChange}
+                    placeholder="Ví dụ: 2"
+                    required
+                  />
+                </div>
+
+                <div className="habit-field">
+                  <label htmlFor="unit">
+                    Đơn vị <span>*</span>
+                  </label>
+
+                  <input
+                    id="unit"
+                    type="text"
+                    name="unit"
+                    value={formData.unit}
+                    onChange={handleChange}
+                    placeholder="lần, lít, phút..."
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* SECTION 03 */}
+          <section className="habit-form-section">
+            <div className="habit-section-info">
+              <div className="habit-section-number">03</div>
+
+              <div>
+                <h2>Thời gian</h2>
+                <p>
+                  Xác định thời gian thực hiện và lời nhắc.
+                </p>
+              </div>
+            </div>
+
+            <div className="habit-section-fields">
+              <div className="habit-field-row">
+                <div className="habit-field">
+                  <label htmlFor="start_date">
+                    Ngày bắt đầu <span>*</span>
+                  </label>
+
+                  <input
+                    id="start_date"
+                    type="date"
+                    name="start_date"
+                    value={formData.start_date}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                <div className="habit-field">
+                  <label htmlFor="end_date">
+                    Ngày kết thúc
+                  </label>
+
+                  <input
+                    id="end_date"
+                    type="date"
+                    name="end_date"
+                    value={formData.end_date}
+                    onChange={handleChange}
+                    min={formData.start_date || undefined}
+                  />
+
+                  <small>
+                    Có thể để trống nếu bạn muốn duy trì lâu dài.
+                  </small>
+                </div>
+              </div>
+
+              <div className="habit-field">
+                <label htmlFor="reminder_time">
+                  Giờ nhắc
+                </label>
+
+                <input
+                  id="reminder_time"
+                  type="time"
+                  name="reminder_time"
+                  value={formData.reminder_time}
+                  onChange={handleChange}
+                />
+
+                <small>
+                  NovaLife sẽ sử dụng thời gian này để nhắc bạn duy trì thói quen.
+                </small>
+              </div>
+            </div>
+          </section>
+
+          {error && (
+            <div className="habit-form-error">
+              {error}
+            </div>
+          )}
+
+          <div className="habit-form-actions">
+            <button
+              type="button"
+              className="habit-cancel-button"
+              onClick={() => navigate('/habits')}
+              disabled={submitting}
+            >
+              Hủy
+            </button>
+
+            <button
+              type="submit"
+              className="habit-submit-button"
+              disabled={submitting}
+            >
+              {submitting ? 'Đang tạo...' : '+ Tạo thói quen'}
+            </button>
+          </div>
+        </form>
+
+        {/* RIGHT SIDEBAR */}
+        <aside className="habit-create-guide">
+          <div className="habit-guide-icon">
+            ✓
+          </div>
+
+          <h2>Một thói quen tốt nên...</h2>
+
+          <div className="habit-guide-item">
+            <span>01</span>
+
+            <div>
+              <strong>Dễ bắt đầu</strong>
+              <p>
+                Bắt đầu từ một hành động nhỏ mà bạn có thể duy trì.
+              </p>
+            </div>
+          </div>
+
+          <div className="habit-guide-item">
+            <span>02</span>
+
+            <div>
+              <strong>Đo lường được</strong>
+              <p>
+                Sử dụng số lần, phút, lít hoặc một đơn vị cụ thể.
+              </p>
+            </div>
+          </div>
+
+          <div className="habit-guide-item">
+            <span>03</span>
+
+            <div>
+              <strong>Duy trì đều đặn</strong>
+              <p>
+                Chọn tần suất phù hợp với lịch sinh hoạt của bạn.
+              </p>
+            </div>
+          </div>
+
+          <div className="habit-guide-item">
+            <span>04</span>
+
+            <div>
+              <strong>Có lời nhắc</strong>
+              <p>
+                Một thời điểm cố định giúp bạn dễ hình thành thói quen hơn.
+              </p>
+            </div>
+          </div>
+        </aside>
+      </div>
     </div>
   )
 }

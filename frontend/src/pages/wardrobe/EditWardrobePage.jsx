@@ -1,9 +1,5 @@
-import { useEffect, useMemo, useState } from 'react'
-import {
-  Link,
-  useNavigate,
-  useParams,
-} from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import {
   getClothingItem,
@@ -11,16 +7,8 @@ import {
 } from '../../api/wardrobe'
 
 
-const CATEGORY_OPTIONS = [
-  { value: 'top', label: 'Áo' },
-  { value: 'bottom', label: 'Quần' },
-  { value: 'shoes', label: 'Giày' },
-  { value: 'outerwear', label: 'Áo khoác' },
-  { value: 'accessory', label: 'Phụ kiện' },
-]
-
-
 const COLOR_OPTIONS = [
+  { value: '', label: 'Chọn màu sắc' },
   { value: 'white', label: 'Trắng' },
   { value: 'black', label: 'Đen' },
   { value: 'gray', label: 'Xám' },
@@ -36,57 +24,20 @@ const COLOR_OPTIONS = [
 ]
 
 
-const SEASON_OPTIONS = [
-  { value: 'spring', label: 'Mùa xuân' },
-  { value: 'summer', label: 'Mùa hè' },
-  { value: 'autumn', label: 'Mùa thu' },
-  { value: 'winter', label: 'Mùa đông' },
-  { value: 'all_season', label: 'Mọi mùa' },
-]
-
-
-const OCCASION_OPTIONS = [
-  { value: 'casual', label: 'Hằng ngày' },
-  { value: 'work', label: 'Đi làm' },
-  { value: 'sport', label: 'Thể thao' },
-  { value: 'party', label: 'Tiệc' },
-  { value: 'formal', label: 'Trang trọng' },
-  { value: 'versatile', label: 'Đa dụng' },
-]
-
-
 function EditWardrobePage() {
   const { id } = useParams()
   const navigate = useNavigate()
 
-  const [formData, setFormData] = useState({
-    name: '',
-    category: 'top',
-    color: '',
-    season: 'all_season',
-    occasion: 'versatile',
-    is_favorite: false,
-  })
+  const [formData, setFormData] = useState(null)
+  const [currentImage, setCurrentImage] = useState('')
+  const [newImage, setNewImage] = useState(null)
+  const [previewUrl, setPreviewUrl] = useState('')
 
-  const [currentImage, setCurrentImage] =
-    useState(null)
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
+  const [fieldErrors, setFieldErrors] = useState({})
 
-  const [newImage, setNewImage] =
-    useState(null)
-
-  const [loading, setLoading] =
-    useState(true)
-
-  const [saving, setSaving] =
-    useState(false)
-
-  const [error, setError] =
-    useState('')
-
-
-  /* =========================================
-     LOAD ITEM
-     ========================================= */
 
   useEffect(() => {
     const fetchItem = async () => {
@@ -94,36 +45,22 @@ function EditWardrobePage() {
         setLoading(true)
         setError('')
 
-        const result =
-          await getClothingItem(id)
-
+        const result = await getClothingItem(id)
         const item = result.data
 
         setFormData({
           name: item.name || '',
-          category:
-            item.category || 'top',
+          category: item.category || 'top',
           color: item.color || '',
-          season:
-            item.season || 'all_season',
-          occasion:
-            item.occasion || 'versatile',
-          is_favorite:
-            Boolean(item.is_favorite),
+          season: item.season || 'all_season',
+          occasion: item.occasion || 'versatile',
+          is_favorite: Boolean(item.is_favorite),
         })
 
-        setCurrentImage(
-          item.image || null
-        )
-      } catch (error) {
-        console.error(
-          'Load wardrobe edit error:',
-          error
-        )
-
-        setError(
-          'Không thể tải thông tin trang phục.'
-        )
+        setCurrentImage(item.image || '')
+      } catch (err) {
+        console.error('Load clothing item error:', err)
+        setError('Không thể tải thông tin trang phục.')
       } finally {
         setLoading(false)
       }
@@ -133,82 +70,51 @@ function EditWardrobePage() {
   }, [id])
 
 
-  /* =========================================
-     IMAGE PREVIEW
-     ========================================= */
-
-  const previewImage = useMemo(() => {
-    if (!newImage) {
-      return currentImage
-    }
-
-    return URL.createObjectURL(
-      newImage
-    )
-  }, [newImage, currentImage])
-
-
   useEffect(() => {
     return () => {
-      if (
-        newImage &&
-        previewImage &&
-        previewImage.startsWith('blob:')
-      ) {
-        URL.revokeObjectURL(
-          previewImage
-        )
-      }
+      if (previewUrl) URL.revokeObjectURL(previewUrl)
     }
-  }, [newImage, previewImage])
+  }, [previewUrl])
 
-
-  /* =========================================
-     FORM CHANGE
-     ========================================= */
 
   const handleChange = (e) => {
-    const {
-      name,
-      value,
-      type,
-      checked,
-    } = e.target
+    const { name, value, type, checked } = e.target
 
-    setFormData((previous) => ({
-      ...previous,
-      [name]:
-        type === 'checkbox'
-          ? checked
-          : value,
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
     }))
+
+    setFieldErrors((prev) => ({ ...prev, [name]: undefined }))
+    setError('')
   }
 
-
-  /* =========================================
-     IMAGE CHANGE
-     ========================================= */
 
   const handleImageChange = (e) => {
-    const file =
-      e.target.files?.[0]
+    const file = e.target.files?.[0]
+    if (!file) return
 
-    if (!file) {
-      return
-    }
+    if (previewUrl) URL.revokeObjectURL(previewUrl)
 
     setNewImage(file)
+    setPreviewUrl(URL.createObjectURL(file))
+    setFieldErrors((prev) => ({ ...prev, image: undefined }))
   }
 
 
-  const handleCancelNewImage = () => {
-    setNewImage(null)
+  const renderFieldError = (field) => {
+    const messages = fieldErrors[field]
+    if (!messages) return null
+
+    const list = Array.isArray(messages) ? messages : [messages]
+
+    return (
+      <div className="wardrobe-field-error">
+        {list.map((message, index) => <p key={index}>{message}</p>)}
+      </div>
+    )
   }
 
-
-  /* =========================================
-     SUBMIT
-     ========================================= */
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -216,67 +122,33 @@ function EditWardrobePage() {
     try {
       setSaving(true)
       setError('')
+      setFieldErrors({})
 
-      const data =
-        new FormData()
+      const data = new FormData()
 
-      data.append(
-        'name',
-        formData.name
-      )
+      data.append('name', formData.name)
+      data.append('category', formData.category)
+      data.append('color', formData.color)
+      data.append('season', formData.season)
+      data.append('occasion', formData.occasion)
+      data.append('is_favorite', formData.is_favorite)
 
-      data.append(
-        'category',
-        formData.category
-      )
+      if (newImage) data.append('image', newImage)
 
-      data.append(
-        'color',
-        formData.color
-      )
+      await updateClothingItem(id, data)
+      navigate(`/wardrobe/${id}`)
+    } catch (err) {
+      console.error('Update wardrobe error:', err)
 
-      data.append(
-        'season',
-        formData.season
-      )
+      const responseData = err.response?.data
 
-      data.append(
-        'occasion',
-        formData.occasion
-      )
-
-      data.append(
-        'is_favorite',
-        formData.is_favorite
-      )
-
-      if (newImage) {
-        data.append(
-          'image',
-          newImage
-        )
+      if (responseData?.errors && typeof responseData.errors === 'object') {
+        setFieldErrors(responseData.errors)
+        return
       }
 
-      await updateClothingItem(
-        id,
-        data
-      )
-
-      navigate(
-        `/wardrobe/${id}`
-      )
-    } catch (error) {
-      console.error(
-        'Update wardrobe error:',
-        error
-      )
-
-      console.error(
-        'Response:',
-        error.response?.data
-      )
-
       setError(
+        responseData?.message ||
         'Không thể lưu thay đổi. Vui lòng kiểm tra lại thông tin.'
       )
     } finally {
@@ -285,404 +157,249 @@ function EditWardrobePage() {
   }
 
 
-  /* =========================================
-     LOADING
-     ========================================= */
-
   if (loading) {
     return (
-      <div className="wardrobe-edit-page">
-        <div className="wardrobe-edit-state">
-          Đang tải trang phục...
-        </div>
+      <div className="wardrobe-edit-state">
+        <div className="wardrobe-edit-loader" />
+        <h2>Đang tải trang phục...</h2>
+        <p>NovaLife đang chuẩn bị thông tin của bạn.</p>
       </div>
     )
   }
 
 
-  /* =========================================
-     LOAD ERROR
-     ========================================= */
-
-  if (
-    error &&
-    !currentImage &&
-    !formData.name
-  ) {
+  if (!formData) {
     return (
-      <div className="wardrobe-edit-page">
-        <div className="wardrobe-edit-state">
-          <p>{error}</p>
+      <div className="wardrobe-edit-state">
+        <h2>Không thể tải trang phục</h2>
+        <p>Vui lòng quay lại và thử lại.</p>
 
-          <Link
-            to={`/wardrobe/${id}`}
-            className="wardrobe-edit-back"
-          >
-            ← Quay lại trang phục
-          </Link>
-        </div>
+        <button type="button" onClick={() => navigate('/wardrobe')}>
+          ← Quay lại tủ đồ
+        </button>
       </div>
     )
   }
+
+
+  const displayedImage = previewUrl || currentImage
 
 
   return (
     <div className="wardrobe-edit-page">
 
-      {/* BACK */}
+      <header className="wardrobe-edit-header">
+        <button
+          type="button"
+          className="wardrobe-edit-back"
+          onClick={() => navigate(`/wardrobe/${id}`)}
+        >
+          ← Quay lại chi tiết
+        </button>
 
-      <Link
-        to={`/wardrobe/${id}`}
-        className="wardrobe-edit-back"
-      >
-        ← Quay lại trang phục
-      </Link>
-
-
-      {/* HEADER */}
-
-      <div className="wardrobe-edit-header">
-
-        <p className="wardrobe-edit-eyebrow">
-          CHỈNH SỬA TỦ ĐỒ
-        </p>
-
-        <h1>
-          Chỉnh sửa trang phục
-        </h1>
+        <p className="wardrobe-edit-eyebrow">CHỈNH SỬA</p>
+        <h1>Chỉnh sửa trang phục</h1>
 
         <p>
-          Cập nhật hình ảnh và thông tin
-          của món đồ trong tủ đồ NovaLife.
+          Cập nhật thông tin để tủ đồ NovaLife luôn phản ánh
+          chính xác những món đồ bạn đang sở hữu.
         </p>
-
-      </div>
-
-
-      <form
-        className="wardrobe-edit-layout"
-        onSubmit={handleSubmit}
-      >
-
-        {/* =====================================
-            LEFT - IMAGE
-            ===================================== */}
-
-        <section className="wardrobe-edit-image-card">
-
-          <div className="wardrobe-edit-card-heading">
-
-            <div className="wardrobe-edit-number">
-              01
-            </div>
-
-            <div>
-              <h2>
-                Hình ảnh trang phục
-              </h2>
-
-              <p>
-                Giữ ảnh hiện tại hoặc
-                thay bằng một hình ảnh mới.
-              </p>
-            </div>
-
-          </div>
+      </header>
 
 
-          <div className="wardrobe-edit-image-preview">
+      <div className="wardrobe-edit-layout">
 
-            {previewImage ? (
-              <img
-                src={previewImage}
-                alt={
-                  formData.name ||
-                  'Trang phục'
-                }
-              />
-            ) : (
-              <div className="wardrobe-edit-empty-image">
-                <span>◇</span>
+        <form className="wardrobe-edit-form" onSubmit={handleSubmit}>
 
-                <p>
-                  Chưa có hình ảnh
-                </p>
-              </div>
-            )}
+          {/* IMAGE */}
 
-          </div>
-
-
-          <label className="wardrobe-edit-upload">
-
-            <span className="wardrobe-edit-upload-icon">
-              +
-            </span>
-
-            <span>
-              <strong>
-                {newImage
-                  ? 'Chọn ảnh khác'
-                  : 'Thay đổi hình ảnh'}
-              </strong>
-
-              <small>
-                JPG, PNG hoặc ảnh từ thiết bị
-              </small>
-            </span>
-
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-            />
-
-          </label>
-
-
-          {newImage && (
-            <div className="wardrobe-edit-new-image-info">
+          <section className="wardrobe-edit-section">
+            <div className="wardrobe-edit-section-info">
+              <span className="wardrobe-edit-section-number">01</span>
 
               <div>
-                <span>
-                  Ảnh mới đã chọn
-                </span>
+                <h2>Hình ảnh</h2>
+                <p>Bạn có thể giữ ảnh hiện tại hoặc thay bằng ảnh mới.</p>
+              </div>
+            </div>
 
-                <strong>
-                  {newImage.name}
-                </strong>
+            <div className="wardrobe-edit-fields">
+
+              <div className={`wardrobe-edit-image ${fieldErrors.image ? 'has-error' : ''}`}>
+                {displayedImage ? (
+                  <img src={displayedImage} alt={formData.name} />
+                ) : (
+                  <div className="wardrobe-edit-image-empty">
+                    <span>＋</span>
+                    <p>Chưa có hình ảnh</p>
+                  </div>
+                )}
               </div>
 
-              <button
-                type="button"
-                onClick={
-                  handleCancelNewImage
-                }
-              >
-                Hủy
-              </button>
+              {renderFieldError('image')}
 
-            </div>
-          )}
-
-        </section>
-
-
-        {/* =====================================
-            RIGHT - INFORMATION
-            ===================================== */}
-
-        <section className="wardrobe-edit-form-card">
-
-          <div className="wardrobe-edit-card-heading">
-
-            <div className="wardrobe-edit-number">
-              02
-            </div>
-
-            <div>
-              <h2>
-                Thông tin trang phục
-              </h2>
-
-              <p>
-                Điều chỉnh thông tin để
-                quản lý và phối đồ chính xác hơn.
-              </p>
-            </div>
-
-          </div>
-
-
-          {/* NAME */}
-
-          <div className="wardrobe-edit-field wardrobe-edit-field-full">
-
-            <label htmlFor="name">
-              Tên trang phục
-              <span>*</span>
-            </label>
-
-            <input
-              id="name"
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Ví dụ: Áo thun trắng"
-              required
-            />
-
-          </div>
-
-
-          <div className="wardrobe-edit-fields-grid">
-
-            {/* CATEGORY */}
-
-            <div className="wardrobe-edit-field">
-
-              <label htmlFor="category">
-                Loại trang phục
-                <span>*</span>
+              <label className="wardrobe-edit-upload">
+                Thay đổi ảnh
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  hidden
+                />
               </label>
 
-              <select
-                id="category"
-                name="category"
-                value={formData.category}
-                onChange={handleChange}
-                required
-              >
-                {CATEGORY_OPTIONS.map(
-                  (option) => (
-                    <option
-                      key={option.value}
-                      value={option.value}
-                    >
-                      {option.label}
-                    </option>
-                  )
-                )}
-              </select>
+            </div>
+          </section>
 
+
+          {/* INFORMATION */}
+
+          <section className="wardrobe-edit-section">
+            <div className="wardrobe-edit-section-info">
+              <span className="wardrobe-edit-section-number">02</span>
+
+              <div>
+                <h2>Thông tin trang phục</h2>
+                <p>Điều chỉnh thông tin của món đồ.</p>
+              </div>
             </div>
 
+            <div className="wardrobe-edit-fields">
 
-            {/* COLOR */}
+              <div className={`wardrobe-edit-field wardrobe-edit-field-full ${fieldErrors.name ? 'has-error' : ''}`}>
+                <label htmlFor="name">
+                  Tên trang phục <span>*</span>
+                </label>
 
-            <div className="wardrobe-edit-field">
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="Ví dụ: Áo thun trắng"
+                  required
+                />
 
-              <label htmlFor="color">
-                Màu sắc
-                <span>*</span>
+                {renderFieldError('name')}
+              </div>
+
+
+              <div className="wardrobe-edit-field-row">
+
+                <div className={`wardrobe-edit-field ${fieldErrors.category ? 'has-error' : ''}`}>
+                  <label htmlFor="category">
+                    Loại trang phục <span>*</span>
+                  </label>
+
+                  <select
+                    id="category"
+                    name="category"
+                    value={formData.category}
+                    onChange={handleChange}
+                    required
+                  >
+                    <option value="top">Áo</option>
+                    <option value="bottom">Quần</option>
+                    <option value="shoes">Giày</option>
+                    <option value="outerwear">Áo khoác</option>
+                    <option value="accessory">Phụ kiện</option>
+                  </select>
+
+                  {renderFieldError('category')}
+                </div>
+
+
+                <div className={`wardrobe-edit-field ${fieldErrors.color ? 'has-error' : ''}`}>
+                  <label htmlFor="color">
+                    Màu sắc <span>*</span>
+                  </label>
+
+                  <select
+                    id="color"
+                    name="color"
+                    value={formData.color}
+                    onChange={handleChange}
+                    required
+                  >
+                    {COLOR_OPTIONS.map((color) => (
+                      <option key={color.value} value={color.value}>
+                        {color.label}
+                      </option>
+                    ))}
+                  </select>
+
+                  {renderFieldError('color')}
+                </div>
+
+              </div>
+
+
+              <div className="wardrobe-edit-field-row">
+
+                <div className={`wardrobe-edit-field ${fieldErrors.season ? 'has-error' : ''}`}>
+                  <label htmlFor="season">
+                    Mùa phù hợp <span>*</span>
+                  </label>
+
+                  <select
+                    id="season"
+                    name="season"
+                    value={formData.season}
+                    onChange={handleChange}
+                    required
+                  >
+                    <option value="all_season">Mọi mùa</option>
+                    <option value="spring">Mùa xuân</option>
+                    <option value="summer">Mùa hè</option>
+                    <option value="autumn">Mùa thu</option>
+                    <option value="winter">Mùa đông</option>
+                  </select>
+
+                  {renderFieldError('season')}
+                </div>
+
+
+                <div className={`wardrobe-edit-field ${fieldErrors.occasion ? 'has-error' : ''}`}>
+                  <label htmlFor="occasion">
+                    Hoàn cảnh sử dụng <span>*</span>
+                  </label>
+
+                  <select
+                    id="occasion"
+                    name="occasion"
+                    value={formData.occasion}
+                    onChange={handleChange}
+                    required
+                  >
+                    <option value="versatile">Đa dụng</option>
+                    <option value="casual">Hằng ngày</option>
+                    <option value="work">Công việc</option>
+                    <option value="sport">Thể thao</option>
+                    <option value="party">Tiệc</option>
+                    <option value="formal">Trang trọng</option>
+                  </select>
+
+                  {renderFieldError('occasion')}
+                </div>
+
+              </div>
+
+
+              <label className="wardrobe-edit-favorite">
+                <input
+                  type="checkbox"
+                  name="is_favorite"
+                  checked={formData.is_favorite}
+                  onChange={handleChange}
+                />
+
+                <span>Đánh dấu là trang phục yêu thích</span>
               </label>
 
-              <select
-                id="color"
-                name="color"
-                value={formData.color}
-                onChange={handleChange}
-                required
-              >
-                <option value="">
-                  Chọn màu sắc
-                </option>
-
-                {COLOR_OPTIONS.map(
-                  (option) => (
-                    <option
-                      key={option.value}
-                      value={option.value}
-                    >
-                      {option.label}
-                    </option>
-                  )
-                )}
-              </select>
-
             </div>
+          </section>
 
-
-            {/* SEASON */}
-
-            <div className="wardrobe-edit-field">
-
-              <label htmlFor="season">
-                Mùa phù hợp
-                <span>*</span>
-              </label>
-
-              <select
-                id="season"
-                name="season"
-                value={formData.season}
-                onChange={handleChange}
-                required
-              >
-                {SEASON_OPTIONS.map(
-                  (option) => (
-                    <option
-                      key={option.value}
-                      value={option.value}
-                    >
-                      {option.label}
-                    </option>
-                  )
-                )}
-              </select>
-
-            </div>
-
-
-            {/* OCCASION */}
-
-            <div className="wardrobe-edit-field">
-
-              <label htmlFor="occasion">
-                Hoàn cảnh sử dụng
-                <span>*</span>
-              </label>
-
-              <select
-                id="occasion"
-                name="occasion"
-                value={formData.occasion}
-                onChange={handleChange}
-                required
-              >
-                {OCCASION_OPTIONS.map(
-                  (option) => (
-                    <option
-                      key={option.value}
-                      value={option.value}
-                    >
-                      {option.label}
-                    </option>
-                  )
-                )}
-              </select>
-
-            </div>
-
-          </div>
-
-
-          {/* FAVORITE */}
-
-          <label className="wardrobe-edit-favorite">
-
-            <input
-              type="checkbox"
-              name="is_favorite"
-              checked={
-                formData.is_favorite
-              }
-              onChange={handleChange}
-            />
-
-            <span className="wardrobe-edit-heart">
-              ♥
-            </span>
-
-            <span className="wardrobe-edit-favorite-text">
-
-              <strong>
-                Trang phục yêu thích
-              </strong>
-
-              <small>
-                Đánh dấu nếu đây là một
-                trong những món đồ bạn
-                thường ưu tiên.
-              </small>
-
-            </span>
-
-          </label>
-
-
-          {/* ERROR */}
 
           {error && (
             <div className="wardrobe-edit-error">
@@ -691,33 +408,69 @@ function EditWardrobePage() {
           )}
 
 
-          {/* ACTION */}
-
           <div className="wardrobe-edit-actions">
-
-            <Link
-              to={`/wardrobe/${id}`}
+            <button
+              type="button"
               className="wardrobe-edit-cancel"
+              onClick={() => navigate(`/wardrobe/${id}`)}
+              disabled={saving}
             >
               Hủy
-            </Link>
+            </button>
 
             <button
               type="submit"
-              className="wardrobe-edit-save"
+              className="wardrobe-edit-submit"
               disabled={saving}
             >
-              {saving
-                ? 'Đang lưu...'
-                : '✓ Lưu thay đổi'}
+              {saving ? 'Đang lưu...' : '✓ Lưu thay đổi'}
             </button>
-
           </div>
 
-        </section>
+        </form>
 
-      </form>
 
+        <aside className="wardrobe-edit-guide">
+          <div className="wardrobe-edit-guide-icon">✎</div>
+
+          <p className="wardrobe-edit-guide-label">NOVALIFE WARDROBE</p>
+
+          <h2>Giữ tủ đồ của bạn luôn chính xác.</h2>
+
+          <p>
+            Thông tin trang phục càng chính xác thì các module AI
+            sử dụng tủ đồ sau này càng có dữ liệu tốt hơn.
+          </p>
+
+          <div className="wardrobe-edit-guide-item">
+            <span>01</span>
+
+            <div>
+              <strong>Tên rõ ràng</strong>
+              <p>Ví dụ: Áo thun trắng, Quần jean xanh.</p>
+            </div>
+          </div>
+
+          <div className="wardrobe-edit-guide-item">
+            <span>02</span>
+
+            <div>
+              <strong>Màu chính xác</strong>
+              <p>Chọn màu gần nhất với màu thực tế của trang phục.</p>
+            </div>
+          </div>
+
+          <div className="wardrobe-edit-guide-item">
+            <span>03</span>
+
+            <div>
+              <strong>Đúng hoàn cảnh</strong>
+              <p>Giúp NovaLife hiểu món đồ phù hợp khi nào.</p>
+            </div>
+          </div>
+        </aside>
+
+      </div>
     </div>
   )
 }

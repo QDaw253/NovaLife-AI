@@ -1,66 +1,134 @@
-from rest_framework import viewsets, status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+from rest_framework.permissions import (
+    IsAuthenticated,
+)
 from rest_framework.response import Response
+from rest_framework import viewsets
 
-from .models import Goal, Task  
+from .models import Goal, Task
+
 from .serializers import (
     GoalCreateSerializer,
     GoalListSerializer,
     GoalDetailSerializer,
-    TaskUpdateSerializer
+    TaskUpdateSerializer,
 )
-from .services import GoalService, TaskService
 
+from .services import (
+    TaskService,
+)
+
+
+# =========================================================
+# GOAL VIEWSET
+# =========================================================
 
 class GoalViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
+
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
+    # =====================================================
+    # QUERYSET
+    # =====================================================
 
     def get_queryset(self):
-        return( 
+
+        return (
             Goal.objects
-            .filter(user=self.request.user)
-            .select_related("ai_plan")
+            .filter(
+                user=self.request.user
+            )
+            .select_related(
+                "ai_plan"
+            )
             .prefetch_related(
                 "milestones",
                 "milestones__tasks",
-                )
-        
+            )
         )
+
+    # =====================================================
+    # SERIALIZER
+    # =====================================================
+
     def get_serializer_class(self):
+
         if self.action == "list":
             return GoalListSerializer
 
-        elif self.action == "retrieve":
+        if self.action == "retrieve":
             return GoalDetailSerializer
 
         return GoalCreateSerializer
 
-class TaskViewSet(viewsets.GenericViewSet):
-    serializer_class = TaskUpdateSerializer
-    permission_classes = [IsAuthenticated]
+
+# =========================================================
+# TASK VIEWSET
+# =========================================================
+
+class TaskViewSet(
+    viewsets.GenericViewSet
+):
+
+    serializer_class = (
+        TaskUpdateSerializer
+    )
+
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
+    # =====================================================
+    # QUERYSET
+    # =====================================================
 
     def get_queryset(self):
+
         return Task.objects.filter(
-            milestone__goal__user=self.request.user
+            milestone__goal__user=(
+                self.request.user
+            )
         )
 
-    def partial_update(self, request, pk=None):
+    # =====================================================
+    # UPDATE STATUS
+    # =====================================================
+
+    def partial_update(
+        self,
+        request,
+        pk=None,
+    ):
+
         task = self.get_object()
 
-        serializer = self.get_serializer(
-            task,
-            data=request.data,
-            partial=True,
+        serializer = (
+            self.get_serializer(
+                task,
+                data=request.data,
+                partial=True,
+            )
         )
 
-        serializer.is_valid(raise_exception=True)
+        serializer.is_valid(
+            raise_exception=True
+        )
 
         TaskService.update_task_status(
             task=task,
-            status=serializer.validated_data["status"],
+
+            status=(
+                serializer
+                .validated_data["status"]
+            ),
         )
 
         return Response(
-            TaskUpdateSerializer(task).data,
+            TaskUpdateSerializer(
+                task
+            ).data,
+
             status=status.HTTP_200_OK,
         )

@@ -1,11 +1,22 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { analyzeClothingImage, createClothingItem } from '../../api/wardrobe'
 
-import {
-  analyzeClothingImage,
-  createClothingItem,
-} from '../../api/wardrobe'
-
+const COLOR_OPTIONS = [
+  { value: '', label: 'Chọn màu sắc' },
+  { value: 'white', label: 'Trắng' },
+  { value: 'black', label: 'Đen' },
+  { value: 'gray', label: 'Xám' },
+  { value: 'blue', label: 'Xanh dương' },
+  { value: 'green', label: 'Xanh lá' },
+  { value: 'red', label: 'Đỏ' },
+  { value: 'yellow', label: 'Vàng' },
+  { value: 'orange', label: 'Cam' },
+  { value: 'pink', label: 'Hồng' },
+  { value: 'purple', label: 'Tím' },
+  { value: 'brown', label: 'Nâu' },
+  { value: 'beige', label: 'Be' },
+]
 
 function CreateWardrobePage() {
   const navigate = useNavigate()
@@ -21,18 +32,13 @@ function CreateWardrobePage() {
 
   const [image, setImage] = useState(null)
   const [preview, setPreview] = useState('')
-
   const [analyzing, setAnalyzing] = useState(false)
   const [aiAnalyzed, setAiAnalyzed] = useState(false)
   const [aiMessage, setAiMessage] = useState('')
-
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
-
-
-  // =========================================
-  // IMAGE PREVIEW
-  // =========================================
+  const [analysisError, setAnalysisError] = useState('')
+  const [fieldErrors, setFieldErrors] = useState({})
 
   useEffect(() => {
     if (!image) {
@@ -41,145 +47,105 @@ function CreateWardrobePage() {
     }
 
     const objectUrl = URL.createObjectURL(image)
-
     setPreview(objectUrl)
 
-    return () => {
-      URL.revokeObjectURL(objectUrl)
-    }
+    return () => URL.revokeObjectURL(objectUrl)
   }, [image])
-
-
-  // =========================================
-  // HANDLE FORM
-  // =========================================
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
-
-    setFormData((previousData) => ({
-      ...previousData,
-      [name]:
-        type === 'checkbox'
-          ? checked
-          : value,
-    }))
+    setFormData((prev) => ({ ...prev, [name]: type === 'checkbox' ? checked : value }))
+    setFieldErrors((prev) => ({ ...prev, [name]: undefined }))
+    setError('')
   }
-
-
-  // =========================================
-  // HANDLE IMAGE
-  // =========================================
 
   const handleImageChange = (e) => {
     const selectedImage = e.target.files?.[0]
-
-    if (!selectedImage) {
-      return
-    }
+    if (!selectedImage) return
 
     setImage(selectedImage)
-
-    // Ảnh mới -> kết quả AI cũ không còn ý nghĩa.
     setAiAnalyzed(false)
     setAiMessage('')
+    setAnalysisError('')
     setError('')
+    setFieldErrors((prev) => ({ ...prev, image: undefined }))
   }
-
-
-  // =========================================
-  // REMOVE IMAGE
-  // =========================================
 
   const handleRemoveImage = () => {
     setImage(null)
-
+    setPreview('')
     setAiAnalyzed(false)
     setAiMessage('')
+    setAnalysisError('')
     setError('')
   }
 
+  const renderFieldError = (field) => {
+    const messages = fieldErrors[field]
+    if (!messages) return null
 
-  // =========================================
-  // AI VISION
-  // =========================================
+    const list = Array.isArray(messages) ? messages : [messages]
+
+    return (
+      <div className="wardrobe-field-error">
+        {list.map((message, index) => <p key={index}>{message}</p>)}
+      </div>
+    )
+  }
 
   const handleAnalyzeImage = async () => {
     if (!image) {
-      setError(
-        'Vui lòng chọn ảnh trước khi sử dụng AI Vision.'
-      )
-
+      setAnalysisError('Vui lòng chọn ảnh trước khi sử dụng AI Vision.')
       return
     }
 
     try {
       setAnalyzing(true)
       setError('')
+      setAnalysisError('')
       setAiMessage('')
       setAiAnalyzed(false)
 
+      // wardrobe.js đã tự tạo FormData → chỉ truyền File
       const result = await analyzeClothingImage(image)
-
       const aiData = result.data
 
-      if (aiData?.status !== 'success') {
-        setError(
-          aiData?.reason ||
-            'AI chưa thể phân tích ảnh này.'
-        )
+      console.log('AI Vision result:', aiData)
 
+      if (aiData?.status !== 'success') {
+        setAnalysisError(aiData?.message || aiData?.reason || 'AI chưa thể phân tích ảnh này.')
         return
       }
 
-      setFormData((previousData) => ({
-        ...previousData,
-
-        name:
-          aiData.suggested_name ||
-          previousData.name,
-
-        category:
-          aiData.category ||
-          previousData.category,
-
-        color:
-          aiData.color ||
-          previousData.color,
-
-        season:
-          aiData.season ||
-          previousData.season,
-
-        occasion:
-          aiData.occasion ||
-          previousData.occasion,
+      setFormData((prev) => ({
+        ...prev,
+        name: aiData.suggested_name || prev.name,
+        category: aiData.category || prev.category,
+        color: aiData.color || prev.color,
+        season: aiData.season || prev.season,
+        occasion: aiData.occasion || prev.occasion,
       }))
 
+      setFieldErrors({})
       setAiAnalyzed(true)
-
-      setAiMessage(
-        'AI đã phân tích ảnh và điền các thông tin gợi ý. Bạn vẫn có thể chỉnh sửa trước khi lưu.'
-      )
+      setAiMessage('AI đã phân tích ảnh và điền các thông tin gợi ý. Bạn vẫn có thể chỉnh sửa trước khi lưu.')
     } catch (err) {
       console.error('Analyze image error:', err)
 
       const responseData = err.response?.data
+      console.log('AI Vision backend error:', responseData)
 
-      setError(
-        responseData?.message ||
-          responseData?.reason ||
-          'Không thể phân tích ảnh. Vui lòng thử lại.'
-      )
+      if (responseData?.errors && typeof responseData.errors === 'object') {
+        const firstError = Object.values(responseData.errors).flat().find(Boolean)
+        setAnalysisError(firstError || responseData?.message || 'Không thể phân tích ảnh.')
+        return
+      }
+
+      setAnalysisError(responseData?.message || responseData?.reason || 'Không thể phân tích ảnh. Vui lòng thử lại.')
     } finally {
       setAnalyzing(false)
     }
   }
-
-
-  // =========================================
-  // SUBMIT
-  // =========================================
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -187,6 +153,7 @@ function CreateWardrobePage() {
     try {
       setSubmitting(true)
       setError('')
+      setFieldErrors({})
 
       const data = new FormData()
 
@@ -195,567 +162,235 @@ function CreateWardrobePage() {
       data.append('color', formData.color)
       data.append('season', formData.season)
       data.append('occasion', formData.occasion)
+      data.append('is_favorite', formData.is_favorite)
 
-      data.append(
-        'is_favorite',
-        formData.is_favorite
-      )
-
-      if (image) {
-        data.append('image', image)
-      }
+      if (image) data.append('image', image)
 
       await createClothingItem(data)
-
       navigate('/wardrobe')
     } catch (err) {
       console.error('Create clothing error:', err)
 
       const responseData = err.response?.data
 
-      setError(
-        responseData?.message ||
-          'Không thể thêm trang phục. Vui lòng kiểm tra lại thông tin.'
-      )
+      if (responseData?.errors && typeof responseData.errors === 'object') {
+        setFieldErrors(responseData.errors)
+        return
+      }
+
+      setError(responseData?.message || 'Không thể thêm trang phục. Vui lòng kiểm tra lại thông tin.')
     } finally {
       setSubmitting(false)
     }
   }
 
-
   return (
     <div className="wardrobe-create-page">
 
-      {/* =====================================
-          HEADER
-      ====================================== */}
-
       <header className="wardrobe-create-header">
-
-        <button
-          type="button"
-          className="wardrobe-create-back"
-          onClick={() => navigate('/wardrobe')}
-        >
+        <button type="button" className="wardrobe-create-back" onClick={() => navigate('/wardrobe')}>
           ← Quay lại tủ đồ
         </button>
 
-
-        <p className="wardrobe-create-eyebrow">
-          THÊM TRANG PHỤC
-        </p>
-
+        <p className="wardrobe-create-eyebrow">THÊM TRANG PHỤC</p>
         <h1>Một món đồ mới</h1>
-
-        <p className="wardrobe-create-subtitle">
-          Thêm trang phục vào tủ đồ của bạn hoặc để
-          AI Vision hỗ trợ nhận diện thông tin từ ảnh.
-        </p>
-
+        <p>Thêm trang phục vào tủ đồ của bạn hoặc để AI Vision hỗ trợ nhận diện thông tin từ ảnh.</p>
       </header>
 
+      <div className="wardrobe-create-layout">
 
-      {/* =====================================
-          MAIN
-      ====================================== */}
+        <form className="wardrobe-create-form" onSubmit={handleSubmit}>
 
-      <form
-        className="wardrobe-create-layout"
-        onSubmit={handleSubmit}
-      >
+          {/* IMAGE */}
 
-        {/* ===================================
-            LEFT - IMAGE + AI
-        ==================================== */}
-
-        <div className="wardrobe-create-left">
-
-          <section className="wardrobe-create-image-card">
-
-            <div className="wardrobe-create-section-heading">
-
-              <div className="wardrobe-create-step">
-                01
-              </div>
+          <section className="wardrobe-create-section">
+            <div className="wardrobe-create-section-info">
+              <span className="wardrobe-create-section-number">01</span>
 
               <div>
                 <h2>Hình ảnh trang phục</h2>
-
-                <p>
-                  Chọn một ảnh rõ ràng để lưu vào
-                  tủ đồ và sử dụng AI Vision.
-                </p>
+                <p>Chọn một ảnh rõ ràng để lưu vào tủ đồ và sử dụng AI Vision.</p>
               </div>
-
             </div>
 
+            <div className="wardrobe-create-section-fields">
 
-            {/* IMAGE */}
+              <div className={`wardrobe-create-image-box ${fieldErrors.image ? 'has-error' : ''}`}>
+                {preview ? (
+                  <>
+                    <img src={preview} alt="Trang phục" />
 
-            <div
-              className={
-                preview
-                  ? 'wardrobe-create-preview has-image'
-                  : 'wardrobe-create-preview'
-              }
-            >
-
-              {preview ? (
-                <img
-                  src={preview}
-                  alt="Trang phục được chọn"
-                />
-              ) : (
-                <div className="wardrobe-create-placeholder">
-
-                  <div className="wardrobe-create-placeholder-icon">
-                    ◇
+                    <button type="button" className="wardrobe-create-remove-image" onClick={handleRemoveImage}>
+                      ×
+                    </button>
+                  </>
+                ) : (
+                  <div className="wardrobe-create-image-empty">
+                    <span>+</span>
+                    <p>Chưa có hình ảnh</p>
                   </div>
+                )}
+              </div>
 
-                  <strong>
-                    Thêm hình ảnh
-                  </strong>
+              {renderFieldError('image')}
 
-                  <p>
-                    Chọn ảnh rõ toàn bộ trang phục
-                    để AI nhận diện tốt hơn.
-                  </p>
+              <label className="wardrobe-create-upload">
+                {image ? 'Thay đổi hình ảnh' : 'Chọn ảnh'}
+                <input type="file" accept="image/png,image/jpeg,image/webp" onChange={handleImageChange} />
+              </label>
 
-                </div>
-              )}
-
-
-              {preview && (
+              {image && (
                 <button
                   type="button"
-                  className="wardrobe-create-remove-image"
-                  onClick={handleRemoveImage}
-                  title="Xóa ảnh"
+                  className="wardrobe-create-analyze"
+                  onClick={handleAnalyzeImage}
+                  disabled={analyzing}
                 >
-                  ×
+                  {analyzing ? 'AI đang phân tích...' : '✦ Phân tích bằng AI'}
                 </button>
               )}
 
-            </div>
+              {analysisError && <div className="wardrobe-analysis-error">{analysisError}</div>}
 
-
-            {/* FILE INPUT */}
-
-            <label className="wardrobe-create-upload">
-
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-              />
-
-              <span className="wardrobe-create-upload-icon">
-                +
-              </span>
-
-              <div>
-                <strong>
-                  {image
-                    ? 'Thay đổi hình ảnh'
-                    : 'Chọn hình ảnh'}
-                </strong>
-
-                <small>
-                  JPG, PNG hoặc ảnh từ thiết bị
-                </small>
-              </div>
-
-            </label>
-
-          </section>
-
-
-          {/* =================================
-              AI VISION
-          ================================== */}
-
-          <section
-            className={
-              aiAnalyzed
-                ? 'wardrobe-ai-vision-card analyzed'
-                : 'wardrobe-ai-vision-card'
-            }
-          >
-
-            <div className="wardrobe-ai-vision-top">
-
-              <div className="wardrobe-ai-vision-icon">
-                ✦
-              </div>
-
-              <div>
-                <p>AI VISION</p>
-
-                <h3>
-                  Phân tích trang phục
-                </h3>
-              </div>
-
-            </div>
-
-
-            <p className="wardrobe-ai-vision-description">
-              NovaLife có thể quan sát hình ảnh và
-              gợi ý tên, loại trang phục, màu sắc,
-              mùa và hoàn cảnh sử dụng.
-            </p>
-
-
-            <div className="wardrobe-ai-vision-note">
-
-              <span>i</span>
-
-              <p>
-                AI chỉ đưa ra gợi ý. Bạn luôn có thể
-                kiểm tra và chỉnh sửa thông tin trước
-                khi lưu vào tủ đồ.
-              </p>
-
-            </div>
-
-
-            <button
-              type="button"
-              className="wardrobe-ai-analyze-button"
-              onClick={handleAnalyzeImage}
-              disabled={!image || analyzing}
-            >
-
-              {analyzing ? (
-                <>
-                  <span className="wardrobe-ai-small-spinner" />
-
-                  Đang phân tích...
-                </>
-              ) : aiAnalyzed ? (
-                <>
-                  ✦ Phân tích lại
-                </>
-              ) : (
-                <>
-                  ✦ Phân tích bằng AI
-                </>
+              {aiAnalyzed && aiMessage && (
+                <div className="wardrobe-ai-success">
+                  <span>✓</span>
+                  <p>{aiMessage}</p>
+                </div>
               )}
 
-            </button>
-
-
-            {aiMessage && (
-              <div className="wardrobe-ai-success">
-
-                <span>✓</span>
-
-                <p>{aiMessage}</p>
-
-              </div>
-            )}
-
+            </div>
           </section>
 
-        </div>
 
+          {/* INFORMATION */}
 
-        {/* ===================================
-            RIGHT - FORM
-        ==================================== */}
+          <section className="wardrobe-create-section">
 
-        <section className="wardrobe-create-form-card">
-
-          <div className="wardrobe-create-section-heading">
-
-            <div className="wardrobe-create-step">
-              02
-            </div>
-
-            <div>
-              <h2>Thông tin trang phục</h2>
-
-              <p>
-                Kiểm tra và điều chỉnh thông tin
-                trước khi thêm vào tủ đồ.
-              </p>
-            </div>
-
-          </div>
-
-
-          {aiAnalyzed && (
-            <div className="wardrobe-ai-form-badge">
-
-              <span>✦</span>
-
-              <p>
-                Một số thông tin bên dưới đang sử dụng
-                gợi ý từ AI Vision.
-              </p>
-
-            </div>
-          )}
-
-
-          <div className="wardrobe-create-fields">
-
-            {/* NAME */}
-
-            <div className="wardrobe-create-field">
-
-              <label htmlFor="name">
-                Tên trang phục <span>*</span>
-              </label>
-
-              <input
-                id="name"
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                placeholder="Ví dụ: Áo thun trắng"
-                required
-              />
-
-            </div>
-
-
-            {/* CATEGORY */}
-
-            <div className="wardrobe-create-field">
-
-              <label htmlFor="category">
-                Loại trang phục <span>*</span>
-              </label>
-
-              <select
-                id="category"
-                name="category"
-                value={formData.category}
-                onChange={handleChange}
-                required
-              >
-                <option value="top">
-                  Áo
-                </option>
-
-                <option value="bottom">
-                  Quần
-                </option>
-
-                <option value="shoes">
-                  Giày
-                </option>
-
-                <option value="outerwear">
-                  Áo khoác
-                </option>
-
-                <option value="accessory">
-                  Phụ kiện
-                </option>
-              </select>
-
-            </div>
-
-
-            {/* COLOR */}
-
-            <div className="wardrobe-create-field">
-              <label htmlFor="color">
-                Màu sắc <span>*</span>
-              </label>
-
-              <select
-                id="color"
-                name="color"
-                value={formData.color}
-                onChange={handleChange}
-                required
-              >
-                <option value="">
-                  Chọn màu sắc
-                </option>
-
-                <option value="white">
-                  Trắng
-                </option>
-
-                <option value="black">
-                  Đen
-                </option>
-
-                <option value="gray">
-                  Xám
-                </option>
-
-                <option value="blue">
-                  Xanh dương
-                </option>
-
-                <option value="green">
-                  Xanh lá
-                </option>
-
-                <option value="red">
-                  Đỏ
-                </option>
-
-                <option value="yellow">
-                  Vàng
-                </option>
-
-                <option value="orange">
-                  Cam
-                </option>
-
-                <option value="pink">
-                  Hồng
-                </option>
-
-                <option value="purple">
-                  Tím
-                </option>
-
-                <option value="brown">
-                  Nâu
-                </option>
-
-                <option value="beige">
-                  Be
-                </option>
-              </select>
-            </div>
-
-
-            {/* SEASON */}
-
-            <div className="wardrobe-create-field">
-
-              <label htmlFor="season">
-                Mùa phù hợp <span>*</span>
-              </label>
-
-              <select
-                id="season"
-                name="season"
-                value={formData.season}
-                onChange={handleChange}
-                required
-              >
-                <option value="all_season">
-                  Mọi mùa
-                </option>
-
-                <option value="spring">
-                  Mùa xuân
-                </option>
-
-                <option value="summer">
-                  Mùa hè
-                </option>
-
-                <option value="autumn">
-                  Mùa thu
-                </option>
-
-                <option value="winter">
-                  Mùa đông
-                </option>
-              </select>
-
-            </div>
-
-
-            {/* OCCASION */}
-
-            <div className="wardrobe-create-field">
-
-              <label htmlFor="occasion">
-                Hoàn cảnh sử dụng <span>*</span>
-              </label>
-
-              <select
-                id="occasion"
-                name="occasion"
-                value={formData.occasion}
-                onChange={handleChange}
-                required
-              >
-                <option value="versatile">
-                  Đa dụng
-                </option>
-
-                <option value="casual">
-                  Hằng ngày
-                </option>
-
-                <option value="work">
-                  Công việc
-                </option>
-
-                <option value="sport">
-                  Thể thao
-                </option>
-
-                <option value="party">
-                  Tiệc
-                </option>
-
-                <option value="formal">
-                  Trang trọng
-                </option>
-              </select>
-
-            </div>
-
-
-            {/* FAVORITE */}
-
-            <label className="wardrobe-create-favorite">
-
-              <input
-                type="checkbox"
-                name="is_favorite"
-                checked={formData.is_favorite}
-                onChange={handleChange}
-              />
-
-              <span className="wardrobe-create-favorite-box">
-                ♥
-              </span>
+            <div className="wardrobe-create-section-info">
+              <span className="wardrobe-create-section-number">02</span>
 
               <div>
-                <strong>
-                  Trang phục yêu thích
-                </strong>
+                <h2>Thông tin trang phục</h2>
+                <p>Kiểm tra và chỉnh sửa thông tin trước khi lưu.</p>
+              </div>
+            </div>
 
-                <p>
-                  Đánh dấu nếu đây là một trong
-                  những món đồ bạn thường ưu tiên.
-                </p>
+            <div className="wardrobe-create-section-fields">
+
+              {/* NAME */}
+
+              <div className={`wardrobe-create-field ${fieldErrors.name ? 'has-error' : ''}`}>
+                <label htmlFor="name">Tên trang phục <span>*</span></label>
+
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="Ví dụ: Áo thun trắng"
+                  required
+                />
+
+                {renderFieldError('name')}
               </div>
 
-            </label>
 
-          </div>
+              {/* CATEGORY + COLOR */}
+
+              <div className="wardrobe-create-field-row">
+
+                <div className={`wardrobe-create-field ${fieldErrors.category ? 'has-error' : ''}`}>
+                  <label htmlFor="category">Loại trang phục <span>*</span></label>
+
+                  <select id="category" name="category" value={formData.category} onChange={handleChange} required>
+                    <option value="top">Áo</option>
+                    <option value="bottom">Quần</option>
+                    <option value="shoes">Giày</option>
+                    <option value="outerwear">Áo khoác</option>
+                    <option value="accessory">Phụ kiện</option>
+                  </select>
+
+                  {renderFieldError('category')}
+                </div>
 
 
-          {/* =================================
-              ERROR
-          ================================== */}
+                <div className={`wardrobe-create-field ${fieldErrors.color ? 'has-error' : ''}`}>
+                  <label htmlFor="color">Màu sắc <span>*</span></label>
 
-          {error && (
-            <div className="wardrobe-create-error">
-              {error}
+                  <select id="color" name="color" value={formData.color} onChange={handleChange} required>
+                    {COLOR_OPTIONS.map((color) => (
+                      <option key={color.value} value={color.value}>{color.label}</option>
+                    ))}
+                  </select>
+
+                  {renderFieldError('color')}
+                </div>
+
+              </div>
+
+
+              {/* SEASON + OCCASION */}
+
+              <div className="wardrobe-create-field-row">
+
+                <div className={`wardrobe-create-field ${fieldErrors.season ? 'has-error' : ''}`}>
+                  <label htmlFor="season">Mùa phù hợp <span>*</span></label>
+
+                  <select id="season" name="season" value={formData.season} onChange={handleChange} required>
+                    <option value="all_season">Mọi mùa</option>
+                    <option value="spring">Mùa xuân</option>
+                    <option value="summer">Mùa hè</option>
+                    <option value="autumn">Mùa thu</option>
+                    <option value="winter">Mùa đông</option>
+                  </select>
+
+                  {renderFieldError('season')}
+                </div>
+
+
+                <div className={`wardrobe-create-field ${fieldErrors.occasion ? 'has-error' : ''}`}>
+                  <label htmlFor="occasion">Hoàn cảnh sử dụng <span>*</span></label>
+
+                  <select id="occasion" name="occasion" value={formData.occasion} onChange={handleChange} required>
+                    <option value="versatile">Đa dụng</option>
+                    <option value="casual">Hằng ngày</option>
+                    <option value="work">Công việc</option>
+                    <option value="sport">Thể thao</option>
+                    <option value="party">Tiệc</option>
+                    <option value="formal">Trang trọng</option>
+                  </select>
+
+                  {renderFieldError('occasion')}
+                </div>
+
+              </div>
+
+
+              {/* FAVORITE */}
+
+              <label className="wardrobe-create-favorite">
+                <input
+                  type="checkbox"
+                  name="is_favorite"
+                  checked={formData.is_favorite}
+                  onChange={handleChange}
+                />
+
+                <span>Đánh dấu là trang phục yêu thích</span>
+              </label>
+
             </div>
-          )}
+          </section>
 
 
-          {/* =================================
-              ACTIONS
-          ================================== */}
+          {/* GENERAL ERROR */}
+
+          {error && <div className="wardrobe-create-error">{error}</div>}
+
+
+          {/* ACTIONS */}
 
           <div className="wardrobe-create-actions">
 
@@ -768,26 +403,62 @@ function CreateWardrobePage() {
               Hủy
             </button>
 
-
-            <button
-              type="submit"
-              className="wardrobe-create-submit"
-              disabled={submitting}
-            >
-              {submitting
-                ? 'Đang lưu...'
-                : '+ Thêm vào tủ đồ'}
+            <button type="submit" className="wardrobe-create-submit" disabled={submitting}>
+              {submitting ? 'Đang lưu...' : '+ Thêm vào tủ đồ'}
             </button>
 
           </div>
 
-        </section>
+        </form>
 
-      </form>
 
+        {/* AI GUIDE */}
+
+        <aside className="wardrobe-create-guide">
+
+          <div className="wardrobe-create-guide-icon">✦</div>
+
+          <p className="wardrobe-create-guide-label">NOVALIFE VISION</p>
+
+          <h2>AI có thể giúp bạn nhận diện trang phục.</h2>
+
+          <p>
+            Tải lên một ảnh rõ ràng và NovaLife sẽ gợi ý tên, loại,
+            màu sắc, mùa và hoàn cảnh sử dụng.
+          </p>
+
+          <div className="wardrobe-create-guide-item">
+            <span>01</span>
+
+            <div>
+              <strong>Một món đồ</strong>
+              <p>Nên để một món trang phục chính trong ảnh.</p>
+            </div>
+          </div>
+
+          <div className="wardrobe-create-guide-item">
+            <span>02</span>
+
+            <div>
+              <strong>Ảnh đủ sáng</strong>
+              <p>Tránh ảnh quá tối hoặc quá mờ.</p>
+            </div>
+          </div>
+
+          <div className="wardrobe-create-guide-item">
+            <span>03</span>
+
+            <div>
+              <strong>Kiểm tra lại</strong>
+              <p>AI chỉ gợi ý. Bạn luôn có thể chỉnh sửa trước khi lưu.</p>
+            </div>
+          </div>
+
+        </aside>
+
+      </div>
     </div>
   )
 }
-
 
 export default CreateWardrobePage

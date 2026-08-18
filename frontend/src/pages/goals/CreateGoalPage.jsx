@@ -357,9 +357,11 @@ function CreateGoalPage() {
                     Sức khỏe
                   </option>
 
-                  <option value="personal">
-                    Cá nhân
-                  </option>
+                  <option value="career">Sự nghiệp</option>
+                  <option value="finance">Tài chính</option>
+                  <option value="relationship">Mối quan hệ</option>
+                  <option value="personal_development">Phát triển bản thân</option>
+                  <option value="other">Khác</option>
 
                 </select>
 

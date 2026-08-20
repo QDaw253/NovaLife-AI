@@ -6172,6 +6172,396 @@ a {
 }
 
 /* =========================================================
+   HABIT REMINDER SYSTEM
+   - .habit-reminder       : chuông notification toàn app
+   - .habit-card-reminder  : giờ nhắc bên trong Habit card
+========================================================= */
+
+
+/* =========================================================
+   1. GLOBAL REMINDER / NOTIFICATION BELL
+========================================================= */
+
+.habit-reminder {
+  position: fixed;
+  top: 22px;
+  right: 30px;
+  z-index: 1200;
+}
+
+.habit-reminder-bell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border: 1px solid #dce8e2;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(25, 70, 52, 0.09);
+  font-size: 19px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.habit-reminder-bell:hover {
+  transform: translateY(-2px);
+  border-color: #b8d8c9;
+  box-shadow: 0 10px 28px rgba(25, 70, 52, 0.13);
+}
+
+.habit-reminder-bell strong {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border: 2px solid #fff;
+  border-radius: 999px;
+  background: #e05252;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+
+/* =========================================================
+   2. REMINDER DROPDOWN PANEL
+========================================================= */
+
+.habit-reminder-panel {
+  position: absolute;
+  top: 56px;
+  right: 0;
+  width: 360px;
+  overflow: hidden;
+  border: 1px solid #dce7e1;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 20px 55px rgba(23, 55, 42, 0.15);
+}
+
+.habit-reminder-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 22px 16px;
+  border-bottom: 1px solid #e7eee9;
+}
+
+.habit-reminder-header p {
+  margin: 0 0 4px;
+  color: #27865f;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.3px;
+}
+
+.habit-reminder-header h3 {
+  margin: 0;
+  color: #17231d;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.habit-reminder-header button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #77827c;
+  font-size: 25px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.habit-reminder-header button:hover {
+  color: #26342d;
+}
+
+
+/* =========================================================
+   3. REMINDER LIST
+========================================================= */
+
+.habit-reminder-list {
+  max-height: 360px;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.habit-reminder-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 12px;
+  padding: 13px;
+  border: 0;
+  border-radius: 13px;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.habit-reminder-item:hover {
+  background: #f2f8f5;
+}
+
+.habit-reminder-item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: 11px;
+  background: #e8f4ee;
+  color: #27865f;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.habit-reminder-item-info {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.habit-reminder-item-info strong {
+  overflow: hidden;
+  color: #26342d;
+  font-size: 13px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.habit-reminder-item-info span {
+  color: #78847e;
+  font-size: 11px;
+}
+
+.habit-reminder-item-info small {
+  color: #27865f;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.habit-reminder-arrow {
+  flex-shrink: 0;
+  color: #a0aaa5;
+  font-size: 16px;
+}
+
+
+/* =========================================================
+   4. EMPTY REMINDER
+========================================================= */
+
+.habit-reminder-empty {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 24px 22px;
+}
+
+.habit-reminder-empty > span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #eaf5ef;
+  color: #27865f;
+  font-weight: 800;
+}
+
+.habit-reminder-empty strong {
+  color: #26342d;
+  font-size: 13px;
+}
+
+.habit-reminder-empty p {
+  margin: 5px 0 0;
+  color: #7e8983;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   5. ENABLE BROWSER NOTIFICATION
+========================================================= */
+
+.habit-reminder-enable {
+  width: calc(100% - 32px);
+  margin: 8px 16px 16px;
+  padding: 11px 14px;
+  border: 0;
+  border-radius: 11px;
+  background: #27865f;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.habit-reminder-enable:hover {
+  background: #217250;
+}
+
+.habit-reminder-permission {
+  margin: 0;
+  padding: 13px 18px 17px;
+  border-top: 1px solid #e7eee9;
+  color: #8a7263;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   6. REMINDER TOAST
+========================================================= */
+
+.habit-reminder-toast {
+  position: fixed;
+  right: 30px;
+  bottom: 30px;
+  z-index: 1300;
+  max-width: 380px;
+  padding: 14px 18px;
+  border: 1px solid #cae2d6;
+  border-radius: 13px;
+  background: #fff;
+  color: #26382f;
+  box-shadow: 0 16px 42px rgba(23, 55, 42, 0.14);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   7. REMINDER INSIDE HABIT CARD
+========================================================= */
+
+.habit-card-reminder {
+  position: absolute;
+  top: 28px;
+  right: 28px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 125px;
+  padding: 9px 12px;
+  border-radius: 13px;
+  background: #f3f8f5;
+}
+
+.habit-card-reminder-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #e7f3ed;
+  color: #27865f;
+  font-size: 17px;
+}
+
+.habit-card-reminder-info {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.habit-card-reminder-label {
+  color: #89958f;
+  font-size: 10px;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.habit-card-reminder-time {
+  color: #26342d;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   8. REQUIRED CARD POSITION
+========================================================= */
+
+.habit-card {
+  position: relative;
+}
+
+
+/* =========================================================
+   9. RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+  .habit-card-reminder {
+    top: 22px;
+    right: 22px;
+  }
+}
+
+@media (max-width: 650px) {
+  .habit-reminder {
+    top: 16px;
+    right: 16px;
+  }
+
+  .habit-reminder-bell {
+    width: 42px;
+    height: 42px;
+  }
+
+  .habit-reminder-panel {
+    position: fixed;
+    top: 70px;
+    right: 14px;
+    left: 14px;
+    width: auto;
+  }
+
+  .habit-reminder-toast {
+    right: 16px;
+    bottom: 20px;
+    left: 16px;
+    max-width: none;
+  }
+
+  .habit-card-reminder {
+    position: static;
+    width: fit-content;
+    min-width: 120px;
+    margin-left: auto;
+  }
+}
+
+/* =========================================================
    NOVALIFE - WARDROBE LIST
    ========================================================= */
 

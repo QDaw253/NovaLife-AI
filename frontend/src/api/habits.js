@@ -26,10 +26,11 @@ export const deleteHabit = async (id) => {
 }
 
 export const completeHabitToday = async (id, data) => {
-  const response = await api.post(
-    `/habits/${id}/complete-today/`,
-    data,
-  )
+  const response = await api.post(`/habits/${id}/complete-today/`, data)
+  return response.data
+}
 
+export const getHabitReminders = async () => {
+  const response = await api.get('/habits/reminders/')
   return response.data
 }

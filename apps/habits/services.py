@@ -12,56 +12,24 @@ class HabitService:
 
     @staticmethod
     @transaction.atomic
-    def log_today(
-        habit: Habit,
-        value,
-        note: str = "",
-    ) -> HabitLog:
+    def log_today(habit: Habit, value, note: str = "") -> HabitLog:
         today = timezone.localdate()
 
         if today < habit.start_date:
-            raise ValidationError(
-                {
-                    "habit": [
-                        "Thói quen này chưa đến ngày bắt đầu."
-                    ]
-                }
-            )
+            raise ValidationError({"habit": ["Thói quen này chưa đến ngày bắt đầu."]})
 
-        if (
-            habit.end_date is not None
-            and today > habit.end_date
-        ):
-            raise ValidationError(
-                {
-                    "habit": [
-                        "Thói quen này đã kết thúc."
-                    ]
-                }
-            )
+        if habit.end_date is not None and today > habit.end_date:
+            raise ValidationError({"habit": ["Thói quen này đã kết thúc."]})
 
         if value < 0:
-            raise ValidationError(
-                {
-                    "value": [
-                        "Giá trị thực hiện không được nhỏ hơn 0."
-                    ]
-                }
-            )
+            raise ValidationError({"value": ["Giá trị thực hiện không được nhỏ hơn 0."]})
 
-        if value >= habit.target_value:
-            log_status = HabitLog.Status.COMPLETED
-        else:
-            log_status = HabitLog.Status.PENDING
+        log_status = HabitLog.Status.COMPLETED if value >= habit.target_value else HabitLog.Status.PENDING
 
-        habit_log, created = HabitLog.objects.update_or_create(
+        habit_log, _ = HabitLog.objects.update_or_create(
             habit=habit,
             date=today,
-            defaults={
-                "value": value,
-                "status": log_status,
-                "note": note,
-            },
+            defaults={"value": value, "status": log_status, "note": note},
         )
 
         return habit_log
@@ -73,26 +41,16 @@ class HabitService:
             end_date = target_date
 
         elif habit.frequency == Habit.Frequency.WEEKLY:
-            start_date = target_date - timedelta(
-                days=target_date.weekday()
-            )
-
+            start_date = target_date - timedelta(days=target_date.weekday())
             end_date = start_date + timedelta(days=6)
 
         elif habit.frequency == Habit.Frequency.MONTHLY:
             start_date = target_date.replace(day=1)
 
             if target_date.month == 12:
-                next_month = target_date.replace(
-                    year=target_date.year + 1,
-                    month=1,
-                    day=1,
-                )
+                next_month = target_date.replace(year=target_date.year + 1, month=1, day=1)
             else:
-                next_month = target_date.replace(
-                    month=target_date.month + 1,
-                    day=1,
-                )
+                next_month = target_date.replace(month=target_date.month + 1, day=1)
 
             end_date = next_month - timedelta(days=1)
 
@@ -103,64 +61,22 @@ class HabitService:
         return start_date, end_date
 
     @staticmethod
-    def get_period_value(
-        habit: Habit,
-        start_date,
-        end_date,
-    ):
-        logs = HabitLog.objects.filter(
-            habit=habit,
-            date__range=(
-                start_date,
-                end_date,
-            ),
-        )
+    def get_period_value(habit: Habit, start_date, end_date):
+        logs = HabitLog.objects.filter(habit=habit, date__range=(start_date, end_date))
 
-        return sum(
-            (log.value for log in logs),
-            Decimal("0"),
-        )
+        return sum((log.value for log in logs), Decimal("0"))
 
     @staticmethod
     def get_current_progress(habit: Habit):
         today = timezone.localdate()
+        start_date, end_date = HabitService.get_period_range(habit, today)
 
-        start_date, end_date = (
-            HabitService.get_period_range(
-                habit,
-                today,
-            )
-        )
-
-        current_value = HabitService.get_period_value(
-            habit,
-            start_date,
-            end_date,
-        )
-
+        current_value = HabitService.get_period_value(habit, start_date, end_date)
         target = habit.target_value
 
-        percentage = (
-            round(
-                float(
-                    current_value
-                    / target
-                    * 100
-                ),
-                2,
-            )
-            if target > 0
-            else 0
-        )
-
-        percentage = min(
-            percentage,
-            100,
-        )
-
-        completed = (
-            current_value >= target
-        )
+        percentage = round(float(current_value / target * 100), 2) if target > 0 else 0
+        percentage = min(percentage, 100)
+        completed = current_value >= target
 
         return {
             "current": current_value,
@@ -171,25 +87,61 @@ class HabitService:
             "end_date": end_date,
         }
 
+    # =========================================================
+    # REMINDERS
+    # =========================================================
+
     @staticmethod
-    def is_period_completed(
-        habit: Habit,
-        start_date,
-        end_date,
-    ):
-        value = HabitService.get_period_value(
-            habit,
-            start_date,
-            end_date,
+    def get_due_reminders(user):
+        now = timezone.localtime()
+        today = now.date()
+        current_time = now.time()
+
+        habits = (
+            Habit.objects
+            .filter(
+                user=user,
+                is_active=True,
+                reminder_time__isnull=False,
+                start_date__lte=today,
+            )
+            .prefetch_related("logs")
         )
 
+        reminders = []
+
+        for habit in habits:
+            if habit.end_date is not None and today > habit.end_date:
+                continue
+
+            if current_time < habit.reminder_time:
+                continue
+
+            progress = HabitService.get_current_progress(habit)
+
+            if progress["completed"]:
+                continue
+
+            reminders.append({
+                "id": habit.id,
+                "title": habit.title,
+                "frequency": habit.frequency,
+                "reminder_time": habit.reminder_time,
+                "current": progress["current"],
+                "target": progress["target"],
+                "unit": habit.unit,
+                "percentage": progress["percentage"],
+            })
+
+        return reminders
+
+    @staticmethod
+    def is_period_completed(habit: Habit, start_date, end_date):
+        value = HabitService.get_period_value(habit, start_date, end_date)
         return value >= habit.target_value
 
     @staticmethod
-    def get_previous_period_date(
-        habit: Habit,
-        target_date,
-    ):
+    def get_previous_period_date(habit: Habit, target_date):
         if habit.frequency == Habit.Frequency.DAILY:
             return target_date - timedelta(days=1)
 
@@ -198,7 +150,6 @@ class HabitService:
 
         if habit.frequency == Habit.Frequency.MONTHLY:
             first_day = target_date.replace(day=1)
-
             return first_day - timedelta(days=1)
 
         return target_date - timedelta(days=1)
@@ -206,62 +157,37 @@ class HabitService:
     @staticmethod
     def get_periods(habit: Habit):
         today = timezone.localdate()
-
         current_date = today
         periods = []
 
         while True:
-            start_date, end_date = (
-                HabitService.get_period_range(
-                    habit,
-                    current_date,
-                )
-            )
+            start_date, end_date = HabitService.get_period_range(habit, current_date)
 
             if end_date < habit.start_date:
                 break
 
-            effective_start = max(
-                start_date,
-                habit.start_date,
-            )
-
+            effective_start = max(start_date, habit.start_date)
             effective_end = end_date
 
             if habit.end_date is not None:
-                effective_end = min(
-                    effective_end,
-                    habit.end_date,
-                )
+                effective_end = min(effective_end, habit.end_date)
 
-            effective_end = min(
-                effective_end,
-                today,
-            )
+            effective_end = min(effective_end, today)
 
             if effective_start <= effective_end:
-                completed = (
-                    HabitService.is_period_completed(
-                        habit,
-                        effective_start,
-                        effective_end,
-                    )
-                )
-
-                periods.append(
-                    {
-                        "start_date": effective_start,
-                        "end_date": effective_end,
-                        "completed": completed,
-                    }
-                )
-
-            current_date = (
-                HabitService.get_previous_period_date(
+                completed = HabitService.is_period_completed(
                     habit,
-                    start_date,
+                    effective_start,
+                    effective_end,
                 )
-            )
+
+                periods.append({
+                    "start_date": effective_start,
+                    "end_date": effective_end,
+                    "completed": completed,
+                })
+
+            current_date = HabitService.get_previous_period_date(habit, start_date)
 
         return periods
 
@@ -285,10 +211,7 @@ class HabitService:
         for period in reversed(periods):
             if period["completed"]:
                 current += 1
-                longest = max(
-                    longest,
-                    current,
-                )
+                longest = max(longest, current)
             else:
                 current = 0
 
@@ -297,34 +220,17 @@ class HabitService:
     @staticmethod
     def get_statistics(habit: Habit):
         periods = HabitService.get_periods(habit)
-
         total_periods = len(periods)
 
         total_completions = sum(
-            1
-            for period in periods
-            if period["completed"]
+            1 for period in periods if period["completed"]
         )
 
-        current_streak = (
-            HabitService.calculate_current_streak(
-                periods
-            )
-        )
-
-        longest_streak = (
-            HabitService.calculate_longest_streak(
-                periods
-            )
-        )
+        current_streak = HabitService.calculate_current_streak(periods)
+        longest_streak = HabitService.calculate_longest_streak(periods)
 
         completion_rate = (
-            round(
-                total_completions
-                / total_periods
-                * 100,
-                2,
-            )
+            round(total_completions / total_periods * 100, 2)
             if total_periods > 0
             else 0
         )

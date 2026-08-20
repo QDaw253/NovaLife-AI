@@ -232,28 +232,18 @@ function HabitsPage() {
 
               {/* REMINDER */}
 
-              <div className="habit-reminder">
+              <div className="habit-card-reminder">
+                <div className="habit-card-reminder-icon">◷</div>
 
-                <div className="habit-reminder-icon">
-                  ◷
-                </div>
+                <div className="habit-card-reminder-info">
+                  <span className="habit-card-reminder-label">Nhắc nhở</span>
 
-                <div>
-
-                  <span>
-                    Nhắc nhở
-                  </span>
-
-                  <strong>
-
+                  <strong className="habit-card-reminder-time">
                     {habit.reminder_time
-                      ? habit.reminder_time
+                      ? habit.reminder_time.slice(0, 5)
                       : 'Chưa thiết lập'}
-
                   </strong>
-
                 </div>
-
               </div>
 
 

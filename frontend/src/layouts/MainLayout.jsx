@@ -8,6 +8,8 @@ import { useState } from 'react'
 
 import { useAuth } from '../contexts/AuthContext'
 
+import HabitReminder from '../components/HabitReminder'
+
 
 function MainLayout() {
   const { logout } = useAuth()
@@ -206,6 +208,7 @@ function MainLayout() {
 
       <main className="app-main">
         <div className="app-content">
+          <HabitReminder />
           <Outlet />
         </div>
       </main>

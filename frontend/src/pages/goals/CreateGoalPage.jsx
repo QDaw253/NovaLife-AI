@@ -95,32 +95,25 @@ function CreateGoalPage() {
       navigate(
         `/goals/${result.data.id}`,
       )
-    } catch (err) {
-      console.error(
-        'Create goal error:',
-        err,
-      )
+    }
+    catch (err) {
+      console.error('Create goal error:', err)
 
-      const responseData =
-        err.response?.data
+      const responseData = err.response?.data
+
+      console.log('STATUS:', err.response?.status)
+      console.log('BACKEND RESPONSE:', responseData)
 
       if (
         responseData?.errors &&
-        typeof responseData.errors ===
-          'object'
+        typeof responseData.errors === 'object'
       ) {
-        setFieldErrors(
-          responseData.errors,
-        )
-
+        setFieldErrors(responseData.errors)
         return
       }
 
       if (responseData?.message) {
-        setError(
-          responseData.message,
-        )
-
+        setError(responseData.message)
         return
       }
 

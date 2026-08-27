@@ -177,6 +177,10 @@ GEMINI_MODEL = config(
     "GEMINI_MODEL",
     default="gemini-2.5-flash",
 )
+
+GROQ_API_KEY = config("GROQ_API_KEY", default="")
+GROQ_MODEL = config("GROQ_MODEL", default="openai/gpt-oss-120b")
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
 ]

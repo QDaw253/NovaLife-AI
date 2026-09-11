@@ -77,8 +77,8 @@ function HabitReminder() {
         if (showToast) {
           setToast(
             data.length === 1
-              ? `🔔 Đến giờ thực hiện: ${data[0].title}`
-              : `🔔 Bạn có ${data.length} thói quen cần thực hiện.`
+              ? ` Đến giờ thực hiện: ${data[0].title}`
+              : ` Bạn có ${data.length} thói quen cần thực hiện.`
           )
 
           setTimeout(() => {
@@ -105,7 +105,7 @@ function HabitReminder() {
     if (permission === 'granted') {
       reminders.forEach(showBrowserNotification)
 
-      setToast('🔔 Đã bật thông báo nhắc thói quen.')
+      setToast(' Đã bật thông báo nhắc thói quen.')
 
       setTimeout(() => {
         setToast('')

@@ -3,10 +3,6 @@ from rest_framework import serializers
 from .models import ClothingItem
 
 
-# =========================================================
-# COMMON VALIDATION
-# =========================================================
-
 def validate_clothing_name(value):
     value = value.strip()
 
@@ -33,9 +29,6 @@ def validate_clothing_name(value):
     return value
 
 
-# =========================================================
-# CLOTHING BASE
-# =========================================================
 
 class ClothingItemBaseSerializer(serializers.ModelSerializer):
 
@@ -51,9 +44,6 @@ class ClothingItemBaseSerializer(serializers.ModelSerializer):
         return value
 
 
-# =========================================================
-# CLOTHING CREATE
-# =========================================================
 
 class ClothingItemCreateSerializer(ClothingItemBaseSerializer):
 
@@ -113,9 +103,6 @@ class ClothingItemCreateSerializer(ClothingItemBaseSerializer):
         return ClothingItem.objects.create(user=request.user, **validated_data)
 
 
-# =========================================================
-# CLOTHING UPDATE
-# =========================================================
 
 class ClothingItemUpdateSerializer(ClothingItemBaseSerializer):
 
@@ -165,9 +152,6 @@ class ClothingItemUpdateSerializer(ClothingItemBaseSerializer):
         }
 
 
-# =========================================================
-# CLOTHING LIST
-# =========================================================
 
 class ClothingItemListSerializer(serializers.ModelSerializer):
 
@@ -176,9 +160,6 @@ class ClothingItemListSerializer(serializers.ModelSerializer):
         fields = ("id", "name", "category", "color", "image", "is_favorite")
 
 
-# =========================================================
-# CLOTHING DETAIL
-# =========================================================
 
 class ClothingItemDetailSerializer(serializers.ModelSerializer):
 
@@ -191,17 +172,11 @@ class ClothingItemDetailSerializer(serializers.ModelSerializer):
         )
 
 
-# =========================================================
-# AI VISION - IMAGE INPUT
-# =========================================================
 
 class ClothingImageAnalyzeSerializer(serializers.Serializer):
     image = serializers.ImageField()
 
 
-# =========================================================
-# AI VISION - ANALYSIS RESULT
-# =========================================================
 
 class ClothingAnalysisResultSerializer(serializers.Serializer):
 
@@ -325,9 +300,6 @@ class ClothingAnalysisResultSerializer(serializers.Serializer):
             raise serializers.ValidationError(errors)
 
 
-# =========================================================
-# AI OUTFIT - REQUEST
-# =========================================================
 
 class OutfitRecommendationRequestSerializer(serializers.Serializer):
 
@@ -340,9 +312,6 @@ class OutfitRecommendationRequestSerializer(serializers.Serializer):
     )
 
 
-# =========================================================
-# AI OUTFIT - RESULT
-# =========================================================
 
 class OutfitRecommendationResultSerializer(serializers.Serializer):
 

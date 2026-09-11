@@ -112,9 +112,7 @@ function MainLayout() {
                 ◫
               </span>
 
-              <span>
-                Dashboard
-              </span>
+              <span>Dashboard</span>
             </NavLink>
 
 
@@ -131,9 +129,7 @@ function MainLayout() {
                 ◎
               </span>
 
-              <span>
-                Mục tiêu
-              </span>
+              <span>Mục tiêu</span>
             </NavLink>
 
             <NavLink
@@ -145,9 +141,7 @@ function MainLayout() {
                 ✓
               </span>
 
-              <span>
-                Thói quen
-              </span>
+              <span>Thói quen</span>
             </NavLink>
 
 
@@ -164,9 +158,7 @@ function MainLayout() {
                 ◇
               </span>
 
-              <span>
-                Tủ đồ
-              </span>
+              <span>Tủ đồ</span>
             </NavLink>
 
             <NavLink
@@ -178,9 +170,7 @@ function MainLayout() {
                 ✦
               </span>
 
-              <span>
-                AI Outfit
-              </span>
+              <span>AI Outfit</span>
             </NavLink>
 
           </nav>
@@ -197,9 +187,7 @@ function MainLayout() {
               ↪
             </span>
 
-            <span>
-              Đăng xuất
-            </span>
+            <span>Đăng xuất</span>
           </button>
         </div>
 

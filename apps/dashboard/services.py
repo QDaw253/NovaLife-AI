@@ -17,9 +17,7 @@ class DashboardService:
 
     @staticmethod
     def get_goal_summary(user):
-        goals = Goal.objects.filter(
-            user=user,
-        )
+        goals = Goal.objects.filter(user=user,)
 
         total = goals.count()
 
@@ -48,10 +46,7 @@ class DashboardService:
     def get_habit_summary(user):
         today = timezone.localdate()
 
-        active_habits = Habit.objects.filter(
-            user=user,
-            is_active=True,
-        )
+        active_habits = Habit.objects.filter(user=user,is_active=True,)
 
         active = active_habits.count()
 

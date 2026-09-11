@@ -39,57 +39,17 @@ class ClothingItem(models.Model):
         ("beige", "Be"),
     ]
 
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name="clothing_items",
-    )
-
-    name = models.CharField(
-        max_length=255,
-    )
-
-    category = models.CharField(
-        max_length=20,
-        choices=Category.choices,
-    )
-
-    color = models.CharField(
-        max_length=100,
-        choices=COLOR_CHOICES,
-    )
-
-    season = models.CharField(
-        max_length=20,
-        choices=Season.choices,
-        default=Season.ALL_SEASON,
-    )
-
-    occasion = models.CharField(
-        max_length=20,
-        choices=Occasion.choices,
-        default=Occasion.VERSATILE,
-    )
-
-    image = models.ImageField(
-        upload_to="wardrobe/",
-    )
-
-    is_favorite = models.BooleanField(
-        default=False,
-    )
-
-    is_active = models.BooleanField(
-        default=True,
-    )
-
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-    )
-
-    updated_at = models.DateTimeField(
-        auto_now=True,
-    )
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="clothing_items")
+    name = models.CharField(max_length=255)
+    category = models.CharField(max_length=20, choices=Category.choices)
+    color = models.CharField(max_length=100, choices=COLOR_CHOICES)
+    season = models.CharField(max_length=20, choices=Season.choices, default=Season.ALL_SEASON)
+    occasion = models.CharField(max_length=20, choices=Occasion.choices, default=Occasion.VERSATILE)
+    image = models.ImageField(upload_to="wardrobe/")
+    is_favorite = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["-created_at"]

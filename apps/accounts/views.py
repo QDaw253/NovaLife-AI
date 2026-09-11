@@ -6,9 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from .services import AuthService
 from .serializers import UserSerializer
 class RegisterView(APIView):
-    """
-    API đăng ký tài khoản
-    """
+
     def post(self,request):
         user = AuthService.register(request.data)
         serializer = UserSerializer(user)
@@ -29,7 +27,7 @@ class LoginView(APIView):
                 "user": UserSerializer(result["user"]).data,
                 "access":result["access"],
                 "refresh": result["refresh"],
-            },
+            }, 
             status = status.HTTP_200_OK,
         )        
 
@@ -40,9 +38,7 @@ class MeView(APIView):
         serializer = UserSerializer(user)
 
         return Response(
-            {
-                "user": serializer.data,
-            },
+            { "user": serializer.data, },
             status=status.HTTP_200_OK,
         )
 
@@ -53,8 +49,6 @@ class LogoutView(APIView):
         AuthService.logout(request.data)
 
         return Response(
-            {
-                "message":"Đăng xuất thành công",
-            },
+            { "message":"Đăng xuất thành công", },
             status=status.HTTP_200_OK,
         )

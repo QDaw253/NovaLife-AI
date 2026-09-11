@@ -2,21 +2,8 @@ from datetime import date
 
 from rest_framework import serializers
 
-from .models import (
-    Goal,
-    GoalAIPlan,
-    Task,
-    Milestone,
-)
-from .services import (
-    GoalProgressService,
-    GoalService,
-)
-
-
-# =========================================================
-# GOAL CREATE / UPDATE
-# =========================================================
+from .models import (Goal, GoalAIPlan, Task, Milestone)
+from .services import (GoalService, GoalProgressService,)
 
 class GoalCreateSerializer(serializers.ModelSerializer):
 
@@ -94,10 +81,6 @@ class GoalCreateSerializer(serializers.ModelSerializer):
             },
         }
 
-    # =====================================================
-    # TITLE
-    # =====================================================
-
     def validate_title(self, value):
         value = value.strip()
 
@@ -117,7 +100,6 @@ class GoalCreateSerializer(serializers.ModelSerializer):
                 )
             )
 
-        # Một số input rõ ràng là placeholder/test
         meaningless_values = {
             "hehe",
             "haha",
@@ -141,9 +123,6 @@ class GoalCreateSerializer(serializers.ModelSerializer):
 
         return value
 
-    # =====================================================
-    # DESCRIPTION
-    # =====================================================
 
     def validate_description(self, value):
         value = value.strip()
@@ -187,9 +166,6 @@ class GoalCreateSerializer(serializers.ModelSerializer):
 
         return value
 
-    # =====================================================
-    # DEADLINE
-    # =====================================================
 
     def validate_deadline(self, value):
 
@@ -203,9 +179,7 @@ class GoalCreateSerializer(serializers.ModelSerializer):
 
         return value
 
-    # =====================================================
-    # CREATE
-    # =====================================================
+
 
     def create(self, validated_data):
         request = self.context["request"]
@@ -215,9 +189,6 @@ class GoalCreateSerializer(serializers.ModelSerializer):
             goal_data=validated_data,
         )
 
-    # =====================================================
-    # UPDATE
-    # =====================================================
 
     def update(self, instance, validated_data):
 
@@ -226,10 +197,6 @@ class GoalCreateSerializer(serializers.ModelSerializer):
             goal_data=validated_data,
         )
 
-
-# =========================================================
-# GOAL LIST
-# =========================================================
 
 class GoalListSerializer(serializers.ModelSerializer):
 
@@ -250,14 +217,8 @@ class GoalListSerializer(serializers.ModelSerializer):
 
     def get_progress(self, obj):
 
-        return GoalProgressService.calculate_progress(
-            obj
-        )
+        return GoalProgressService.calculate_progress(obj)
 
-
-# =========================================================
-# AI PLAN
-# =========================================================
 
 class GoalAIPlanSerializer(serializers.ModelSerializer):
 
@@ -270,10 +231,6 @@ class GoalAIPlanSerializer(serializers.ModelSerializer):
             "recommended_hours_per_week",
         )
 
-
-# =========================================================
-# TASK
-# =========================================================
 
 class TaskSerializer(serializers.ModelSerializer):
 
@@ -292,10 +249,6 @@ class TaskSerializer(serializers.ModelSerializer):
         )
 
 
-# =========================================================
-# TASK UPDATE
-# =========================================================
-
 class TaskUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -305,10 +258,6 @@ class TaskUpdateSerializer(serializers.ModelSerializer):
             "status",
         )
 
-
-# =========================================================
-# MILESTONE
-# =========================================================
 
 class MilestoneSerializer(serializers.ModelSerializer):
 
@@ -330,10 +279,6 @@ class MilestoneSerializer(serializers.ModelSerializer):
             "tasks",
         )
 
-
-# =========================================================
-# GOAL DETAIL
-# =========================================================
 
 class GoalDetailSerializer(serializers.ModelSerializer):
 
@@ -368,6 +313,5 @@ class GoalDetailSerializer(serializers.ModelSerializer):
 
     def get_progress(self, obj):
 
-        return GoalProgressService.calculate_progress(
-            obj
-        )
+        return GoalProgressService.calculate_progress(obj)
+            

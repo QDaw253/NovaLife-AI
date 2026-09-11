@@ -325,14 +325,11 @@ class HabitDetailSerializer(serializers.ModelSerializer):
         )
 
     def get_progress(self, obj):
-        return HabitService.get_current_progress(
-            obj
-        )
+        return HabitService.get_current_progress(obj)
+
 
     def get_statistics(self, obj):
-        return HabitService.get_statistics(
-            obj
-        )
+        return HabitService.get_statistics(obj)
 
     def get_recent_logs(self, obj):
         logs = obj.logs.all()[:7]
@@ -343,9 +340,6 @@ class HabitDetailSerializer(serializers.ModelSerializer):
         ).data
 
 
-# =========================================================
-# UPDATE HABIT
-# =========================================================
 
 class HabitUpdateSerializer(serializers.ModelSerializer):
 
@@ -401,16 +395,10 @@ class HabitUpdateSerializer(serializers.ModelSerializer):
             },
         }
 
-    # =====================================================
-    # TITLE
-    # =====================================================
 
     def validate_title(self, value):
         return validate_habit_title(value)
 
-    # =====================================================
-    # TARGET
-    # =====================================================
 
     def validate_target_value(self, value):
 
@@ -421,9 +409,6 @@ class HabitUpdateSerializer(serializers.ModelSerializer):
 
         return value
 
-    # =====================================================
-    # UNIT
-    # =====================================================
 
     def validate_unit(self, value):
         value = value.strip()
@@ -435,9 +420,6 @@ class HabitUpdateSerializer(serializers.ModelSerializer):
 
         return value
 
-    # =====================================================
-    # END DATE
-    # =====================================================
 
     def validate_end_date(self, value):
 

@@ -20,13 +20,10 @@ class Habit(models.Model):
         related_name="habits",
     )
 
-    title = models.CharField(
-        max_length=255,
-    )
+    title = models.CharField( max_length=255,)
 
-    description = models.TextField(
-        blank=True,
-    )
+    description = models.TextField(blank=True,)
+        
 
     category = models.CharField(
         max_length=30,
@@ -63,17 +60,14 @@ class Habit(models.Model):
         blank=True,
     )
 
-    is_active = models.BooleanField(
-        default=True,
-    )
+    is_active = models.BooleanField(default=True,)
+        
 
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-    )
+    created_at = models.DateTimeField(auto_now_add=True,)
+        
 
-    updated_at = models.DateTimeField(
-        auto_now=True,
-    )
+    updated_at = models.DateTimeField(auto_now=True,)
+        
 
     class Meta:
         ordering = ["-created_at"]
@@ -109,17 +103,14 @@ class HabitLog(models.Model):
         default=Status.PENDING,
     )
 
-    note = models.TextField(
-        blank=True,
-    )
+    note = models.TextField(blank=True,)
+        
 
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-    )
+    created_at = models.DateTimeField(auto_now_add=True,)
+        
 
-    updated_at = models.DateTimeField(
-        auto_now=True,
-    )
+    updated_at = models.DateTimeField(auto_now=True,)
+        
 
     class Meta:
         ordering = ["-date", "-created_at"]

@@ -3,10 +3,7 @@ import json
 from django.conf import settings
 from google import genai
 from google.genai import types
-from google.genai.errors import (
-    ClientError,
-    ServerError,
-)
+from google.genai.errors import (ClientError,ServerError,)
 from rest_framework.exceptions import ValidationError
 
 from .models import ClothingItem
@@ -21,9 +18,6 @@ from .serializers import (
 )
 
 
-# =========================================================
-# GEMINI COMMON SERVICE
-# =========================================================
 
 class GeminiService:
 
@@ -37,22 +31,12 @@ class GeminiService:
     def generate_json(*, contents):
         client = GeminiService.get_client()
 
-        # =========================================
-        # CALL GEMINI
-        # =========================================
-
         try:
             response = client.models.generate_content(
                 model=settings.GEMINI_MODEL,
                 contents=contents,
             )
 
-        # =========================================
-        # GEMINI CLIENT ERROR
-        # Ví dụ:
-        # - 429 RESOURCE_EXHAUSTED
-        # - quota / rate limit
-        # =========================================
 
         except ClientError as exc:
 
@@ -89,10 +73,6 @@ class GeminiService:
                 }
             ) from exc
 
-        # =========================================
-        # GEMINI SERVER ERROR
-        # =========================================
-
         except ServerError as exc:
             raise ValidationError(
                 {
@@ -102,10 +82,6 @@ class GeminiService:
                     ]
                 }
             ) from exc
-
-        # =========================================
-        # PARSE JSON
-        # =========================================
 
         try:
             result = json.loads(
@@ -125,18 +101,11 @@ class GeminiService:
         return result
 
 
-# =========================================================
-# AI VISION
-# =========================================================
-
 class ClothingVisionService:
 
     @staticmethod
     def analyze_image(*, image):
 
-        # =========================================
-        # PREPARE IMAGE
-        # =========================================
 
         image_bytes = image.read()
 
@@ -145,10 +114,6 @@ class ClothingVisionService:
             mime_type=image.content_type,
         )
 
-        # =========================================
-        # CALL GEMINI
-        # =========================================
-
         result = GeminiService.generate_json(
             contents=[
                 image_part,
@@ -156,9 +121,6 @@ class ClothingVisionService:
             ],
         )
 
-        # =========================================
-        # VALIDATE AI RESULT
-        # =========================================
 
         serializer = ClothingAnalysisResultSerializer(
             data=result,
@@ -171,9 +133,6 @@ class ClothingVisionService:
         return serializer.validated_data
 
 
-# =========================================================
-# AI OUTFIT
-# =========================================================
 
 class OutfitRecommendationService:
 
@@ -200,9 +159,6 @@ class OutfitRecommendationService:
         request,
     ):
 
-        # =========================================
-        # GET ACTIVE WARDROBE ITEMS
-        # =========================================
 
         wardrobe_items = list(
             OutfitRecommendationService
@@ -211,9 +167,6 @@ class OutfitRecommendationService:
             )
         )
 
-        # =========================================
-        # EMPTY WARDROBE
-        # =========================================
 
         if not wardrobe_items:
             return {
@@ -223,9 +176,6 @@ class OutfitRecommendationService:
                 "explanation": None,
             }
 
-        # =========================================
-        # BUILD PROMPT
-        # =========================================
 
         prompt = build_outfit_recommendation_prompt(
             occasion=occasion,
@@ -233,17 +183,11 @@ class OutfitRecommendationService:
             wardrobe_items=wardrobe_items,
         )
 
-        # =========================================
-        # CALL GEMINI
-        # =========================================
 
         result = GeminiService.generate_json(
             contents=prompt,
         )
 
-        # =========================================
-        # VALIDATE AI RESULT
-        # =========================================
 
         serializer = (
             OutfitRecommendationResultSerializer(
@@ -257,9 +201,6 @@ class OutfitRecommendationService:
 
         validated_data = serializer.validated_data
 
-        # =========================================
-        # SUCCESS
-        # =========================================
 
         if validated_data["status"] == "success":
 
@@ -272,9 +213,6 @@ class OutfitRecommendationService:
                 validated_data["item_ids"]
             )
 
-            # =====================================
-            # DATA INTEGRITY CHECK
-            # =====================================
 
             if not recommended_item_ids.issubset(
                 valid_item_ids
@@ -288,9 +226,6 @@ class OutfitRecommendationService:
                     }
                 )
 
-            # =====================================
-            # LOAD RECOMMENDED ITEMS
-            # =====================================
 
             recommended_items = (
                 ClothingItem.objects.filter(
@@ -302,9 +237,6 @@ class OutfitRecommendationService:
                 )
             )
 
-            # =====================================
-            # PRESERVE AI ORDER
-            # =====================================
 
             items_by_id = {
                 item.id: item
@@ -317,9 +249,6 @@ class OutfitRecommendationService:
                 in validated_data["item_ids"]
             ]
 
-            # =====================================
-            # SERIALIZE ITEMS
-            # =====================================
 
             item_serializer = (
                 ClothingItemListSerializer(

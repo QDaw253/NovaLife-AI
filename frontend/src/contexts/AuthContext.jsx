@@ -4,14 +4,14 @@ import { logout as logoutApi } from '../api/auth'
 const AuthContext = createContext()
 
 export const AuthProvider = ({ children }) => {
-  // Khi mở web lại, lấy user đã lưu trong localStorage
+
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('user')
 
     return savedUser? JSON.parse(savedUser): null
   })
 
-  // Hàm đăng xuất
+
   const logout = async () => {
     const refreshToken = localStorage.getItem('refresh_token')
 

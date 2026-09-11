@@ -19,19 +19,11 @@ from .services import (
 )
 
 
-# =========================================================
-# GOAL VIEWSET
-# =========================================================
 
 class GoalViewSet(viewsets.ModelViewSet):
 
-    permission_classes = [
-        IsAuthenticated,
-    ]
+    permission_classes = [IsAuthenticated,]
 
-    # =====================================================
-    # QUERYSET
-    # =====================================================
 
     def get_queryset(self):
 
@@ -48,10 +40,7 @@ class GoalViewSet(viewsets.ModelViewSet):
                 "milestones__tasks",
             )
         )
-
-    # =====================================================
-    # SERIALIZER
-    # =====================================================
+    
 
     def get_serializer_class(self):
 
@@ -63,10 +52,6 @@ class GoalViewSet(viewsets.ModelViewSet):
 
         return GoalCreateSerializer
 
-
-# =========================================================
-# TASK VIEWSET
-# =========================================================
 
 class TaskViewSet(
     viewsets.GenericViewSet
@@ -80,10 +65,6 @@ class TaskViewSet(
         IsAuthenticated,
     ]
 
-    # =====================================================
-    # QUERYSET
-    # =====================================================
-
     def get_queryset(self):
 
         return Task.objects.filter(
@@ -91,10 +72,6 @@ class TaskViewSet(
                 self.request.user
             )
         )
-
-    # =====================================================
-    # UPDATE STATUS
-    # =====================================================
 
     def partial_update(
         self,
@@ -126,9 +103,7 @@ class TaskViewSet(
         )
 
         return Response(
-            TaskUpdateSerializer(
-                task
-            ).data,
+            TaskUpdateSerializer(task).data,
 
             status=status.HTTP_200_OK,
         )

@@ -77,7 +77,7 @@ function DashboardPage() {
           </p>
 
           <h1>
-            Xin chào, {user?.username || 'bạn'} 👋
+            Xin chào, {user?.username || 'bạn'} 
           </h1>
 
           <p className="dashboard-header-description">
